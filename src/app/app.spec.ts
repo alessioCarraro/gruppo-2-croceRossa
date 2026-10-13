@@ -19,7 +19,8 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.brand')?.textContent).toContain('FOOD NETWORK');
     expect(compiled.textContent).toContain('Identifica beneficiario');
+    expect(compiled.textContent).toContain('Cerca un prodotto nel catalogo');
+    expect(compiled.querySelector('.role-chip')?.textContent).toContain('Admin');
   });
 });
