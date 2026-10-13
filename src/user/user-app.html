@@ -1,0 +1,38 @@
+<main class="user-shell">
+  <app-bar role="BENEFICIARIO"></app-bar>
+  @switch (screen()) {
+    @case ('home') {
+      <section class="page">
+        <div class="profile"><div class="avatar">MR</div><div><small>La tua tessera famiglia</small><h1>Ciao, Mario</h1><code>ID-2024-0481</code></div></div>
+        <article class="token-card"><div class="between"><div><small>Token disponibili</small><strong>{{ remaining() }}</strong><small>di 575 token famiglia</small></div><span class="coin">T</span></div><div class="progress"><i [style.width.%]="remaining() / 575 * 100"></i></div></article>
+        <button class="btn primary wide" (click)="go('catalog')">Inizia una nuova consegna</button>
+        <h2>Azioni rapide</h2><div class="quick"><button class="card" (click)="go('card')"><b>▣</b><small>Mostra QR tessera</small></button><button class="card" (click)="go('card')"><b>↗</b><small>Verifica profilo</small></button></div>
+        <h2>Ultima consegna</h2><article class="card"><div class="between"><div><b>03 ottobre 2025</b><small>3 prodotti · Negozio Legnano</small></div><span class="chip ok">Completata</span></div><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="go('history')">Dettagli consegna</button></article>
+      </section>
+    }
+    @case ('catalog') {
+      <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Nuova consegna</h1><span class="chip">{{ remaining() }} T</span></div>
+        <div class="input"><input [(ngModel)]="search" placeholder="Cerca un prodotto…"></div><div class="filters">@for (c of ['Tutti','Dispensa','Freschi','Infanzia']; track c) {<button [class.on]="category === c" (click)="category = c">{{ c }}</button>}</div>
+        @for (product of filtered(); track product.name) {<article class="product"><div class="grow"><b>{{ product.name }}</b><small>{{ product.category }} · {{ product.cost }} token</small></div><div class="stepper"><button (click)="remove(product.name)">−</button><b>{{ cart()[product.name] ?? 0 }}</b><button (click)="add(product.name)">+</button></div></article>}
+        <button class="btn primary wide bottom-action" (click)="go('summary')">Riepilogo consegna · {{ count() }}</button>
+      </section>
+    }
+    @case ('summary') {
+      <section class="page"><div class="app-title"><button class="back" (click)="go('catalog')">‹</button><h1>Riepilogo consegna</h1></div><div class="card between"><div><b>Mario Rossi</b><small>Token residui</small></div><b class="gold-t">{{ remaining() }} / 575</b></div><h2>Prodotti selezionati</h2>
+        @for (product of products; track product.name) { @if (cart()[product.name]) {<article class="card product"><div class="grow"><b>{{ product.name }}</b><small>{{ product.cost }} token cad. · quantità {{ cart()[product.name] }}</small></div><b class="gold-t">{{ product.cost * cart()[product.name] }} T</b></article>}}
+        <button class="btn primary wide bottom-action" (click)="go('success')">Conferma consegna</button>
+      </section>
+    }
+    @case ('success') {
+      <section class="page success"><div class="success-icon">✓</div><h1>Consegna registrata</h1><p>La tua consegna è stata salvata.</p><article class="card wide"><div class="kv"><span>Prodotti</span><b>{{ count() }}</b></div><div class="kv"><span>Token utilizzati</span><b>{{ used() }}</b></div><div class="kv"><span>Token residui</span><b>{{ remaining() }}</b></div></article><button class="btn primary wide" (click)="go('home')">Torna alla home</button><button class="btn ghost wide" (click)="go('catalog')">Nuova consegna</button></section>
+    }
+    @case ('card') {
+      <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>La mia tessera</h1></div><article class="card card-qr"><div class="qr">ID-2024-0481</div><h3>Mario Rossi</h3><small>Mostra questo codice all’operatore del negozio.</small></article><article class="token-card"><small>Token famiglia disponibili</small><strong>{{ remaining() }}</strong><small>2 adulti · 1 minore · 575 token iniziali</small></article><button class="btn ghost wide" (click)="notify('Dati del profilo verificati')">Verifica identità</button></section>
+    }
+    @case ('history') {
+      <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
+    }
+  }
+  <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav>
+  @if (toast()) { <div class="toast">{{ toast() }}</div> }
+</main>
