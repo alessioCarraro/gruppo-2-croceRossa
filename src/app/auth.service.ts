@@ -1,6 +1,7 @@
 import { computed, signal } from "@angular/core";
 import { User } from "./tables.models";
 
+@Injectable({ providedIn: 'root' })
 export class AuthService {
     private readonly user = signal<User[]>([
         { id: "038929ab-6247-4542-b43d-118ba55a5132", username: "admin", password: "string", is_active: true, can_login: true },

@@ -38,8 +38,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "16kB",
+                  "maximumError": "20kB"
                 }
               ],
               "outputHashing": "all"
@@ -48,6 +48,15 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "user": {
+              "browser": "src/user-main.ts",
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "styles": [
+                "src/styles.css"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -60,6 +69,9 @@
             },
             "development": {
               "buildTarget": "ng-project-croce-rossa:build:development"
+            },
+            "user": {
+              "buildTarget": "ng-project-croce-rossa:build:user"
             }
           },
           "defaultConfiguration": "development"
