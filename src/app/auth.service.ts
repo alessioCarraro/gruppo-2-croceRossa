@@ -1,4 +1,4 @@
-import { computed, signal } from "@angular/core";
+import { Injectable, computed, signal } from "@angular/core";
 import { User } from "./tables.models";
 
 @Injectable({ providedIn: 'root' })
