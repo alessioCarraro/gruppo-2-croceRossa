@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, ViewEncapsulation } from '@angular/core';
 import { AdminScreensComponent } from './admin-screens.component';
 import { AppBarComponent } from './shared/app-bar.component';
 import { TabBarComponent } from './shared/tab-bar.component';
@@ -13,6 +13,7 @@ const screens: Screen[] = ['dashboard', 'approvals', 'identify', 'person', 'deli
   imports: [AdminScreensComponent, AppBarComponent, TabBarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class App {
   readonly products: Product[] = [
