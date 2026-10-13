@@ -1,3 +1,5 @@
+import { DecimalPipe } from "@angular/common";
+
 type UUID = string;
 
 const enum TypeOfOrganization {
@@ -20,6 +22,12 @@ const enum TypeOfProductCategory {
     Altro
 }
 
+const enum TypeOfBeneficicaryStatus {
+    Attivo,
+    Sospeso,
+    Scaduto
+}
+
 export interface User {
     id: UUID;
     username: string;
@@ -34,6 +42,8 @@ export interface Operator {
     last_name: string;
     tax_code: string;
     email: string;
+    birth_place: string;
+    birth_date: Date;
 }
 
 export interface Organization {
@@ -47,9 +57,11 @@ export interface Organization {
 
 export interface Product {
     id: UUID;
-    sku_code: string;
     name: string;
     category_id: TypeOfProductCategory;
+    stock: number;
+    cost: number;
+    expiration: Date;
     beneficiary_max: number;
     beneficiary_organization: number;
     measurement_unit: TypeOfMeasurementUnit;
@@ -68,10 +80,17 @@ export interface Beneficiary {
     last_name: string;
     tax_code: string;
     birth_place: string;
-    birth_date: Date;    
+    birth_date: Date;
+    has_allergies: boolean;   
+    has_intolerances: boolean;
+    religion: string;
+    token: DecimalPipe;
+    status: TypeOfBeneficicaryStatus;
+    log: BeneficiaryLog[];
 }
 
-export interface User {}
+export interface BeneficiaryLog {}
+
 export interface User {}
 export interface User {}
 export interface User {}
