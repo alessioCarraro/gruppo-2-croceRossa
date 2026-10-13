@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KeyValuePipe } from '@angular/common';
 import { App, Product, Screen } from './app';
@@ -24,6 +24,7 @@ export class AdminScreensComponent {
   readonly filteredProducts = this.app.filteredProducts;
   readonly remaining = this.app.remaining;
   readonly used = this.app.used;
+  readonly orderSheetOpen = signal(false);
   get search(): string { return this.app.search; }
   set search(value: string) { this.app.search = value; }
   get category(): string { return this.app.category; }
@@ -37,4 +38,7 @@ export class AdminScreensComponent {
   confirmReceipt(): void { this.app.confirmReceipt(); }
   showToast(message: string): void { this.app.showToast(message); }
   inOrder(id: string): boolean { return this.app.inOrder(id); }
+  openOrderSheet(): void { this.orderSheetOpen.set(true); }
+  closeOrderSheet(): void { this.orderSheetOpen.set(false); }
+  sendOrder(): void { this.orderSheetOpen.set(false); this.showToast('Ordine inviato al magazzino centrale'); }
 }

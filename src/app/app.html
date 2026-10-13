@@ -1,5 +1,5 @@
 <main class="app-shell">
-  @if (screen() !== 'dashboard' && screen() !== 'approvals' && screen() !== 'identify' && screen() !== 'person' && screen() !== 'delivery' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'catalog') { <app-bar role="ADMIN"></app-bar> }
+  @if (screen() !== 'dashboard' && screen() !== 'approvals' && screen() !== 'identify' && screen() !== 'person' && screen() !== 'delivery' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'catalog' && screen() !== 'order') { <app-bar role="ADMIN"></app-bar> }
   <app-admin-screens></app-admin-screens>
   <app-tab-bar></app-tab-bar>
   @if (toast(); as message) { <div class="toast" role="status" aria-live="polite">{{ message }}</div> }
