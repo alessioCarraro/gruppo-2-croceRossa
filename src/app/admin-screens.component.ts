@@ -2,12 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KeyValuePipe } from '@angular/common';
 import { App, Product, Screen } from './app';
-import { AppTitleComponent } from './shared/app-title.component';
 
 @Component({
   selector: 'app-admin-screens',
   standalone: true,
-  imports: [FormsModule, KeyValuePipe, AppTitleComponent],
+  imports: [FormsModule, KeyValuePipe],
   templateUrl: './admin-screens.html',
 })
 export class AdminScreensComponent {
