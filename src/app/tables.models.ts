@@ -22,7 +22,7 @@ const enum TypeOfProductCategory {
 
 export interface User {
     id: UUID;
-    usernamme: string;
+    username: string;
     password: string;
     is_active: boolean;
     can_login: boolean;
