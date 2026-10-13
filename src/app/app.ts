@@ -1,16 +1,10 @@
-import { Component, computed, signal, ViewEncapsulation } from '@angular/core';
-import { AdminScreensComponent } from './admin-screens.component';
-import { AppBarComponent } from './shared/app-bar.component';
-import { TabBarComponent } from './shared/tab-bar.component';
-
-export type Screen = 'dashboard' | 'approvals' | 'identify' | 'person' | 'delivery' | 'summary' | 'success' | 'catalog' | 'order' | 'packages' | 'arrived' | 'transit' | 'low' | 'sites' | 'expiry';
-export type Product = { id: string; name: string; category: string; stock: number; cost: number; expiry: string };
-const screens: Screen[] = ['dashboard', 'approvals', 'identify', 'person', 'delivery', 'summary', 'success', 'catalog', 'order', 'packages', 'arrived', 'transit', 'low', 'sites', 'expiry'];
+import { Component } from '@angular/core';
+import { LoginComponent } from './component/login-component/login-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [AdminScreensComponent, AppBarComponent, TabBarComponent],
+  imports: [LoginComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   encapsulation: ViewEncapsulation.None,
