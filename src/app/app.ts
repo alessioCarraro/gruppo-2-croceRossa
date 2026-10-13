@@ -1,16 +1,16 @@
 import { Component, computed, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KeyValuePipe } from '@angular/common';
-import { AppTitleComponent } from './app-title.component';
+import { AdminScreensComponent } from './admin-screens.component';
+import { AppBarComponent } from './shared/app-bar.component';
+import { TabBarComponent } from './shared/tab-bar.component';
 
 export type Screen = 'dashboard' | 'approvals' | 'identify' | 'person' | 'delivery' | 'summary' | 'success' | 'catalog' | 'order' | 'packages' | 'arrived' | 'transit' | 'low' | 'sites' | 'expiry';
-type Product = { id: string; name: string; category: string; stock: number; cost: number; expiry: string };
+export type Product = { id: string; name: string; category: string; stock: number; cost: number; expiry: string };
 const screens: Screen[] = ['dashboard', 'approvals', 'identify', 'person', 'delivery', 'summary', 'success', 'catalog', 'order', 'packages', 'arrived', 'transit', 'low', 'sites', 'expiry'];
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FormsModule, KeyValuePipe, AppTitleComponent],
+  imports: [AdminScreensComponent, AppBarComponent, TabBarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

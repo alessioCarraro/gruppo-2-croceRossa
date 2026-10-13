@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AppBarComponent } from '../app/shared/app-bar.component';
 
 type Product = { name: string; cost: number; category: string };
 type UserScreen = 'home' | 'catalog' | 'summary' | 'success' | 'card' | 'history';
@@ -8,7 +9,7 @@ const screens: UserScreen[] = ['home', 'catalog', 'summary', 'success', 'card', 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, AppBarComponent],
   templateUrl: './user-app.html',
   styleUrl: './user-app.css',
 })
