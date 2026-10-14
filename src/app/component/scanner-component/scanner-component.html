@@ -10,6 +10,45 @@
             <div class="user-badge">User</div>
         </header>
 
+        <main class="scanner-page">
+            <!-- Area Fotocamera Scansione -->
+            <section class="camera-view">
+                <div class="scanner-target">
+                    <div class="corner top-left"></div>
+                    <div class="corner top-right"></div>
+                    <div class="corner bottom-left"></div>
+                    <div class="corner bottom-right"></div>
+                    <div class="scan-line"></div>
+                </div>
+
+                <p class="instruction-text">Inquadra il QR della tessera</p>
+            </section>
+
+            <!-- Area Azioni e Inserimento Manuale -->
+            <section class="manual-entry-section">
+                <button class="btn-primary" (click)="simulateScan()">
+                    Simula scansione riuscita
+                </button>
+
+                <div class="divider">
+                    <span>oppure codice ID</span>
+                </div>
+
+                <div class="search-input-group">
+                    <svg class="icon-search" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" class="id-input" placeholder="ID-2024-0481" [ngModel]="searchId()"
+                        (ngModelChange)="searchId.set($event)">
+                    <button class="btn-search" (click)="searchById()">
+                        Cerca
+                    </button>
+                </div>
+            </section>
+        </main>
+
         <!-- Main Action -->
         <!-- <button class="primary-action">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
