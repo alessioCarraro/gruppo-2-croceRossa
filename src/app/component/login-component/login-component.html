@@ -1,97 +1,3 @@
-<!-- <div class="mobile-container">
-    <div class="status-bar">
-        <span class="time">9:41</span>
-        <div class="status-icons">
-            <span class="signal-icon"></span>
-            <span class="battery-icon"></span>
-        </div>
-    </div>
-
-    <div class="content-wrapper">
-        <div class="brand-header">
-            <div class="logo-symbol">
-                <svg viewBox="0 0 100 100" width="48" height="48">
-                    <path
-                        d="M50 15 C30 15, 15 30, 15 50 C15 70, 30 85, 50 85 C65 85, 75 75, 75 60 C75 45, 60 40, 50 40 C35 40, 25 50, 25 60"
-                        fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round" />
-                    <path
-                        d="M50 85 C70 85, 85 70, 85 50 C85 30, 70 15, 50 15 C35 15, 25 25, 25 40 C25 55, 40 60, 50 60 C65 60, 75 50, 75 40"
-                        fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round" />
-                </svg>
-            </div>
-            <div class="brand-title">
-                <span class="food-text">FOOD</span>
-                <span class="network-text">NETWORK</span>
-                <span class="aid-text">AID PROJECT</span>
-            </div>
-        </div>
-
-        <div class="welcome-section">
-            <h1 class="main-title">Accedi</h1>
-            <p class="subtitle">Entra nel punto di distribuzione per iniziare le operazioni.</p>
-        </div>
-
-        <form class="login-form" (submit)="onLogin($event)">
-            <div class="input-group">
-                <label for="username">Nome utente</label>
-                <div class="input-field-wrapper">
-                    <span class="icon user-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </span>
-                    <input id="username" type="text" [ngModel]="username()" (ngModelChange)="username.set($event)"
-                        name="username" required />
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label for="password">Password</label>
-                <div class="input-field-wrapper">
-                    <span class="icon lock-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                    </span>
-                    <input id="password" type="password" [ngModel]="password()" (ngModelChange)="password.set($event)"
-                        name="password" required />
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label for="distributionPoint">Punto di distribuzione</label>
-                <div class="input-field-wrapper">
-                    <span class="icon pin-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                    </span>
-                    <input id="distributionPoint" type="text" [ngModel]="distributionPoint()"
-                        (ngModelChange)="distributionPoint.set($event)" name="distributionPoint" required />
-                </div>
-            </div>
-
-            <button type="submit" class="submit-btn">
-                <span>Accedi</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </button>
-        </form>
-
-        <div class="footer-note">
-            Validazione simulata via AuthService · dati sintetici
-        </div>
-    </div>
-</div> -->
-
 <div class="login-container">
   <header class="login-header">
     <div class="logo-wrapper">
@@ -111,6 +17,12 @@
   </header>
 
   <form class="login-form" (submit)="$event.preventDefault()">
+    @if (loginError()) {
+      <div class="error-banner" role="alert">
+        {{ loginError() }}
+      </div>
+    }
+
     <div class="form-group">
       <label for="username" class="form-label">Nome utente</label>
       <div class="input-wrapper">
