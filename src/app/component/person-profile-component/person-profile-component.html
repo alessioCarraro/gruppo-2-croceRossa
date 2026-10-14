@@ -1,0 +1,104 @@
+<main class="profile-layout">
+  <!-- Header App -->
+  <header class="app-header">
+    <button class="icon-btn" (click)="goBack()" aria-label="Indietro">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <h1 class="page-title">Scheda persona</h1>
+    <button class="icon-btn" (click)="openOptions()" aria-label="Opzioni">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="1"></circle>
+        <circle cx="19" cy="12" r="1"></circle>
+        <circle cx="5" cy="12" r="1"></circle>
+      </svg>
+    </button>
+  </header>
+
+  <div class="scrollable-content">
+    <!-- Card Principale Utente -->
+    <section class="main-card">
+      <div class="user-info-row">
+        <div class="avatar">{{ personDetails().initials }}</div>
+        
+        <div class="user-details">
+          <h2 class="user-name">{{ personDetails().name }}</h2>
+          <p class="user-id">{{ personDetails().id }}</p>
+          <p class="user-meta">Nato il {{ personDetails().birthDate }}</p>
+          <p class="user-meta">{{ personDetails().address }}</p>
+        </div>
+
+        <div class="status-badges">
+          <span class="badge badge-success">{{ personDetails().status }}</span>
+          <div class="token-badge">
+            <span class="token-icon">T</span> {{ personDetails().currentTokens }}
+          </div>
+        </div>
+      </div>
+
+      <div class="token-progress-section">
+        <div class="token-progress-header">
+          <span class="progress-label">Token famiglia</span>
+          <span class="progress-values">
+            <strong class="current-value">{{ personDetails().currentTokens }}</strong> / {{ personDetails().maxTokens }}
+          </span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" [style.width.%]="(personDetails().currentTokens / personDetails().maxTokens) * 100"></div>
+        </div>
+      </div>
+
+      <div class="dropdown-selector">
+        <span>Verifica identità · intervista</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Nucleo Familiare -->
+    <section class="data-section">
+      <h3 class="section-title"><span class="dash"></span> NUCLEO FAMILIARE</h3>
+      <div class="grid-3-cols">
+        <div class="stat-card">
+          <div class="stat-number">{{ familyNucleus().adults.count }}</div>
+          <div class="stat-desc">Adulti · {{ familyNucleus().adults.tokensPerPerson }} cad.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ familyNucleus().minors.count }}</div>
+          <div class="stat-desc">Minori · {{ familyNucleus().minors.tokensPerPerson }} cad.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ personDetails().maxTokens }}</div>
+          <div class="stat-desc">Token iniziali</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Storico Mensile -->
+    <section class="data-section history-section">
+      <h3 class="section-title"><span class="dash"></span> STORICO MENSILE</h3>
+      <div class="history-card">
+        <div class="timeline">
+          @for (item of history(); track item.date; let last = $last) {
+            <div class="timeline-item" [class.is-last]="last">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <p class="timeline-meta">{{ item.date }} · {{ item.location }} · {{ item.operator }}</p>
+                <p class="timeline-title">{{ item.type }} · <strong>{{ item.itemsCount }} prodotti</strong></p>
+                <p class="timeline-tokens">Token usati: {{ item.tokensUsed }}</p>
+                <a href="#" class="timeline-link" (click)="$event.preventDefault()">Dettagli e ripeti ordine ›</a>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Bottom Action -->
+  <div class="bottom-action-bar">
+    <button class="btn-primary" (click)="startDelivery()">Avvia consegna</button>
+  </div>
+</main>

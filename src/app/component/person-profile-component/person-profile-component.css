@@ -1,0 +1,337 @@
+:host {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #fcfbf8; /* Sfondo generale coerente con l'immagine */
+  color: #1a1a1a;
+  overflow: hidden;
+}
+
+.profile-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background-color: #fcfbf8;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #eae5de;
+  background-color: #f5f0e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+
+.page-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Area Scrollabile */
+.scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1.25rem 2rem 1.25rem;
+}
+
+/* Sezioni generiche */
+.data-section {
+  margin-top: 1.5rem;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8b8b8b;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.dash {
+  width: 12px;
+  height: 2px;
+  background-color: #154c79;
+}
+
+/* Card Principale */
+.main-card {
+  background: #ffffff;
+  border: 1px solid #eae5de;
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.user-info-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  background-color: #e5f0f9;
+  color: #154c79;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.user-id, .user-meta {
+  font-size: 0.8rem;
+  color: #8b8b8b;
+  margin: 0 0 2px 0;
+}
+
+.status-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 16px;
+}
+
+.badge-success {
+  background-color: #e6f4ea;
+  color: #1e8e3e;
+}
+
+.token-badge {
+  background-color: #fce8b2;
+  color: #b06000;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.token-icon {
+  background-color: #d27c00;
+  color: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+}
+
+/* Token Progress */
+.token-progress-section {
+  margin-bottom: 1.5rem;
+}
+
+.token-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.progress-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.progress-values {
+  color: #666;
+}
+
+.current-value {
+  color: #d27c00;
+}
+
+.progress-bar-container {
+  height: 8px;
+  background-color: #eae5de;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #1e8e3e; /* Verde scuro come nell'immagine */
+  border-radius: 4px;
+}
+
+/* Dropdown */
+.dropdown-selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  border: 1px solid #eae5de;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Grid Nucleo Familiare */
+.grid-3-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #eae5de;
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.stat-desc {
+  font-size: 0.7rem;
+  color: #8b8b8b;
+}
+
+/* Storico Timeline */
+.history-card {
+  background: #ffffff;
+  border: 1px solid #eae5de;
+  border-radius: 16px;
+  padding: 1.25rem;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.timeline-item.is-last {
+  padding-bottom: 0;
+}
+
+.timeline-item:not(.is-last)::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 14px;
+  bottom: -4px;
+  width: 2px;
+  background-color: #eae5de;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #1e8e3e;
+  background-color: #ffffff;
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeline-meta {
+  font-size: 0.75rem;
+  color: #8b8b8b;
+  margin: 0;
+}
+
+.timeline-title {
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  margin: 2px 0;
+}
+
+.timeline-tokens {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.timeline-link {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #154c79;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+/* Bottom Action Bar */
+.bottom-action-bar {
+  padding: 1rem 1.25rem 2rem 1.25rem;
+  background-color: #fcfbf8;
+}
+
+.btn-primary {
+  width: 100%;
+  background-color: #114b79;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
