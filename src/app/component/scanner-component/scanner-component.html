@@ -1,0 +1,100 @@
+<div class="app-layout">
+  <main class="content-scroll">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="avatar-mt">MT</div>
+      <div class="header-titles">
+        <span class="location">Negozio Legnano · Via Gilardelli</span>
+        <h1 class="greeting">Ciao, Marco</h1>
+      </div>
+      <div class="user-badge">User</div>
+    </header>
+
+    <!-- Main Action -->
+    <button class="primary-action">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+        <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+        <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+        <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+      </svg>
+      Identifica beneficiario
+    </button>
+
+    <!-- Oggi Section -->
+    <section class="dashboard-section">
+      <h2 class="section-title"><span class="dash"></span> OGGI</h2>
+      <div class="cards-grid">
+        @for (card of todayCards(); track card.title) {
+          <div class="metric-card">
+            <div class="card-header">
+              <span class="card-value" [style.color]="card.valueColor">{{ card.value }}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+            <p class="card-title">{{ card.title }}</p>
+            <p class="card-subtitle" 
+               [style.color]="card.subtitleColor || '#7a7a7a'" 
+               [class.is-link]="card.isLink">
+              {{ card.subtitle }}
+            </p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Stato Magazzino Section -->
+    <section class="dashboard-section">
+      <h2 class="section-title"><span class="dash"></span> STATO MAGAZZINO</h2>
+      <div class="storage-card">
+        <div class="storage-header">
+          <div class="storage-info">
+            <h3>Scorte sede</h3>
+            <p>1.284 articoli · 4 categorie</p>
+          </div>
+          <span class="storage-percentage">82%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" style="width: 82%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cerca Prodotto Section -->
+    <section class="dashboard-section">
+      <h2 class="section-title"><span class="dash"></span> CERCA PRODOTTO</h2>
+      <div class="search-input">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Cerca un prodotto nel catalogo...">
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-item active">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg>
+      <span>Scansione</span>
+    </button>
+    <button class="nav-item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      <span>Magazzino</span>
+    </button>
+    <button class="nav-item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+      <span>Altre sedi</span>
+    </button>
+    <button class="nav-item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <span>Profilo</span>
+    </button>
+  </nav>
+</div>
