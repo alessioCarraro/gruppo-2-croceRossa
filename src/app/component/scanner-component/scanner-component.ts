@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { QrScannerComponent } from '../scanner1-component/scanner1-component';
 
 interface DashboardCard {
     value: string;
@@ -14,7 +15,7 @@ interface DashboardCard {
 @Component({
     selector: 'app-scanner-component',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, QrScannerComponent],
     templateUrl: './scanner-component.html',
     styleUrls: ['./scanner-component.css']
 })
