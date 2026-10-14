@@ -4,7 +4,6 @@ import { ScannerComponent } from './component/scanner-component/scanner-componen
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [LoginComponent, ScannerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
