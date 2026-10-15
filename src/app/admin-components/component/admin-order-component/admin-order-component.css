@@ -8,7 +8,7 @@
   box-sizing: border-box;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -157,44 +157,34 @@
   color: #888;
 }
 
-/* Badges */
-.badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.badge-blue {
-  background-color: #d8eaf5;
-  color: #2b7095;
-}
-
-.badge-grey {
-  background-color: #f0f0f0;
-  color: #555;
-}
-
-/* Info Banner */
-.info-banner {
+/* FIX 1: Stile del pulsante Elimina */
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: #a0aab2;
+  cursor: pointer;
+  padding: 8px;
   display: flex;
-  background-color: #eef5f9;
-  border-radius: 8px;
-  padding: 16px;
-  gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color 0.2s, background-color 0.2s;
 }
 
-.info-icon-wrapper {
-  flex-shrink: 0;
-  margin-top: 2px;
+.remove-btn:active {
+  color: #d32f2f;
+  background-color: #fce8e8;
 }
 
-.info-text {
-  color: #2b7095;
-  font-size: 0.85rem;
-  line-height: 1.4;
+/* Fallback lista vuota */
+.empty-list-text {
+  font-size: 0.9rem;
+  color: #888;
+  text-align: center;
+  padding: 20px 0;
 }
+
+/* FIX 2: Regole CSS del badge e info-banner rimosse per pulizia */
 
 /* Footer & Button */
 .footer {
@@ -213,9 +203,15 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, opacity 0.2s;
 }
 
 .primary-btn:active {
   background-color: #113850;
+}
+
+.primary-btn[disabled] {
+  background-color: #a0aab2;
+  cursor: not-allowed;
+  opacity: 0.7;
 }

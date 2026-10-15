@@ -5,7 +5,6 @@ interface ProductItem {
   id: string;
   name: string;
   description: string;
-  status: string;
 }
 
 interface OrderInfo {
@@ -23,7 +22,7 @@ interface OrderInfo {
   styleUrls: ['./admin-order-component.css']
 })
 export class AdminOrderComponent {
-  // Gestione dello stato tramite Signals
+  
   readonly orderInfo = signal<OrderInfo>({
     orderId: 'ORD-2025-114',
     title: 'Nuovo ordine',
@@ -31,24 +30,21 @@ export class AdminOrderComponent {
     role: 'Admin'
   });
 
+  // Proprietà status rimossa dall'interfaccia e dai mock data
   readonly products = signal<ProductItem[]>([
     {
       id: '1',
       name: 'Omogeneizzato carne',
-      description: 'Richiesta · Negozio Parabiago',
-      status: 'in ordine'
+      description: 'Richiesta · Negozio Parabiago'
     },
     {
       id: '2',
       name: 'Olio di semi 1L',
-      description: 'Sotto soglia · sede',
-      status: 'in ordine'
+      description: 'Sotto soglia · sede'
     }
   ]);
 
-  readonly infoMessage = signal<string>(
-    'Include i prodotti accettati dalle richieste sedi. Un prodotto già inserito non è più selezionabile nel catalogo.'
-  );
+  // FIX 2: infoMessage eliminato
 
   // Derivazioni
   readonly hasProducts = computed(() => this.products().length > 0);
@@ -58,7 +54,15 @@ export class AdminOrderComponent {
     console.log('Navigazione: Indietro');
   }
 
+  // FIX 1: Nuovo metodo per rimuovere un prodotto dalla lista dell'ordine
+  removeProduct(productId: string): void {
+    this.products.update(currentProducts => 
+      currentProducts.filter(product => product.id !== productId)
+    );
+  }
+
   submitOrder(): void {
+    if (!this.hasProducts()) return;
     console.log('Invio ordine:', this.orderInfo().orderId);
   }
 }
