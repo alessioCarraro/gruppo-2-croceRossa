@@ -20,4 +20,4 @@ import { LocalWarehouseComponent } from './user-components/component/local-wareh
   styleUrl: './app.css',
 })
 export class App {
-}
+} 
