@@ -1,10 +1,8 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 
-// =====================================================================
 // TIPI (gli "stampi" dei dati)
-// =====================================================================
 
-export type Role = 'operatore' | 'responsabile';
+export type Role = 'Operator' | 'S-Admin' | 'User' | 'Admin';
 export type ProductCategory = 'Pasta' | 'Omogeneizzati' | 'Carne' | 'Verdura' | 'Altro';
 export type MeasurementUnit = 'Kg' | 'Litro' | 'Sacco' | 'Pacco' | 'Scatola';
 export type BeneficiaryStatus = 'Attivo' | 'Sospeso' | 'Scaduto';
@@ -156,13 +154,7 @@ export interface Shipment {
     arrivedAt?: string;
 }
 
-
-
-
-
-// =====================================================================
 // COSTANTI E DATI INIZIALI (il "finto database")
-// =====================================================================
 
 const TOKENS_PER_ADULTI = 250;
 const TOKENS_PER_MINORI = 75;
@@ -175,21 +167,21 @@ const MS_PER_DAY = 86_400_000;
 const STORAGE_PREFIX = 'cri_';              // prefisso delle chiavi nel localStorage
 
 
-const SEED_SITES: Site[] = [
+export const SEED_SITES: Site[] = [
     { id: 's-metro', name: 'Metro Milano', type: 'Metro', address: 'Via Fantoli 1', city: 'Milano', province: 'MI' },
     { id: 's-legnano', name: 'Negozio Legnano', type: 'EnteDistributore', address: 'Via Gilardelli', city: 'Legnano', province: 'MI' },
     { id: 's-parabiago', name: 'Parabiago', type: 'EnteDistributore', address: 'Via Santa Maria 10', city: 'Parabiago', province: 'MI' },
 ];
 
 // Password in chiaro SOLO perché sono dati finti per la demo
-const SEED_OPERATORS: Operator[] = [
-    { id: 'op-1', username: 'm.turelli', password: 'password', firstName: 'Marco', lastName: 'Turelli', email: 'm.turelli@cri.it', siteId: 's-legnano', role: 'operatore' },
-    { id: 'op-2', username: 'i.dimarco', password: 'password', firstName: 'Ilaria', lastName: 'Di Marco', email: 'ilariadimarco@hotmail.com', siteId: 's-legnano', role: 'responsabile' },
-    { id: 'op-3', username: 'a.carraro', password: 'password', firstName: 'Alessio', lastName: 'Carraro', email: 'alessiocarraro@hotmail.com', siteId: 's-parabiago', role: 'operatore' },
-    { id: 'op-4', username: 'n.turelli', password: 'password', firstName: 'Nicole', lastName: 'Turelli', email: 'nicoleturelli@hotmail.com', siteId: 's-legnano', role: 'operatore' },
+export const SEED_OPERATORS: Operator[] = [
+    { id: 'op-1', username: 'm.turelli', password: 'password', firstName: 'Marco', lastName: 'Turelli', email: 'm.turelli@cri.it', siteId: 's-legnano', role: 'S-Admin' },
+    { id: 'op-2', username: 'i.dimarco', password: 'password', firstName: 'Ilaria', lastName: 'Di Marco', email: 'ilariadimarco@hotmail.com', siteId: 's-legnano', role: 'Admin' },
+    { id: 'op-3', username: 'a.carraro', password: 'password', firstName: 'Alessio', lastName: 'Carraro', email: 'alessiocarraro@hotmail.com', siteId: 's-parabiago', role: 'Operator' },
+    { id: 'op-4', username: 'n.turelli', password: 'password', firstName: 'Nicole', lastName: 'Turelli', email: 'nicoleturelli@hotmail.com', siteId: 's-legnano', role: 'User' },
 ];
 
-const SEED_PRODUCTS: Product[] = [
+export const SEED_PRODUCTS: Product[] = [
     { id: 'p-1', name: 'Pasta di semola 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 420, minStock: 50, price: 20, expiry: '2027-05-15', maxPerBeneficiary: 5 },
     { id: 'p-2', name: 'Pasta integrale 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 58, minStock: 60, price: 22, expiry: '2026-10-25', maxPerBeneficiary: 3 },
     { id: 'p-3', name: 'Passata di pomodoro 700g', category: 'Verdura', unit: 'Scatola', icon: 'bottle', stock: 300, minStock: 40, price: 15, expiry: '2027-08-20', maxPerBeneficiary: 4 },
@@ -197,14 +189,14 @@ const SEED_PRODUCTS: Product[] = [
     { id: 'p-5', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0, minStock: 20, price: 12, expiry: '2027-01-10', maxPerBeneficiary: 6 },
 ];
 
-const SEED_BENEFICIARIES: Beneficiary[] = [
+export const SEED_BENEFICIARIES: Beneficiary[] = [
     { id: 'b-1', code: 'ID-2024-0481', firstName: 'Mario', lastName: 'Rossi', taxCode: 'RSSMRA82C14F205X', birthDate: '1982-03-14', address: 'Via Roma 24, Legnano (MI)', hasAllergies: false, hasIntolerances: false, status: 'Attivo', adults: 2, minors: 1, tokens: 420 },
     { id: 'b-2', code: 'ID-2024-0502', firstName: 'Pietro', lastName: 'Moretti', taxCode: 'MRTPTR90A01F205Y', birthDate: '1990-01-01', address: 'Via Milano 3, Legnano (MI)', hasAllergies: true, hasIntolerances: false, status: 'Attivo', adults: 1, minors: 0, tokens: 250 },
     { id: 'b-3', code: 'ID-2024-0517', firstName: 'Alessandro', lastName: 'Fina', taxCode: 'FNILSN85B02F205Z', birthDate: '1985-02-02', address: 'Via Verdi 8, Parabiago (MI)', hasAllergies: false, hasIntolerances: true, status: 'Sospeso', adults: 2, minors: 2, tokens: 0 },
     { id: 'b-4', code: 'ID-2024-0533', firstName: 'Simone', lastName: 'Ruggeri', taxCode: 'RGGSMN95C03F205W', birthDate: '1995-03-03', address: 'Via Dante 12, Legnano (MI)', hasAllergies: false, hasIntolerances: false, status: 'Scaduto', adults: 1, minors: 1, tokens: 0 },
 ];
 
-const SEED_DELIVERIES: Delivery[] = [
+export const SEED_DELIVERIES: Delivery[] = [
     {
         id: 'd-1', beneficiaryId: 'b-1', operatorId: 'op-4', siteId: 's-legnano', date: '2026-10-03T10:30:00.000Z', tokensUsed: 95, status: 'Completata',
         items: [{ productId: 'p-1', name: 'Pasta di semola 500g', quantity: 2, price: 20 }, { productId: 'p-3', name: 'Passata di pomodoro 700g', quantity: 1, price: 15 }, { productId: 'p-4', name: 'Petto di pollo 1kg', quantity: 1, price: 40 }]
@@ -215,25 +207,20 @@ const SEED_DELIVERIES: Delivery[] = [
     },
 ];
 
-const SEED_ALERTS: DeliveryAlert[] = [];
+export const SEED_ALERTS: DeliveryAlert[] = [];
 
-const SEED_APPROVALS: ApprovalRequest[] = [
+export const SEED_APPROVALS: ApprovalRequest[] = [
     { id: 'a-1', type: 'Nuovo beneficiario', description: 'Attivazione Alessandro Fina (nucleo 2+2)', requestedBy: 'op-2', date: '2026-10-14T15:00:00.000Z', status: 'In attesa', beneficiaryId: 'b-3' },
     { id: 'a-2', type: 'Token extra', description: '+50 token per Mario Rossi (spesa medica)', requestedBy: 'op-1', date: '2026-10-15T08:30:00.000Z', status: 'In attesa', beneficiaryId: 'b-1', extraTokens: 50 },
     { id: 'a-3', type: 'Riordino', description: 'Riordino 100 Omogeneizzato carne', requestedBy: 'op-1', date: '2026-10-15T09:00:00.000Z', status: 'In attesa', productId: 'p-5', quantity: 100 },
 ];
 
-const SEED_SHIPMENTS: Shipment[] = [
+export const SEED_SHIPMENTS: Shipment[] = [
     { id: 'sh-1', trackingNumber: 'TRK-100231', fromSiteId: 's-metro', toSiteId: 's-legnano', items: [{ productId: 'p-2', quantity: 120 }], status: 'In transito', createdAt: '2026-10-13T08:00:00.000Z' },
     { id: 'sh-2', trackingNumber: 'TRK-100245', fromSiteId: 's-metro', toSiteId: 's-legnano', items: [{ productId: 'p-4', quantity: 40 }], status: 'Ordinato', createdAt: '2026-10-15T07:00:00.000Z' },
 ];
 
-
-
-
-// =====================================================================
 // CLASSE E STATO
-// =====================================================================
 
 @Injectable({ providedIn: 'root' })
 export class MockBackendService {
@@ -291,11 +278,7 @@ export class MockBackendService {
         effect(() => this.save('operatorId', this._currentOperatorId()));
     }
 
-
-
-    // =====================================================================
     // HELPER (attrezzi usati da tutti)
-    // =====================================================================
 
     private newId(): string {
         return crypto.randomUUID();
@@ -406,10 +389,7 @@ export class MockBackendService {
         this._lastDelivery.set(null);
     }
 
-
-    // =====================================================================
     // ACCESSO
-    // =====================================================================
 
     async login(username: string, password: string): Promise<SafeOperator> {
         return this.fakeApi(() => {
@@ -434,9 +414,5 @@ export class MockBackendService {
         this._lastDelivery.set(null);
     }
 
-  // =====================================================================
   // BENEFICIARI
-  // =====================================================================
-
-  
 }

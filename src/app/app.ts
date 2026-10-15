@@ -11,18 +11,20 @@ import { DeliverySuccessComponent } from './user-components/component/delivery-s
 import { StoreLocatorComponent } from './user-components/component/store-locator-component/store-locator-component';
 import { LocalWarehouseComponent } from './user-components/component/local-warehouse-component/local-warehouse-component';
 import { PersonProfileNotokenComponent } from './user-components/component/person-profile-notoken/person-profile-notoken';
+import { RouterOutlet } from '@angular/router';
 import { AdminHomeComponent } from './admin-components/component/admin-home-component/admin-home-component';
 import { RequestsComponent } from './admin-components/component/admin-requests-component/admin-requests-component';
 import { AdminPersonProfileComponent } from './admin-components/component/admin-personal-profile-component/admin-personal-profile-component';
 import { AdminQrScannerComponent } from './admin-components/component/admin-qr-scanner-component/admin-qr-scanner-component';
-import { AdminSummaryComponent } from './admin-components/component/admin-summary-component/admin-summary-component';
-import { AdminWarehouseComponent } from './admin-warehouse-component/admin-warehouse-component';
-import { AdminOrderComponent } from './admin-order-component/admin-order-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, SummaryComponent, AdminSummaryComponent, AdminWarehouseComponent, AdminOrderComponent],
+  imports: [
+    RouterOutlet, LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, 
+    DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, 
+    RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

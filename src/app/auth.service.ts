@@ -1,38 +1,99 @@
 import { Injectable, computed, signal } from "@angular/core";
-import { User } from "./tables.models";
+import { Operator, SafeOperator, Site, SEED_OPERATORS, SEED_SITES } from '../app/utils';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private readonly user = signal<User[]>([
-        { id: "038929ab-6247-4542-b43d-118ba55a5132", username: "admin", password: "string", is_active: true, can_login: true },
-        { id: "cdce36fd-0c27-452e-b76f-859500f735f8", username: "user", password: "string", is_active: true, can_login: true },
-        { id: "fa353178-ea94-4fd1-a8af-77f10f1ab2e0", username: "super_admin", password: "string", is_active: true, can_login: true },
-        { id: "8849f731-fbc5-4047-bf43-9f7f0d275331", username: "operator", password: "string", is_active: true, can_login: true }
-    ])
-    private readonly _currentUser = signal<User | null>(null);
-    readonly isLoggedIn = computed(() => this._currentUser() !== null);
-    readonly currentUser = this._currentUser.asReadonly();
+    // private readonly _operators = signal<Operator[]>(SEED_OPERATORS);
+    // private readonly _sites = signal<Site[]>(SEED_SITES);
+    // private readonly _currentOperator = signal<Operator | null>(null);
 
-    login(inputUsername: string, passwordInput: string): boolean {
-        const foundUser = this.user().find(u => u.username === inputUsername)
+    // readonly isLoggedIn = computed(() => this._currentOperator() !== null);
+    // readonly currentUser = computed<SafeOperator | null>(() => {
+    //     const op = this._currentOperator();
+    //     if (!op) return null;
+    //     const { password, ...safe } = op;
+    //     return safe;
+    // });
+
+    // readonly currentSite = computed<Site | null>(() => {
+    //     const op = this._currentOperator();
+    //     if (!op) return null;
+    //     return this._sites().find(s => s.id === op.siteId) ?? null;
+    // });
+
+    // login(inputUsername: string, passwordInput: string, selectedDistributionPoint: string): boolean {
+    //     const foundUser = this._operators().find(
+    //         o => o.username.toLowerCase() === inputUsername.trim().toLowerCase()
+    //     );
+
+    //     if (!foundUser || foundUser.password !== passwordInput) {
+    //         console.warn("Credenziali non valide!");
+    //         return false;
+    //     }
+
+    //     // Verifica opzionale della sede di distribuzione selezionata rispetto a quella dell'operatore
+    //     const matchedSite = this._sites().find(s => s.name.toLowerCase() === selectedDistributionPoint.trim().toLowerCase());
+    //     if (matchedSite && foundUser.siteId !== matchedSite.id) {
+    //         console.warn("La sede di distribuzione non corrisponde a quella autorizzata per l'utente.");
+    //         // A seconda dei requisiti si può bloccare o consentire l'accesso. Qui effettuiamo il controllo di coerenza:
+    //         // return false;
+    //     }
+
+    //     this._currentOperator.set(foundUser);
+    //     console.log(`Login riuscito per l'utente: ${foundUser.username} con ruolo ${foundUser.role}`);
+    //     return true;
+    // }
+
+    // logout(): void {
+    //     this._currentOperator.set(null);
+    //     console.log("Logout effettuato.");
+    // }
+    private readonly _operators = signal<Operator[]>(SEED_OPERATORS);
+    private readonly _sites = signal<Site[]>(SEED_SITES);
+    private readonly _currentOperator = signal<Operator | null>(null);
+
+    readonly isLoggedIn = computed(() => this._currentOperator() !== null);
+
+    readonly currentUser = computed<SafeOperator | null>(() => {
+        const op = this._currentOperator();
+        if (!op) return null;
+        const { password, ...safe } = op;
+        return safe;
+    });
+
+    readonly currentSite = computed<Site | null>(() => {
+        const op = this._currentOperator();
+        if (!op) return null;
+        return this._sites().find(s => s.id === op.siteId) ?? null;
+    });
+
+    login(inputUsername: string, passwordInput: string, distributionPointName: string): boolean {
+        const trimmedUsername = inputUsername.trim().toLowerCase();
+        const foundUser = this._operators().find(
+            o => o.username.toLowerCase() === trimmedUsername
+        );
 
         if (!foundUser || foundUser.password !== passwordInput) {
-            console.warn("Credenziali non valide!");
+            console.warn("Credenziali non valide.");
             return false;
         }
 
-        if (!foundUser.is_active || !foundUser.can_login) {
-            console.warn("Account disattivato o non autorizzato al login.");
-            return false;
+        // Verifica opzionale della coerenza con la sede di distribuzione
+        const matchedSite = this._sites().find(
+            s => s.name.toLowerCase().includes(distributionPointName.toLowerCase().trim())
+        );
+
+        if (matchedSite && foundUser.siteId !== matchedSite.id) {
+            console.warn("La sede selezionata non corrisponde a quella assegnata all'operatore.");
         }
 
-        this._currentUser.set(foundUser);
-        console.log(`Login riuscito per l'utente: ${foundUser.username}`);
+        this._currentOperator.set(foundUser);
+        console.log(`Login riuscito per l'utente: ${foundUser.username} con ruolo ${foundUser.role}`);
         return true;
     }
-    
+
     logout(): void {
-        this._currentUser.set(null);
+        this._currentOperator.set(null);
         console.log("Logout effettuato.");
     }
 }

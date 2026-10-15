@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     standalone: true,
@@ -12,9 +13,11 @@ import { AuthService } from '../../../auth.service';
 })
 export class LoginComponent {
     private readonly authService = inject(AuthService);
-    username = signal<string>('m.turelli');
+    private readonly router = inject(Router);
+
+    username = signal<string>('n.turelli');
     password = signal<string>('password');
-    distributionPoint = signal<string>('Negozio Legnano — Via Gilardelli');
+    distributionPoint = signal<string>('Negozio Legnano');
     loginError = signal<string | null>(null);
 
     updateUsername(event: Event): void {
@@ -32,12 +35,20 @@ export class LoginComponent {
         this.distributionPoint.set(val);
     }
 
-    onLogin(): void {
+    async onLogin(): Promise<void> {
         this.loginError.set(null);
-        const success = this.authService.login(this.username(), this.password());
-
-        if (!success) {
-            this.loginError.set("Credenziali non valide o utente non autorizzato.");
+        try {
+            // Gestione corretta della chiamata asincrona al servizio di autenticazione
+            await this.authService.login(
+                this.username(),
+                this.password(),
+                this.distributionPoint()
+            );
+            
+            // Reindirizzamento eseguito solo dopo la risoluzione e il salvataggio dello stato
+            await this.router.navigate(['/home']);
+        } catch (err: any) {
+            this.loginError.set(err.message || "Credenziali non valide o utente non autorizzato.");
         }
     }
 }

@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './user-components/component/login-component/login-component';
+import { HomeComponent } from './user-components/component/home-component/home-component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  ...['dashboard', 'approvals', 'identify', 'person', 'delivery', 'summary', 'success', 'catalog', 'order', 'packages', 'arrived', 'transit', 'low', 'sites', 'expiry']
-    .map((path) => ({ path, loadComponent: () => import('./app').then((m) => m.App) })),
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent },
+  { path: '**', redirectTo: 'login' }
 ];
