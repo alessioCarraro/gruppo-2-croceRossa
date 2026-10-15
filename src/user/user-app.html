@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -73,7 +73,19 @@
       </section>
     }
     @case ('success') {
-      <section class="page success"><div class="success-icon">✓</div><h1>Consegna registrata</h1><p>La tua consegna è stata salvata.</p><article class="card wide"><div class="kv"><span>Prodotti</span><b>{{ count() }}</b></div><div class="kv"><span>Token utilizzati</span><b>{{ used() }}</b></div><div class="kv"><span>Token residui</span><b>{{ remaining() }}</b></div></article><button class="btn primary wide" (click)="go('home')">Torna alla home</button><button class="btn ghost wide" (click)="go('catalog')">Nuova consegna</button></section>
+      <section class="success-page">
+        <div class="success-icon">✓</div>
+        <h1>Consegna registrata</h1>
+        <p>Consegna salvata e stock locale<br>aggiornato.</p>
+        <article class="success-details">
+          <div><span>Beneficiario</span><b>Mario Rossi</b></div>
+          <div><span>Numero prodotti</span><b>{{ count() }}</b></div>
+          <div><span>Token usati</span><b>{{ used() }}</b></div>
+          <div><span>Token residui</span><b class="gold-t">{{ remaining() }} / 575</b></div>
+        </article>
+        <button class="btn primary wide success-home" (click)="go('home')">Torna alla dashboard</button>
+        <button class="btn ghost wide success-identify" (click)="go('identify')">Nuova identificazione</button>
+      </section>
     }
     @case ('card') {
       <section class="person-page">
@@ -95,6 +107,6 @@
       <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
     }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
