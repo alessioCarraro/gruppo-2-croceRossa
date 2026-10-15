@@ -1,4 +1,14 @@
 :host {
+    --bg-color: #FAFAFA;
+    --text-dark: #1E293B;
+    --text-grey: #64748B;
+    --border-color: #E2E8F0;
+    --primary-blue: #185E86;
+    --token-bg-light: #FDF3DF;
+    --token-bg-solid: #F3E5CC;
+    --token-gold: #B48600;
+    --token-text: #8C6A00;
+
     display: block;
     width: 100vw;
     height: 100dvh; /* oppure min-height: 100dvh */

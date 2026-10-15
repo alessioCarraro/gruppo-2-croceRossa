@@ -16,7 +16,6 @@ import { RequestsComponent } from './admin-requests-component/admin-requests-com
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
