@@ -1,73 +1,73 @@
 <div class="app-container">
-  
-  <!-- Header -->
-  <header class="header">
-    <button class="back-btn" aria-label="Indietro">
-      <span class="icon-back"></span>
-    </button>
-    <h1 class="page-title">Riepilogo</h1>
-    <span class="order-id">{{ userInfo().orderId }}</span>
-  </header>
 
-  <main class="main-content">
-    <!-- User Card -->
-    <section class="card user-card">
-      <div class="user-info">
-        <h2 class="user-name">{{ userInfo().name }}</h2>
-        <p class="user-subtitle">token residui dopo l'ordine</p>
-      </div>
-      <div class="token-badge large-badge">
-        <span class="token-icon">T</span>
-        <span class="token-value">{{ userInfo().remainingTokens }} / {{ userInfo().initialTokens }}</span>
-      </div>
-    </section>
+    <!-- Header -->
+    <header class="header">
+        <button class="back-btn" aria-label="Indietro">
+            <span class="icon-back"></span>
+        </button>
+        <h1 class="page-title">Riepilogo</h1>
+        <span class="name">{{ userInfo().name }}</span>
+    </header>
 
-    <!-- Section Title -->
-    <div class="section-header">
-      <span class="dash"></span>
-      <h3 class="section-title">PRODOTTI SELEZIONATI</h3>
-    </div>
+    <main class="main-content">
 
-    <!-- Products List -->
-    <section class="card products-card">
-      @for (product of products(); track product.id; let isLast = $last) {
-        <article class="product-item">
-          <div class="product-details">
-            <h4 class="product-name">{{ product.name }} <span>{{ product.weight }}</span></h4>
-            <p class="product-cost">{{ product.unitTokenCost }} token cad.</p>
-          </div>
-          <div class="product-actions">
-            <div class="product-total-tokens">
-              <span class="token-value-small">{{ product.unitTokenCost * product.quantity }}</span>
-              <span class="token-icon small-icon">T</span>
+        <!-- Section Title -->
+        <div class="section-header">
+            <span class="dash"></span>
+            <h3 class="section-title">PRODOTTI SELEZIONATI</h3>
+        </div>
+
+        <!-- Products List -->
+        <section class="card products-card">
+            @for (product of products(); track product.id; let isLast = $last) {
+            <article class="product-item">
+                <div class="product-details">
+                    <h4 class="product-name">{{ product.name }} <span>{{ product.weight }}</span></h4>
+                    <p class="product-cost">{{ product.unitTokenCost }} token cad.</p>
+                </div>
+                <div class="product-actions">
+                    <div class="product-total-tokens">
+                        <span class="token-value-small">{{ product.unitTokenCost * product.quantity }}</span>
+                        <span class="token-icon small-icon">T</span>
+                    </div>
+                    <div class="quantity-selector">
+                        <button class="qty-btn" (click)="decrementQuantity(product.id)"
+                            aria-label="Riduci quantità">−</button>
+                        <span class="qty-value">{{ product.quantity }}</span>
+                        <button class="qty-btn" (click)="incrementQuantity(product.id)"
+                            aria-label="Aumenta quantità">+</button>
+                    </div>
+                </div>
+            </article>
+            @if (!isLast) {
+            <hr class="divider" />
+            }
+            }
+        </section>
+
+        <!-- Summary Tokens Card -->
+        <section class="summary-card">
+            <div class="summary-item">
+                <p class="summary-text">Token utilizzati con questo ordine</p>
+                <div class="token-badge solid-badge">
+                    <span class="token-icon">T</span>
+                    <span class="token-value">{{ totalTokensUsed() }}</span>
+                </div>
             </div>
-            <div class="quantity-selector">
-              <button class="qty-btn" (click)="decrementQuantity(product.id)" aria-label="Riduci quantità">−</button>
-              <span class="qty-value">{{ product.quantity }}</span>
-              <button class="qty-btn" (click)="incrementQuantity(product.id)" aria-label="Aumenta quantità">+</button>
+            <div class="summary-item">
+                <p class="summary-text">Token residui dopo l'ordine</p>
+                <div class="token-badge large-badge">
+                    <span class="token-icon">T</span>
+                    <span class="token-value">{{ userInfo().remainingTokens }}</span>
+                </div>
             </div>
-          </div>
-        </article>
-        @if (!isLast) {
-          <hr class="divider" />
-        }
-      }
-    </section>
+        </section>
+    </main>
 
-    <!-- Summary Tokens Card -->
-    <section class="summary-card">
-      <p class="summary-text">Token utilizzati con questo ordine</p>
-      <div class="token-badge solid-badge">
-        <span class="token-icon">T</span>
-        <span class="token-value">{{ totalTokensUsed() }}</span>
-      </div>
-    </section>
-  </main>
-
-  <!-- Bottom Action Bar -->
-  <footer class="bottom-bar">
-    <button class="primary-btn" (click)="confirmDelivery()">
-      Conferma consegna
-    </button>
-  </footer>
+    <!-- Bottom Action Bar -->
+    <footer class="bottom-bar">
+        <button class="primary-btn" (click)="confirmDelivery()">
+            Conferma consegna
+        </button>
+    </footer>
 </div>
