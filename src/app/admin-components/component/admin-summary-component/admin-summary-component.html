@@ -9,15 +9,14 @@
         <span class="name">{{ userInfo().name }}</span>
     </header>
 
-    <!-- Main Content (Area scorrevole) -->
+    <!-- Section Title (Fisso sotto l'header) -->
+    <div class="section-header">
+        <span class="dash"></span>
+        <h3 class="section-title">PRODOTTI SELEZIONATI</h3>
+    </div>
+
+    <!-- Main Content (Area scorrevole per lista prodotti e riepilogo token) -->
     <main class="main-content">
-
-        <!-- Section Title -->
-        <div class="section-header">
-            <span class="dash"></span>
-            <h3 class="section-title">PRODOTTI SELEZIONATI</h3>
-        </div>
-
         <!-- Products List -->
         <section class="card products-card">
             @for (product of products(); track product.id; let isLast = $last) {
