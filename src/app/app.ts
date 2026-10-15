@@ -6,11 +6,12 @@ import { PersonProfileComponent } from './component/person-profile-component/per
 import { ProductCatalogComponent } from './component/product-catalog-component/product-catalog-component';
 import { ExitComponent } from './exit-component/exit-component';
 import { SummaryComponent } from './component/summary-component/summary-component';
+import { DeliverySuccessComponent } from './component/delivery-success-component/delivery-success-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent],
+  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

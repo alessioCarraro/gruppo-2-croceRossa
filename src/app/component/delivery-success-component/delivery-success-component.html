@@ -1,0 +1,39 @@
+<div class="fullscreen-container">
+  
+  <!-- Status Header (Icon & Text) -->
+  <header class="status-header">
+    <div class="success-icon-wrapper">
+      <span class="icon-check" aria-hidden="true"></span>
+    </div>
+    <h1 class="title">{{ pageTitle() }}</h1>
+    <p class="subtitle">{{ pageSubtitle() }}</p>
+  </header>
+
+  <!-- Summary Details Card -->
+  <main class="main-content">
+    <section class="summary-card" aria-label="Riepilogo consegna">
+      @for (item of summaryDetails(); track item.label; let isLast = $last) {
+        <div class="summary-row">
+          <span class="summary-label">{{ item.label }}</span>
+          <span class="summary-value" [class.text-highlight]="item.highlight">
+            {{ item.value }}
+          </span>
+        </div>
+        @if (!isLast) {
+          <hr class="divider" />
+        }
+      }
+    </section>
+  </main>
+
+  <!-- Action Buttons -->
+  <footer class="actions-footer">
+    <button class="btn btn-primary" (click)="navigateToDashboard()">
+      Torna alla dashboard
+    </button>
+    <button class="btn btn-secondary" (click)="startNewIdentification()">
+      Nuova identificazione
+    </button>
+  </footer>
+
+</div>
