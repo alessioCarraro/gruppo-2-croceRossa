@@ -22,7 +22,6 @@
   <!-- Area Principale Scrollabile -->
   <main class="main-content">
     
-
     <!-- Sezione: Da Gestire -->
     <section class="dashboard-section">
       <h2 class="section-title"><span class="dash"></span> DA GESTIRE</h2>
@@ -70,10 +69,22 @@
       </div>
     </section>
 
-
-    <!-- Sezione: Cerca Prodotto (Visibile parzialmente) -->
+    <!-- Sezione: Cerca Prodotto -->
     <section class="dashboard-section section-bottom-padding">
       <h2 class="section-title"><span class="dash"></span> CERCA PRODOTTO</h2>
+      <div class="search-container">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Cerca un prodotto..."
+          [ngModel]="searchQuery()" 
+          (ngModelChange)="searchQuery.set($event)"
+        >
+      </div>
     </section>
 
   </main>
