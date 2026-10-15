@@ -27,14 +27,14 @@
                 <div class="user-details">
                     <h2 class="user-name">{{ personDetails().name }}</h2>
                     <p class="user-id">{{ personDetails().id }}</p>
-                    <p class="user-meta">Nato il {{ personDetails().birthDate }}</p>
+                    <p class="user-meta">{{ personDetails().birthDate }}</p>
                     <p class="user-meta">{{ personDetails().address }}</p>
                 </div>
 
                 <div class="status-badges">
                     <span class="badge badge-success">{{ personDetails().status }}</span>
                     <div class="token-badge">
-                        <span class="token-icon">T</span> {{ personDetails().currentTokens }}/{{ personDetails().maxTokens }}
+                        <span class="token-icon">T {{ personDetails().currentTokens }}/{{ personDetails().maxTokens }}</span>
                     </div>
                 </div>
             </div>

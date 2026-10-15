@@ -1,21 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PersonProfileNotoken } from './person-profile-notoken';
+import { PersonProfileNotokenComponent } from './person-profile-notoken';
 
 describe('PersonProfileNotoken', () => {
-  let component: PersonProfileNotoken;
-  let fixture: ComponentFixture<PersonProfileNotoken>;
+  let component: PersonProfileNotokenComponent;
+  let fixture: ComponentFixture<PersonProfileNotokenComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PersonProfileNotoken],
+      imports: [PersonProfileNotokenComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PersonProfileNotoken);
+    fixture = TestBed.createComponent(PersonProfileNotokenComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
+  
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  
 });

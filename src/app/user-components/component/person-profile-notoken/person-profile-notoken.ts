@@ -1,14 +1,24 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-interface PersonData {
-  initials: string;
-  fullName: string;
-  idCode: string;
-  statusLabel: string;
-  tokensRemaining: number;
-  tokensTotal: number;
+interface Transaction {
+  date: string;
+  location: string;
+  operator: string;
+  type: string;
+  itemsCount: number;
+  tokensUsed: number;
 }
+
+interface PersonData {
+    initials: string;
+    fullName: string;
+    idCode: string;
+    statusLabel: string;
+    tokensRemaining: number;
+    tokensTotal: number;
+}
+ 
 
 @Component({
   selector: 'app-person-profile-notoken',
@@ -17,34 +27,65 @@ interface PersonData {
   templateUrl: './person-profile-notoken.html',
   styleUrls: ['./person-profile-notoken.css']
 })
-export class PersonalProfileNotokenComponent {
-  // Stato del profilo gestito tramite Signals
+export class PersonProfileNotokenComponent {
+  // Gestione dello stato tramite Signals
+  readonly personDetails = signal({
+    initials: 'MR',
+    name: 'Mario Rossi',
+    id: 'ID-2024-0481',
+    birthDate: '14/03/1982',
+    address: 'Via Roma 24, Legnano (MI)',
+    status: 'Idoneo',
+    currentTokens: 0,
+    maxTokens: 575
+  });
+
+  readonly familyNucleus = signal({
+    adults: { count: 2, tokensPerPerson: 250 },
+    minors: { count: 1, tokensPerPerson: 75 }
+  });
+
+  readonly history = signal<Transaction[]>([
+    {
+      date: '03 ott',
+      location: 'Negozio Legnano',
+      operator: 'op. M. Turelli',
+      type: 'Consegna',
+      itemsCount: 3,
+      tokensUsed: 95
+    },
+    {
+      date: '14 set',
+      location: 'Parabiago',
+      operator: 'op. G. Carraro',
+      type: 'Consegna',
+      itemsCount: 2,
+      tokensUsed: 60
+    }
+  ]);
+
   public readonly person = signal<PersonData>({
-    initials: 'BN',
-    fullName: 'Luca Bianchi',
-    idCode: 'IO-2024-0377',
-    statusLabel: 'Idoneo',
-    tokensRemaining: 0,
-    tokensTotal: 575
-  });
+        initials: 'BN',
+        fullName: 'Luca Bianchi',
+        idCode: 'IO-2024-0377',
+        statusLabel: 'Idoneo',
+        tokensRemaining: 0,
+        tokensTotal: 575
+    });
 
-  // Stato derivato per la logica condizionale e di visualizzazione
   public readonly isTokensDepleted = computed(() => {
-    return this.person().tokensRemaining <= 0;
-  });
+        return this.person().tokensRemaining <= 0;
+    });
 
-  public readonly progressPercentage = computed(() => {
-    const { tokensRemaining, tokensTotal } = this.person();
-    if (tokensTotal === 0) return 0;
-    return (tokensRemaining / tokensTotal) * 100;
-  });
-
-  // Azioni utente
-  public goBack(): void {
-    console.log('Navigazione: Torna indietro');
+  goBack(): void {
+    console.log('Naviga indietro');
   }
 
-  public requestExtraTokens(): void {
-    console.log('Azione: Richiesta extra token inviata all\'admin');
+  openOptions(): void {
+    console.log('Apri menu opzioni');
+  }
+
+  startDelivery(): void {
+    console.log('Avvia consegna');
   }
 }
