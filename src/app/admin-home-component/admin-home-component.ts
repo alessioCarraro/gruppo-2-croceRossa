@@ -6,7 +6,7 @@ import { Component, signal } from '@angular/core';
   templateUrl: './admin-home-component.html',
   styleUrls: ['./admin-home-component.css']
 })
-export class DashboardComponent {
+export class AdminHomeComponent {
   // Gestione dello stato tramite Signals per reattività ottimizzata
   userProfile = signal({
     name: 'Marta',
