@@ -90,17 +90,20 @@
     @case ('card') {
       <section class="person-page">
         <header class="person-header"><button class="person-back" (click)="go('identify')">‹</button><h1>Scheda persona</h1><button class="person-more" aria-label="Altre azioni" (click)="notify('Altre azioni disponibili')">···</button></header>
-        <article class="person-card">
-          <div class="person-main"><div class="person-avatar">MR</div><div class="person-data"><b>Mario Rossi</b><code>ID-2024-0481</code><small>Nato il 14/03/1982</small><small>Via Roma 24, Legnano (MI)</small></div><div class="person-status"><span>Idoneo</span><strong><i>T</i> {{ remaining() }}</strong></div></div>
-          <div class="person-token"><div class="between"><b>Token famiglia</b><span><strong>{{ remaining() }}</strong> / 575</span></div><div class="person-progress"><i [style.width.%]="remaining() / 575 * 100"></i></div></div>
+        <article class="person-card" [class.tokens-empty]="remaining() <= 0">
+          <div class="person-main"><div class="person-avatar">{{ remaining() <= 0 ? 'BN' : 'MR' }}</div><div class="person-data"><b>{{ remaining() <= 0 ? 'Luca Bianchi' : 'Mario Rossi' }}</b><code>{{ remaining() <= 0 ? 'ID-2024-0377' : 'ID-2024-0481' }}</code>@if (remaining() > 0) {<small>Nato il 14/03/1982</small><small>Via Roma 24, Legnano (MI)</small>} </div><div class="person-status"><span>Idoneo</span><strong><i>T</i> {{ remaining() > 0 ? remaining() : 0 }}</strong></div></div>
+          <div class="person-token"><div class="between"><b>Token famiglia</b><span><strong>{{ remaining() > 0 ? remaining() : 0 }}</strong> / 575</span></div><div class="person-progress"><i [style.width.%]="remaining() > 0 ? remaining() / 575 * 100 : 0"></i></div></div>
           <button class="interview-toggle" [class.open]="interviewOpen()" (click)="toggleInterview()">Verifica identità · intervista <span>⌄</span></button>
           @if (interviewOpen()) { <div class="interview-copy">Identità verificata in sede. Nessuna variazione al nucleo familiare.</div> }
         </article>
+        @if (remaining() <= 0) {
+          <div class="token-empty-banner"><b>ⓘ</b><span><strong>Token mensili esauriti.</strong> Puoi inoltrare all'admin una richiesta di token extra: dovrà approvarla.</span></div>
+        }
         <h2>Nucleo familiare</h2>
         <div class="family-grid"><article><strong>2</strong><small>Adulti · 250 cad.</small></article><article><strong>1</strong><small>Minori · 75 cad.</small></article><article><strong>575</strong><small>Token iniziali</small></article></div>
         <h2>Storico mensile</h2>
         <article class="history-timeline"><div class="history-entry"><span class="timeline-dot"></span><div><small>03 ott · Negozio Legnano · op. M. Turelli</small><b>Consegna · 3 prodotti</b><span>Token usati: 95</span><button (click)="notify('Dettagli e ripeti ordine')">Dettagli e ripeti ordine ›</button></div></div><div class="history-entry"><span class="timeline-dot"></span><div><small>14 set · Parabiago · op. G. Carraro</small><b>Consegna · 2 prodotti</b><span>Token usati: 60</span><button (click)="notify('Dettagli e ripeti ordine')">Dettagli e ripeti ordine ›</button></div></div></article>
-        <button class="btn primary wide person-cta" (click)="go('catalog')">Avvia consegna</button>
+        @if (remaining() <= 0) { <button class="btn primary wide person-cta" (click)="notify('Richiesta di token extra inviata all’admin')">Richiedi extra token all'admin</button> } @else { <button class="btn primary wide person-cta" (click)="go('catalog')">Avvia consegna</button> }
       </section>
     }
     @case ('history') {
