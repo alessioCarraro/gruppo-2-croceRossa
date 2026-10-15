@@ -1,0 +1,79 @@
+<div class="app-container">
+  <!-- Header -->
+  <header class="header">
+    <button class="btn-icon" aria-label="Esci">
+      <span class="icon exit-icon"></span>
+    </button>
+    <div class="header-info">
+      <span class="location">{{ location() }}</span>
+      <h1 class="greeting">
+        Ciao, {{ userName() }}
+        <span class="role-badge">{{ userRole() }}</span>
+      </h1>
+    </div>
+    <button class="btn-icon" aria-label="Profilo">
+      <span class="icon profile-icon"></span>
+    </button>
+  </header>
+
+  <main class="main-content">
+    <!-- Sezione: Merci Oggi -->
+    <section class="section">
+      <h2 class="section-title"><span class="dash"></span> MERCI · OGGI</h2>
+      <div class="stats-grid">
+        @for (stat of stats(); track stat.label) {
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-value" [ngClass]="stat.colorClass">{{ stat.value }}</span>
+              @if (stat.hasArrow) {
+                <span class="icon chevron-right"></span>
+              }
+            </div>
+            <p class="stat-label">{{ stat.label }}</p>
+            @if (stat.action) {
+              <a href="#" class="stat-action">{{ stat.action }}</a>
+            }
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Sezione: Controlli -->
+    <section class="section">
+      <h2 class="section-title"><span class="dash"></span> CONTROLLI</h2>
+      <div class="controls-list">
+        @for (ctrl of controls(); track ctrl.title) {
+          <div class="card control-card">
+            <div class="control-icon-wrapper" [ngClass]="ctrl.iconClass">
+              <span class="icon" [ngClass]="ctrl.icon"></span>
+            </div>
+            <div class="control-info">
+              <h3 class="control-title">{{ ctrl.title }}</h3>
+              <p class="control-subtitle">{{ ctrl.subtitle }}</p>
+            </div>
+            <span class="control-badge" [ngClass]="ctrl.badgeClass">{{ ctrl.badgeValue }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Sezione: Ricerca -->
+    <section class="section search-section">
+      <h2 class="section-title"><span class="dash"></span> CERCA PRODOTTO</h2>
+      <div class="search-bar">
+        <span class="icon search-icon"></span>
+        <input type="text" placeholder="Cerca un prodotto in magazzino..." aria-label="Cerca prodotto" />
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    @for (nav of navItems(); track nav.label) {
+      <button class="nav-btn" [class.active]="nav.isActive" [attr.aria-label]="nav.label">
+        <span class="icon nav-icon" [ngClass]="nav.icon"></span>
+        <span class="nav-label">{{ nav.label }}</span>
+      </button>
+    }
+  </nav>
+</div>
