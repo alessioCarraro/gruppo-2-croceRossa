@@ -110,9 +110,8 @@
 .request-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1rem; /* Mantiene una spaziatura corretta e coerente interna alla sezione */
 }
-
 
 .section-title {
   font-size: 0.75rem;
@@ -122,7 +121,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0;
 }
 
 .dash {
@@ -290,12 +289,11 @@
   color: var(--danger-red);
 }
 
-/* Container della lista */
+/* Container della lista: rimosso margin-top perché ora è gestito dal gap della section */
 .out-of-stock-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
 /* Singolo Item */
@@ -326,13 +324,20 @@
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  min-width: 0; /* FIX: Permette al testo lungo di andare a capo senza sfondare il contenitore Flex */
 }
 
+/* Dati Prodotto */
 .product-name {
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-dark, #1A1A1A);
   margin: 0;
+  
+  /* FIX: Troncamento del testo lungo con i puntini di sospensione (...) */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-status {
@@ -342,7 +347,7 @@
 }
 
 .text-danger {
-  color: #D32F2F; /* Rosso per l'esaurito */
+  color: #D32F2F; 
 }
 
 /* Pulsante Ordina */
@@ -359,14 +364,16 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0; /* FIX: Impedisce al pulsante di essere schiacciato dai testi lunghi */
+  white-space: nowrap; /* FIX: Mantiene il testo "In ordine" su una singola riga */
 }
 
 /* Stato "In Ordine" */
 .btn-order.ordered {
-  background-color: #EBF4FA; /* Azzurro chiaro */
-  color: #31708F; /* Blu scuro desaturato */
+  background-color: #EBF4FA; 
+  color: #31708F; 
   cursor: default;
-  pointer-events: none; /* Disabilita click aggiuntivi */
+  pointer-events: none; 
 }
 
 .icon-check {

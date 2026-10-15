@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
 
-// Le interfacce devono essere dichiarate in cima al file (o in file di dominio separati)
 export interface TokenRequest {
   id: string;
   initials: string;
@@ -21,7 +20,6 @@ export interface OutOfStockProduct {
   isOrdered: boolean;
 }
 
-// Il decoratore @Component deve essere attaccato direttamente alla classe
 @Component({
   selector: 'app-admin-requests',
   standalone: true,
@@ -29,12 +27,11 @@ export interface OutOfStockProduct {
   styleUrls: ['./admin-requests-component.css']
 })
 export class RequestsComponent {
-  // Gestione dello stato tramite Signals
+  
   pageTitle = signal('Richieste');
   pendingCount = signal(3);
   userRole = signal('Admin');
 
-  // Array di dati reattivo per le card delle richieste
   extraTokenRequests = signal<TokenRequest[]>([
     {
       id: 'REQ-01',
@@ -61,7 +58,6 @@ export class RequestsComponent {
     }
   ]);
 
-  // Gestione dello stato dei prodotti esauriti
   outOfStockProducts = signal<OutOfStockProduct[]>([
     {
       id: 'PROD-01',
@@ -99,7 +95,6 @@ export class RequestsComponent {
     console.log(`Apertura storico per ${id}`);
   }
 
-  // Metodo per gestire l'ordine in modo immutabile
   placeOrder(productId: string): void {
     this.outOfStockProducts.update((products) =>
       products.map((product) =>
