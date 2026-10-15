@@ -1,79 +1,73 @@
 <div class="app-container">
-  
-  <!-- Header -->
-  <header class="header">
-    <button class="btn-icon" (click)="goBack()" aria-label="Indietro">
-      <span class="icon-back"></span>
-    </button>
-    <h1 class="page-title">{{ pageTitle() }}</h1>
-    <div class="badge-articles">{{ totalArticles() }}</div>
-  </header>
 
-  <main class="main-content">
-    
-    <!-- Barra di ricerca -->
-    <div class="search-bar">
-      <span class="icon-search" aria-hidden="true"></span>
-      <input type="text" placeholder="Cerca nel catalogo..." aria-label="Cerca nel catalogo" />
-    </div>
-
-    <!-- Filtri orizzontali -->
-    <nav class="filters-container" aria-label="Filtri categoria">
-      @for (filter of filters(); track filter.id) {
-        <button 
-          class="chip" 
-          [class.chip-selected]="filter.selected"
-          (click)="selectFilter(filter.id)">
-          {{ filter.label }}
+    <!-- Header -->
+    <header class="header">
+        <button class="btn-icon" (click)="goBack()" aria-label="Indietro">
+            <span class="icon-back"></span>
         </button>
-      }
-    </nav>
+        <h1 class="page-title">{{ pageTitle() }}</h1>
+        <div class="badge-articles">{{ totalArticles() }}</div>
+    </header>
 
-    <!-- Lista Catalogo -->
-    <section class="catalog-list" aria-label="Catalogo prodotti">
-      @for (item of catalog(); track item.id; let isLast = $last) {
-        <article class="catalog-item">
-          
-          <div class="item-icon-box">
-             <!-- Placeholder visivo per le icone specifiche basato sull'iconType -->
-             <span class="icon-placeholder" [ngClass]="'icon-' + item.iconType"></span>
-          </div>
+    <main class="main-content">
 
-          <div class="item-details">
-            <h2 class="item-name">
-              {{ item.name }} <span class="item-weight" *ngIf="item.weight">{{ item.weight }}</span>
-            </h2>
-            
-            <div class="item-meta">
-              @if (item.stock > 0) {
-                <span class="meta-label">Stock</span>
-                <span class="meta-value">{{ item.stock }}</span>
-                <span class="meta-separator">·</span>
-                <span class="meta-label">scad</span>
-                <span class="meta-value" [class.text-warning]="item.isExpiringSoon">
-                  {{ item.expirationDate }}
-                </span>
-              } @else {
-                <span class="text-danger fw-bold">Esaurito</span>
-              }
-              <span class="meta-separator">·</span>
-              <span class="meta-label">{{ item.tokenCost }} T</span>
-            </div>
-          </div>
+        <!-- Barra di ricerca -->
+        <div class="search-bar">
+            <span class="icon-search" aria-hidden="true"></span>
+            <input type="text" placeholder="Cerca nel catalogo..." aria-label="Cerca nel catalogo" />
+        </div>
 
-          <button 
-            class="btn-restock" 
-            [class.btn-restock-danger]="item.stock === 0"
-            (click)="restockItem(item)">
-            Restock
-          </button>
-        </article>
+        <!-- Filtri orizzontali -->
+        <nav class="filters-container" aria-label="Filtri categoria">
+            @for (filter of filters(); track filter.id) {
+            <button class="chip" [class.chip-selected]="filter.selected" (click)="selectFilter(filter.id)">
+                {{ filter.label }}
+            </button>
+            }
+        </nav>
 
-        @if (!isLast) {
-          <hr class="divider" />
-        }
-      }
-    </section>
+        <!-- Lista Catalogo -->
+        <section class="catalog-list" aria-label="Catalogo prodotti">
+            @for (item of catalog(); track item.id; let isLast = $last) {
+            <article class="catalog-item">
 
-  </main>
+                <div class="item-icon-box">
+                    <!-- Placeholder visivo per le icone specifiche basato sull'iconType -->
+                    <span class="icon-placeholder" [ngClass]="'icon-' + item.iconType"></span>
+                </div>
+
+                <div class="item-details">
+                    <h2 class="item-name">
+                        {{ item.name }} <span class="item-weight" *ngIf="item.weight">{{ item.weight }}</span>
+                    </h2>
+
+                    <div class="item-meta">
+                        @if (item.stock > 0) {
+                        <span class="meta-label">Stock</span>
+                        <span class="meta-value">{{ item.stock }}</span>
+                        <span class="meta-separator">·</span>
+                        <span class="meta-label">scad</span>
+                        <span class="meta-value" [class.text-warning]="item.isExpiringSoon">
+                            {{ item.expirationDate }}
+                        </span>
+                        } @else {
+                        <span class="text-danger fw-bold">Esaurito</span>
+                        }
+                        <span class="meta-separator">·</span>
+                        <span class="meta-label">{{ item.tokenCost }} T</span>
+                    </div>
+                </div>
+
+                <button class="btn-restock" [class.btn-restock-danger]="item.stock === 0" (click)="restockItem(item)">
+                    Richiedi
+                </button>
+            </article>
+
+            @if (!isLast) {
+            <hr class="divider" />
+            }
+            }
+        </section>
+
+    </main>
 </div>
