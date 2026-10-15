@@ -1,0 +1,71 @@
+<div class="app-container">
+  <!-- Header -->
+  <header class="header">
+    <button class="back-btn" (click)="goBack()" aria-label="Indietro">
+      <span class="icon-back"></span>
+    </button>
+    <h1 class="page-title">Altre sedi</h1>
+  </header>
+
+  <main class="main-content">
+    <!-- Search Bar -->
+    <div class="search-container">
+      <span class="icon-search" aria-hidden="true"></span>
+      <input 
+        type="text" 
+        class="search-input" 
+        [value]="searchQuery()" 
+        readonly
+        aria-label="Cerca prodotto" />
+    </div>
+
+    <!-- Product Info -->
+    <section class="product-card">
+      <div class="product-icon-wrapper">
+        <span class="icon-product" aria-hidden="true"></span>
+      </div>
+      <div class="product-info">
+        <h2 class="product-name">{{ productName() }}</h2>
+        <p class="product-status">{{ productStatus() }}</p>
+      </div>
+    </section>
+
+    <!-- Section Title -->
+    <div class="section-header">
+      <span class="dash"></span>
+      <h3 class="section-title">DISPONIBILE, PER VICINANZA</h3>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-card">
+      <div class="table-header">
+        <span class="col-sede">SEDE</span>
+        <span class="col-disp">DISP.</span>
+        <span class="col-dist">DISTANZA</span>
+      </div>
+      
+      <div class="table-body">
+        @for (loc of locations(); track loc.id; let isLast = $last) {
+          <div class="table-row">
+            <span class="col-sede row-name">{{ loc.name }}</span>
+            <span class="col-disp row-value" [ngClass]="getAvailabilityColor(loc.availability)">
+              {{ loc.availability }}
+            </span>
+            <span class="col-dist row-distance">{{ loc.distance }}</span>
+          </div>
+          @if (!isLast) {
+            <hr class="divider" />
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="info-banner" role="note">
+      <span class="icon-info" aria-hidden="true">i</span>
+      <p class="info-text">
+        Le sedi sono ordinate dalla più vicina. Vista in sola lettura della disponibilità.
+      </p>
+    </div>
+  </main>
+</div>

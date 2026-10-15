@@ -11,13 +11,13 @@ interface PersonData {
 }
 
 @Component({
-  selector: 'app-person-profile',
+  selector: 'app-person-profile-notoken',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './person-profile-notoken.html',
   styleUrls: ['./person-profile-notoken.css']
 })
-export class PersonProfileComponent {
+export class PersonalProfileNotokenComponent {
   // Stato del profilo gestito tramite Signals
   public readonly person = signal<PersonData>({
     initials: 'BN',

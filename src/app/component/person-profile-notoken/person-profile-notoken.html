@@ -1,1 +1,64 @@
-<p>person-profile-notoken works!</p>
+<div class="app-container">
+  <!-- Header Navigazione -->
+  <header class="header">
+    <button class="back-btn" (click)="goBack()" aria-label="Indietro">
+      <span class="icon-back"></span>
+    </button>
+    <h1 class="page-title">Scheda persona</h1>
+  </header>
+
+  <main class="main-content">
+    <!-- Card Utente -->
+    <section class="card profile-card" aria-label="Dettagli utente">
+      <div class="profile-header">
+        <div class="avatar-box">
+          <span class="avatar-text">{{ person().initials }}</span>
+        </div>
+        
+        <div class="user-info">
+          <h2 class="user-name">{{ person().fullName }}</h2>
+          <p class="user-id">{{ person().idCode }}</p>
+        </div>
+
+        <div class="badges-container">
+          <span class="status-badge">{{ person().statusLabel }}</span>
+          <div class="token-badge" [class.token-empty]="isTokensDepleted()">
+            <span class="token-icon">T</span>
+            <span class="token-value">{{ person().tokensRemaining }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra di Progresso Token -->
+      <div class="progress-section">
+        <div class="progress-labels">
+          <span class="progress-title">Token famiglia</span>
+          <span class="progress-values" [class.text-red]="isTokensDepleted()">
+            {{ person().tokensRemaining }} <span class="text-grey">/ {{ person().tokensTotal }}</span>
+          </span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" [style.width.%]="progressPercentage()"></div>
+          <div class="progress-handle" [style.left.%]="progressPercentage()"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Avviso Esaurimento Token -->
+    @if (isTokensDepleted()) {
+      <div class="alert-box" role="alert">
+        <span class="icon-alert" aria-hidden="true">!</span>
+        <p class="alert-text">
+          <strong>Token mensili esauriti.</strong> Puoi inoltrare all'admin una richiesta di token extra: dovrà approvarla.
+        </p>
+      </div>
+    }
+  </main>
+
+  <!-- Sticky Footer -->
+  <footer class="bottom-bar">
+    <button class="primary-btn" (click)="requestExtraTokens()">
+      Richiedi extra token all'admin
+    </button>
+  </footer>
+</div>

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ExitComponent } from './exit-component';
+import { StoreLocatorComponent } from './store-locator-component';
 
-describe('ExitComponent', () => {
-  let component: ExitComponent;
-  let fixture: ComponentFixture<ExitComponent>;
+describe('StoreLocatorComponent', () => {
+  let component: StoreLocatorComponent;
+  let fixture: ComponentFixture<StoreLocatorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExitComponent],
+      imports: [StoreLocatorComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ExitComponent);
+    fixture = TestBed.createComponent(StoreLocatorComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
