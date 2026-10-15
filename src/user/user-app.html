@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -20,7 +20,7 @@
     @case ('home') {
       <section class="user-dashboard">
         <header class="dashboard-user-header"><div class="avatar">MT</div><div class="dashboard-user-copy"><small>Negozio Legnano · Via Gilardelli</small><h1>Ciao, Marco</h1></div><span class="user-badge">User</span></header>
-        <button class="btn primary wide identify-button" (click)="go('card')"><span class="identify-icon">⌾</span> Identifica beneficiario</button>
+        <button class="btn primary wide identify-button" (click)="go('identify')"><span class="identify-icon">⌾</span> Identifica beneficiario</button>
         <h2>Oggi</h2>
         <div class="dashboard-kpis">
           <article class="dashboard-kpi"><strong>34</strong><b>Consegne registrate</b><small>solo riepilogo</small></article>
@@ -32,6 +32,13 @@
         <article class="stock-card"><div class="between"><div><b>Scorte sede</b><small>1.284 articoli · 4 categorie</small></div><strong>82%</strong></div><div class="stock-progress"><i></i></div></article>
         <h2>Cerca prodotto</h2>
         <div class="input dashboard-search"><span>⌕</span><input [(ngModel)]="search" placeholder="Cerca un prodotto nel catalogo..."></div>
+      </section>
+    }
+    @case ('identify') {
+      <section class="identify-page">
+        <header class="identify-header"><button class="identify-back" (click)="go('home')">‹</button><h1>Scansiona QR</h1></header>
+        <div class="scanner-panel"><div class="scan-frame"><i></i><i></i><i></i><i></i><span></span></div><p>Inquadra il QR della tessera famiglia</p></div>
+        <div class="identify-controls"><button class="btn primary wide simulate-scan" (click)="identifyBeneficiary()">Simula scansione riuscita</button><div class="identify-divider"><span>oppure codice ID</span></div><div class="id-search"><span>⌕</span><input [(ngModel)]="beneficiaryId" aria-label="Codice ID"><button (click)="identifyBeneficiary()">Cerca</button></div></div>
       </section>
     }
     @case ('catalog') {
@@ -57,6 +64,6 @@
       <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
     }
   }
-  @if (screen() !== 'login') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
