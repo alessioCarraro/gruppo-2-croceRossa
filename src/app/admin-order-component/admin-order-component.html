@@ -1,0 +1,60 @@
+<main class="app-container">
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="icon-button back-btn" aria-label="Indietro" (click)="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <h1 class="title">Ordine</h1>
+    </div>
+    <span class="order-id">{{ orderInfo().orderId }}</span>
+  </header>
+
+  <div class="content-scroll">
+    <section class="order-summary-card">
+      <div class="summary-details">
+        <h2 class="summary-title">{{ orderInfo().title }}</h2>
+        <p class="summary-destination">destinatario: {{ orderInfo().destination }}</p>
+      </div>
+    </section>
+
+    <div class="section-header">
+      <span class="dash">-</span>
+      <h3 class="section-title">PRODOTTI NELL'ORDINE</h3>
+    </div>
+
+    @if (hasProducts()) {
+      <section class="products-card">
+        @for (product of products(); track product.id; let isLast = $last) {
+          <div class="product-item" [class.border-bottom]="!isLast">
+            <div class="product-info">
+              <h4 class="product-name">{{ product.name }}</h4>
+              <p class="product-desc">{{ product.description }}</p>
+            </div>
+            <span class="badge badge-grey">{{ product.status }}</span>
+          </div>
+        }
+      </section>
+    }
+
+    <section class="info-banner">
+      <div class="info-icon-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2b7095" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </div>
+      <p class="info-text">{{ infoMessage() }}</p>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <button class="primary-btn" (click)="submitOrder()">
+      Invia ordine al magazzino centrale
+    </button>
+  </footer>
+
+</main>
