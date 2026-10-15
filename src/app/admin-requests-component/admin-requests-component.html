@@ -1,0 +1,129 @@
+<div class="app-container">
+  
+  <!-- Header Fisso -->
+  <header class="app-header">
+    <button class="back-btn" (click)="goBack()" aria-label="Indietro">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+      </svg>
+    </button>
+    <h1 class="page-title">{{ pageTitle() }}</h1>
+    
+    <div class="header-badges">
+      <span class="badge-count">{{ pendingCount() }}</span>
+      <span class="badge-role">{{ userRole() }}</span>
+    </div>
+  </header>
+
+  <!-- Area Principale Scrollabile -->
+  <main class="main-content">
+    
+    <!-- Sezione: TOKEN EXTRA -->
+    <section class="request-section">
+      <h2 class="section-title"><span class="dash"></span> TOKEN EXTRA</h2>
+      
+      <div class="cards-container">
+        @for (req of extraTokenRequests(); track req.id) {
+          <article class="request-card">
+            
+            <!-- Card Header -->
+            <header class="card-header">
+              <div class="avatar-box">
+                <span class="avatar-text">{{ req.initials }}</span>
+              </div>
+              <div class="user-info">
+                <h3 class="user-name">{{ req.name }}</h3>
+                <p class="user-meta">{{ req.subtitle }}</p>
+              </div>
+              <span class="status-badge pending">{{ req.status }}</span>
+            </header>
+
+            <!-- Card Details Block -->
+            <div class="details-block">
+              <div class="detail-row">
+                <span class="detail-label">Token attuali</span>
+                <span class="detail-value"><strong>{{ req.currentTokens }}</strong> / {{ req.maxTokens }}</span>
+              </div>
+              <div class="detail-row divider">
+                <span class="detail-label">Da concedere (+50%)</span>
+                <span class="detail-value highlight-orange">+{{ req.tokensToGrant }}</span>
+              </div>
+              @if (req.reason) {
+                <div class="detail-row">
+                  <span class="detail-label">Motivo</span>
+                  <span class="detail-value text-bold">{{ req.reason }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Optional History Dropdown -->
+            @if (req.hasHistory) {
+              <button class="dropdown-btn" (click)="toggleHistory(req.id)">
+                <span>Storico beneficiario</span>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                </svg>
+              </button>
+            }
+
+            <!-- Card Actions -->
+            <div class="action-buttons">
+              <button class="btn btn-primary" (click)="acceptRequest(req.id, req.tokensToGrant)">
+                Accetta (+{{ req.tokensToGrant }})
+              </button>
+              <button class="btn btn-outline-danger" (click)="rejectRequest(req.id)">
+                Rifiuta
+              </button>
+            </div>
+
+          </article>
+        }
+      </div>
+    </section>
+
+    <!-- Sezione: PRODOTTO ESAURITO -->
+    <section class="request-section section-bottom-padding">
+      <h2 class="section-title"><span class="dash"></span> PRODOTTO ESAURITO</h2>
+    </section>
+    <div class="out-of-stock-list">
+  @for (product of outOfStockProducts(); track product.id) {
+    <article class="product-item">
+      
+      <!-- Icona Prodotto -->
+      <div class="product-icon-box">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="7" y="7" width="10" height="13" rx="2" ry="2"></rect>
+          <path d="M9 4h6v3H9z"></path>
+        </svg>
+      </div>
+
+      <!-- Informazioni Prodotto -->
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <span class="product-status text-danger">{{ product.status }}</span>
+      </div>
+
+      <!-- Pulsante Azione Dinamico -->
+      <button 
+        class="btn-order" 
+        [class.ordered]="product.isOrdered"
+        [disabled]="product.isOrdered"
+        (click)="placeOrder(product.id)"
+        aria-label="Ordina prodotto">
+        
+        @if (product.isOrdered) {
+          <svg class="icon-check" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          In ordine
+        } @else {
+          Ordina
+        }
+      </button>
+
+    </article>
+  }
+</div>
+
+  </main>
+</div>
