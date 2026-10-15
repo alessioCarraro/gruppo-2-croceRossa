@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -59,9 +59,17 @@
       </section>
     }
     @case ('summary') {
-      <section class="page"><div class="app-title"><button class="back" (click)="go('catalog')">‹</button><h1>Riepilogo consegna</h1></div><div class="card between"><div><b>Mario Rossi</b><small>Token residui</small></div><b class="gold-t">{{ remaining() }} / 575</b></div><h2>Prodotti selezionati</h2>
-        @for (product of products; track product.name) { @if (cart()[product.name]) {<article class="card product"><div class="grow"><b>{{ product.name }}</b><small>{{ product.cost }} token cad. · quantità {{ cart()[product.name] }}</small></div><b class="gold-t">{{ product.cost * cart()[product.name] }} T</b></article>}}
-        <button class="btn primary wide bottom-action" (click)="go('success')">Conferma consegna</button>
+      <section class="summary-page">
+        <header class="summary-header"><button class="back" (click)="go('catalog')">‹</button><h1>Riepilogo</h1><code>ID...0481</code></header>
+        <article class="summary-person"><div><b>Mario Rossi</b><small>token residui dopo l'ordine</small></div><strong><i>T</i> {{ remaining() }} / 575</strong></article>
+        <h2>Prodotti selezionati</h2>
+        <section class="summary-products">
+          @for (product of products; track product.name) { @if (cart()[product.name]) {
+            <article class="summary-product"><div class="grow"><b>{{ product.name }}</b><small>{{ product.cost }} token cad.</small></div><div class="summary-product-side"><strong>{{ product.cost * cart()[product.name] }} <i>T</i></strong><div class="stepper"><button (click)="remove(product.name)">−</button><b>{{ cart()[product.name] }}</b><button (click)="add(product.name)">+</button></div></div></article>
+          }}
+        </section>
+        <article class="summary-used"><b>Token utilizzati con questo ordine</b><strong><i>T</i> {{ used() }}</strong></article>
+        <button class="btn primary wide summary-confirm" (click)="go('success')">Conferma consegna</button>
       </section>
     }
     @case ('success') {
@@ -87,6 +95,6 @@
       <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
     }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
