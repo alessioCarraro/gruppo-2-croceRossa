@@ -1,0 +1,110 @@
+<main class="catalog-layout">
+  <!-- Header Fisso -->
+  <header class="app-header">
+    <button class="btn-back" (click)="goBack()" aria-label="Indietro">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    
+    <h1 class="page-title">Lista beni</h1>
+    
+    <div class="header-user-info">
+      <span class="user-name">{{ beneficiaryName() }}</span>
+      <div class="token-badge">
+        <span class="token-icon">T</span> {{ availableTokens() }}
+      </div>
+    </div>
+  </header>
+
+  <!-- Area Ricerca e Filtri -->
+  <section class="sticky-controls">
+    <div class="search-container">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b8b8b" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Cerca un prodotto..."
+        [ngModel]="searchQuery()" 
+        (ngModelChange)="searchQuery.set($event)"
+      >
+    </div>
+
+    <div class="categories-scroll">
+      @for (category of categories(); track category) {
+        <button 
+          class="category-pill" 
+          [class.active]="category === selectedCategory()"
+          (click)="setCategory(category)">
+          {{ category }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Lista Prodotti -->
+  <section class="product-list">
+    @for (product of products(); track product.id) {
+      <div class="product-card">
+        <div class="product-icon">
+          @if (product.icon === 'bag') {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          } @else if (product.icon === 'bottle') {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"></path><path d="M14 9.3V1.99"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path><line x1="5.52" y1="16" x2="18.48" y2="16"></line></svg>
+          } @else {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M20.5 4.5a3.53 3.53 0 0 0-5 0l-9.5 9.5a3.53 3.53 0 0 0 0 5 3.53 3.53 0 0 0 5 0l9.5-9.5a3.53 3.53 0 0 0 0-5Z"></path></svg>
+          }
+        </div>
+        
+        <div class="product-info">
+          <h2 class="product-name">{{ product.name }}</h2>
+          @if (product.outOfStock) {
+            <p class="product-meta text-error">Esaurito</p>
+          } @else {
+            <p class="product-meta">
+              Stock <strong>{{ product.stock }}</strong> · scad <span [class.text-warning]="product.expiryWarning">{{ product.expiry }}</span>
+            </p>
+          }
+        </div>
+
+        <div class="product-actions">
+          @if (!product.outOfStock) {
+            <div class="price-tag">{{ product.price }} <span class="token-icon-small">T</span></div>
+            <div class="stepper">
+              <button class="stepper-btn" (click)="decrementQuantity(product)" aria-label="Diminuisci quantità">−</button>
+              <span class="stepper-value">{{ product.quantity }}</span>
+              <button class="stepper-btn" (click)="incrementQuantity(product)" aria-label="Aumenta quantità">+</button>
+            </div>
+          } @else {
+            <!-- Blocco aggiornato per logica "Ordina" dell'Admin -->
+            @if (product.isOrdered) {
+              <div class="ordered-badge">
+                <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                In ordine
+              </div>
+            } @else {
+              <button class="btn-order" (click)="orderProduct(product)">
+                Ordina
+              </button>
+            }
+          }
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- FAB Riepilogo -->
+  <button class="fab-summary" (click)="goToSummary()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    </svg>
+    Riepilogo 
+    <span class="summary-count">{{ totalItems() }}</span>
+  </button>
+</main>

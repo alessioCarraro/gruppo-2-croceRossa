@@ -11,15 +11,17 @@ import { DeliverySuccessComponent } from './user-components/component/delivery-s
 import { StoreLocatorComponent } from './user-components/component/store-locator-component/store-locator-component';
 import { LocalWarehouseComponent } from './user-components/component/local-warehouse-component/local-warehouse-component';
 import { PersonProfileNotokenComponent } from './user-components/component/person-profile-notoken/person-profile-notoken';
-import { AdminHomeComponent } from './admin-home-component/admin-home-component';
-import { RequestsComponent } from './admin-requests-component/admin-requests-component';
-import { AdminPersonProfileComponent } from './admin-personal-profile-component/admin-personal-profile-component';
-import { AdminQrScannerComponent } from './admin-qr-scanner-component/admin-qr-scanner-component';
+import { AdminHomeComponent } from './admin-components/component/admin-home-component/admin-home-component';
+import { RequestsComponent } from './admin-components/component/admin-requests-component/admin-requests-component';
+import { AdminPersonProfileComponent } from './admin-components/component/admin-personal-profile-component/admin-personal-profile-component';
+import { AdminQrScannerComponent } from './admin-components/component/admin-qr-scanner-component/admin-qr-scanner-component';
+import { AdminProductCatalogComponent } from './admin-components/component/admin-product-catalog-component/admin-product-catalog-component';
+import { AdminDeliverySuccessComponent } from './admin-components/component/admin-delivery-success-component/admin-delivery-success-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent],
+  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminProductCatalogComponent, AdminDeliverySuccessComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
