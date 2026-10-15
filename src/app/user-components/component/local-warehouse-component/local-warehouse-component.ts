@@ -19,7 +19,7 @@ interface CatalogItem {
 }
 
 @Component({
-  selector: 'app-warehouse',
+  selector: 'app-warehouse-component',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './local-warehouse-component.html',

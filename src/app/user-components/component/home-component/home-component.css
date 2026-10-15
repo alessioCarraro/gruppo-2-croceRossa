@@ -6,7 +6,7 @@
     background-color: #fdfcf8;
     /* Sfondo generale coerente con l'immagine */
     color: #1a1a1a;
-    /* overflow: hidden; */
+    -webkit-overflow-scrolling: touch;
 }
 
 .app-layout {
