@@ -16,6 +16,8 @@ import { AdminHomeComponent } from './admin-components/component/admin-home-comp
 import { RequestsComponent } from './admin-components/component/admin-requests-component/admin-requests-component';
 import { AdminPersonProfileComponent } from './admin-components/component/admin-personal-profile-component/admin-personal-profile-component';
 import { AdminQrScannerComponent } from './admin-components/component/admin-qr-scanner-component/admin-qr-scanner-component';
+import { AdminSummaryComponent } from './admin-components/component/admin-summary-component/admin-summary-component';
+import { AdminWarehouseComponent } from './admin-components/component/admin-warehouse-component/admin-warehouse-component';
 
 @Component({
   selector: 'app-root',

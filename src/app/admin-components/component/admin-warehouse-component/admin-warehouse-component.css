@@ -1,3 +1,9 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 :host {
   display: block;
   width: 100vw;
@@ -6,13 +12,6 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: #1a1a1a;
   overflow-y: auto;
-  box-sizing: border-box;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 .magazzino-container {
@@ -20,57 +19,98 @@
   flex-direction: column;
   padding: 16px;
   gap: 16px;
-  min-width: 360px;
+  width: 100%;
   max-width: 100%;
+  min-width: 0; 
 }
 
+/* Header Base */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: 8px;
+  gap: 8px;
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
   flex: 1;
-  margin-left: 12px;
+  margin: 0 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .icon-button {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  background: #f9f8f6;
+  border-radius: 12px;
+  border: 1px solid #eae5de;
+  background: #fbf9f5;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #333;
+  color: #2c3e50;
+  flex-shrink: 0;
+  padding: 0;
 }
 
-.cart-icon-wrapper {
+/* Raggruppamento Elementi Destri Header */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Badge Totale Articoli */
+.total-articles-badge {
+  background-color: #f5f0e6;
+  color: #1a4f6d;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Icona Scontrino con Badge Contatore Notifica */
+.receipt-icon-wrapper {
   position: relative;
-}
-
-.badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background-color: #0b4b6f;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 0.7rem;
-  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
 }
 
+.order-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #114b79;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Search Bar */
 .search-bar {
   display: flex;
   align-items: center;
@@ -79,6 +119,10 @@
   border-radius: 8px;
   padding: 0 12px;
   height: 48px;
+}
+
+.search-icon {
+  flex-shrink: 0;
 }
 
 .search-bar input {
@@ -95,6 +139,7 @@
   color: #888;
 }
 
+/* Filtri Categorie */
 .filters-scroll {
   overflow-x: auto;
   scrollbar-width: none;
@@ -127,6 +172,7 @@
   background: #eef5f9;
 }
 
+/* Info Banner */
 .info-banner {
   display: flex;
   background: #eef5f9;
@@ -143,6 +189,7 @@
   margin-top: 2px;
 }
 
+/* Lista Prodotti */
 .product-list {
   display: flex;
   flex-direction: column;
@@ -176,12 +223,16 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .product-name {
   font-size: 1rem;
   font-weight: 600;
   color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-meta {
@@ -211,25 +262,39 @@
   margin: 0 2px;
 }
 
+/* Azioni: Ordina / In ordine */
+.product-actions {
+  flex-shrink: 0;
+}
+
 .restock-btn {
   padding: 8px 16px;
-  border: 1px solid #ccc;
-  background: #fff;
-  border-radius: 6px;
+  background-color: #114b79;
+  border: none;
+  border-radius: 16px;
   font-size: 0.85rem;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #ffffff;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+.restock-btn:hover {
+  opacity: 0.9;
 }
 
 .status-added {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #eef5f9;
-  color: #2b7095;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  background-color: #ebf4fa;
+  color: #31708f;
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
