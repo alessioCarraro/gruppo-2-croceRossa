@@ -13,11 +13,12 @@ import { LocalWarehouseComponent } from './user-components/component/local-wareh
 import { PersonProfileNotokenComponent } from './user-components/component/person-profile-notoken/person-profile-notoken';
 import { AdminHomeComponent } from './admin-home-component/admin-home-component';
 import { RequestsComponent } from './admin-requests-component/admin-requests-component';
+import { AdminPersonProfileComponent } from './admin-personal-profile-component/admin-personal-profile-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent],
+  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent, AdminPersonProfileComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
