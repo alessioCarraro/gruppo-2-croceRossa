@@ -15,11 +15,12 @@ import { AdminHomeComponent } from './admin-components/component/admin-home-comp
 import { RequestsComponent } from './admin-components/component/admin-requests-component/admin-requests-component';
 import { AdminPersonProfileComponent } from './admin-components/component/admin-personal-profile-component/admin-personal-profile-component';
 import { AdminQrScannerComponent } from './admin-components/component/admin-qr-scanner-component/admin-qr-scanner-component';
+import { AdminSummaryComponent } from './admin-components/component/admin-summary-component/admin-summary-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent],
+  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, SummaryComponent, AdminSummaryComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

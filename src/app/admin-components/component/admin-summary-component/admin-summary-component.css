@@ -78,31 +78,13 @@ h1, h2, h3, h4, p {
     font-family: monospace;
 }
 
-/* Main Content (Scorrevole) */
-.main-content {
-    flex: 1;
-    overflow-y: auto; /* Abilita lo scroll verticale qui */
-    padding: 0 1.25rem 1.5rem; /* Padding bottom ridotto, non serve più spazio per la barra fixed */
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-/* Cards */
-.card {
-    background-color: #FFFFFF;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-}
-
-/* Section Header */
+/* Section Header (Fisso) */
 .section-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 0.5rem;
+    padding: 0.5rem 1.25rem 1rem;
+    flex-shrink: 0; /* Lo mantiene fisso in alto */
 }
 
 .dash {
@@ -117,6 +99,27 @@ h1, h2, h3, h4, p {
     color: var(--text-grey);
     font-weight: 700;
     letter-spacing: 0.05em;
+}
+
+/* Main Content (Scorrevole) */
+.main-content {
+    flex: 1;
+    overflow-y: auto; /* Abilita lo scroll verticale qui */
+    padding: 0 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* Aggiunta per assicurare che il contenuto scrollabile non si sovrapponga */
+    min-height: 0; 
+}
+
+/* Cards */
+.card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 /* Products List */
