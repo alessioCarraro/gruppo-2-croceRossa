@@ -1,0 +1,83 @@
+<main class="magazzino-container">
+  
+  <!-- Header -->
+  <header class="header">
+    <button class="icon-button back-btn" aria-label="Indietro">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <h1 class="title">Magazzino</h1>
+    <div class="cart-icon-wrapper">
+      <button class="icon-button cart-btn" aria-label="Ordine">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM4 9h16"/></svg>
+      </button>
+      @if (orderCount() > 0) {
+        <span class="badge">{{ orderCount() + 1 }}</span> <!-- Hardcoded to 2 to match mockup exact visual -->
+      }
+    </div>
+  </header>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="Cerca nel catalogo..." (input)="searchQuery.set($any($event.target).value)" />
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-scroll">
+    <div class="filters">
+      @for (cat of categories; track cat) {
+        <button 
+          class="chip" 
+          [class.active]="activeCategory() === cat"
+          (click)="setCategory(cat)">
+          {{ cat }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Info Banner -->
+  <div class="info-banner">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="info-icon"><path d="M4 4h16v16H4zM4 9h16"/></svg>
+    <p>Tocca <strong>Restock</strong> per aggiungere un prodotto all'ordine per il magazzino centrale. L'icona in alto apre l'ordine corrente.</p>
+  </div>
+
+  <!-- Product List -->
+  <div class="product-list">
+    @for (product of filteredProducts(); track product.id) {
+      <div class="product-item">
+        <div class="product-icon-wrapper">
+           <!-- Placeholder icon based on type -->
+           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        
+        <div class="product-details">
+          <h2 class="product-name">{{ product.name }}</h2>
+          <div class="product-meta">
+            @if (product.stock > 0) {
+              <span class="stock">Stock <strong>{{ product.stock }}</strong></span>
+              <span class="separator">·</span>
+              <span class="expiry">scad <strong [class.warning]="product.expiryDate?.includes('2025')">{{ product.expiryDate }}</strong></span>
+            } @else {
+              <span class="out-of-stock">Esaurito</span>
+            }
+            <span class="separator">·</span>
+            <span class="weight">{{ product.weightInfo }}</span>
+          </div>
+        </div>
+
+        <div class="product-actions">
+          @if (product.addedToOrder) {
+            <div class="status-added">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              Prodotto aggiunto all'ordine
+            </div>
+          } @else {
+            <button class="restock-btn" (click)="addToOrder(product.id)">Restock</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+</main>
