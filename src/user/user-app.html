@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock' && screen() !== 'expiring') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock' && screen() !== 'expiring' && screen() !== 'states') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -22,6 +22,20 @@
         <header class="expiring-header"><button class="back" (click)="go('home')">‹</button><h1>Prossimi a scadenza</h1><span class="expiring-count">12</span></header>
         <section class="expiring-table"><div class="expiring-row expiring-heading"><span>Prodotto</span><span>Lotto</span><span>Qtà</span><span>Scad.</span></div><div class="expiring-row"><span>Petto di pollo 1kg</span><code>C-8841</code><span>25</span><strong class="expiry-urgent">30/10/2025</strong></div><div class="expiring-row"><span>Pasta integrale 500g</span><code>C-8830</code><span>58</span><strong class="expiry-urgent">02/11/2025</strong></div><div class="expiring-row"><span>Omogeneizzato frutta</span><code>C-8795</code><span>40</span><strong class="expiry-normal">05/12/2025</strong></div></section>
         <div class="expiring-note"><b>ⓘ</b><span>Dai priorità a questi prodotti nelle prossime consegne.</span></div>
+      </section>
+    }
+    @case ('states') {
+      <section class="states-page">
+        <header class="states-header"><h1>Stati & feedback</h1></header>
+        <p class="states-intro">Stati gestiti con try/catch nei service e sempre mostrati all’utente.</p>
+        <section class="states-list">
+          <article class="state-card state-loading"><span class="state-icon">⌒</span><div><b>Caricamento in corso...</b><small>Recupero scheda</small></div></article>
+          <article class="state-card state-empty"><span class="state-icon">⌕</span><div><b>Nessun risultato</b><small>Nessun nucleo con questo ID</small></div></article>
+          <article class="state-card state-error"><span class="state-icon">!</span><div><b>Errore di caricamento</b><small>Riprova · dettaglio loggato</small></div></article>
+          <article class="state-card state-success"><span class="state-icon">✓</span><div><b>Operazione completata</b><small>Consegna registrata</small></div></article>
+          <article class="state-card state-auth"><span class="state-icon">▢</span><div><b>Autorizzazione insufficiente</b><small>Funzione riservata all’Admin</small></div></article>
+          <article class="state-card state-offline"><span class="state-icon">ⓘ</span><div><b>Servizio non disponibile</b><small>Modalità offline · dati in coda</small></div></article>
+        </section>
       </section>
     }
     @case ('low-stock') {
@@ -172,6 +186,6 @@
       </section>
     }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock' && screen() !== 'expiring') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock' && screen() !== 'expiring' && screen() !== 'states') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
