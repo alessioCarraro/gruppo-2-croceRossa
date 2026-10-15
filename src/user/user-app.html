@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -24,7 +24,7 @@
         <h2>Oggi</h2>
         <div class="dashboard-kpis">
           <article class="dashboard-kpi"><strong>34</strong><b>Consegne registrate</b><small>solo riepilogo</small></article>
-          <button class="dashboard-kpi" (click)="notify('Dettaglio colli in arrivo')"><strong class="blue-number">5</strong><span class="kpi-arrow">›</span><b>Colli in arrivo</b><small class="blue-note">vedi dettaglio</small></button>
+          <button class="dashboard-kpi" (click)="go('shipments')"><strong class="blue-number">5</strong><span class="kpi-arrow">›</span><b>Colli in arrivo</b><small class="blue-note">vedi dettaglio</small></button>
           <button class="dashboard-kpi" (click)="notify('Prodotti in esaurimento')"><strong class="red-number">7</strong><span class="kpi-arrow">›</span><b>Prodotti in esaurimento</b><small class="red-note">riordina</small></button>
           <button class="dashboard-kpi" (click)="notify('Prodotti prossimi a scadenza')"><strong class="gold-number">12</strong><span class="kpi-arrow">›</span><b>Prossimi a scadenza</b><small class="gold-note">entro 14 gg</small></button>
         </div>
@@ -135,7 +135,17 @@
         </div>
       </section>
     }
+    @case ('shipments') {
+      <section class="shipments-page">
+        <header class="shipments-header"><button class="back" (click)="go('home')">‹</button><h1>Colli in arrivo</h1><span class="shipments-count">5</span></header>
+        <p class="shipments-intro">Colli in transito dal magazzino centrale. Tocca un collo per vedere i prodotti.</p>
+        <section class="shipments-list">
+          <button class="shipment-row" (click)="notify('COL-7781 · Dettaglio collo')"><span class="shipment-icon">▱</span><span class="shipment-info"><b>COL-7781</b><small>Alimentari · 24 colli</small></span><strong class="shipment-status transit">In transito</strong></button>
+          <button class="shipment-row" (click)="notify('COL-7780 · Dettaglio collo')"><span class="shipment-icon">▱</span><span class="shipment-info"><b>COL-7780</b><small>Igiene · 12 colli</small></span><strong class="shipment-status delivery">In consegna</strong></button>
+        </section>
+      </section>
+    }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
