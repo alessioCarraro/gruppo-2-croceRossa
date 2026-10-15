@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -17,6 +17,16 @@
         <small class="login-note">Validazione simulata via AuthService · dati sintetici</small>
       </section>
     }
+    @case ('low-stock') {
+      <section class="low-stock-page">
+        <header class="low-stock-header"><button class="back" (click)="go('home')">‹</button><h1>In esaurimento</h1><span class="low-stock-count">7</span></header>
+        <section class="low-stock-list">
+          <article class="low-stock-row"><div class="low-stock-info"><b>Omogeneizzato carne</b><small class="out-label">Esaurito</small></div><button class="restock-button empty-restock" [class.added]="lowStockRequests().includes('Omogeneizzato carne')" [disabled]="lowStockRequests().includes('Omogeneizzato carne')" (click)="requestLowStock('Omogeneizzato carne')">{{ lowStockRequests().includes('Omogeneizzato carne') ? 'Richiesta inoltrata' : 'Restock' }}</button></article>
+          <article class="low-stock-row"><div class="low-stock-info"><b>Pasta integrale 500g</b><small>Stock 58 · sotto soglia</small></div><button class="low-requested" [disabled]="true">✓ &nbsp; Richiesta inoltrata</button></article>
+          <article class="low-stock-row"><div class="low-stock-info"><b>Petto di pollo 1kg</b><small>Stock 25 · sotto soglia</small></div><button class="restock-button" [class.added]="lowStockRequests().includes('Petto di pollo 1kg')" [disabled]="lowStockRequests().includes('Petto di pollo 1kg')" (click)="requestLowStock('Petto di pollo 1kg')">{{ lowStockRequests().includes('Petto di pollo 1kg') ? 'Richiesta inoltrata' : 'Restock' }}</button></article>
+        </section>
+      </section>
+    }
     @case ('home') {
       <section class="user-dashboard">
         <header class="dashboard-user-header"><div class="avatar">MT</div><div class="dashboard-user-copy"><small>Negozio Legnano · Via Gilardelli</small><h1>Ciao, Marco</h1></div><span class="user-badge">User</span></header>
@@ -25,7 +35,7 @@
         <div class="dashboard-kpis">
           <article class="dashboard-kpi"><strong>34</strong><b>Consegne registrate</b><small>solo riepilogo</small></article>
           <button class="dashboard-kpi" (click)="go('shipments')"><strong class="blue-number">5</strong><span class="kpi-arrow">›</span><b>Colli in arrivo</b><small class="blue-note">vedi dettaglio</small></button>
-          <button class="dashboard-kpi" (click)="notify('Prodotti in esaurimento')"><strong class="red-number">7</strong><span class="kpi-arrow">›</span><b>Prodotti in esaurimento</b><small class="red-note">riordina</small></button>
+          <button class="dashboard-kpi" (click)="go('low-stock')"><strong class="red-number">7</strong><span class="kpi-arrow">›</span><b>Prodotti in esaurimento</b><small class="red-note">riordina</small></button>
           <button class="dashboard-kpi" (click)="notify('Prodotti prossimi a scadenza')"><strong class="gold-number">12</strong><span class="kpi-arrow">›</span><b>Prossimi a scadenza</b><small class="gold-note">entro 14 gg</small></button>
         </div>
         <h2>Stato magazzino</h2>
@@ -155,6 +165,6 @@
       </section>
     }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>

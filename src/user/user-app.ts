@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AppBarComponent } from '../app/shared/app-bar.component';
 
 type Product = { name: string; cost: number; category: string; stock: number; expiry: string; icon: string };
-type UserScreen = 'login' | 'home' | 'identify' | 'catalog' | 'summary' | 'success' | 'card' | 'history' | 'network' | 'warehouse' | 'shipments' | 'shipment-detail';
-const screens: UserScreen[] = ['login', 'home', 'identify', 'catalog', 'summary', 'success', 'card', 'history', 'network', 'warehouse', 'shipments', 'shipment-detail'];
+type UserScreen = 'login' | 'home' | 'identify' | 'catalog' | 'summary' | 'success' | 'card' | 'history' | 'network' | 'warehouse' | 'shipments' | 'shipment-detail' | 'low-stock';
+const screens: UserScreen[] = ['login', 'home', 'identify', 'catalog', 'summary', 'success', 'card', 'history', 'network', 'warehouse', 'shipments', 'shipment-detail', 'low-stock'];
 
 @Component({
   selector: 'app-root',
@@ -24,6 +24,7 @@ export class UserApp {
   ];
   readonly cart = signal<Record<string, number>>({ 'Pasta di semola 500g': 1, 'Passata di pomodoro 700g': 2 });
   readonly warehouseOrder = signal<string[]>([]);
+  readonly lowStockRequests = signal<string[]>(['Pasta integrale 500g']);
   readonly screen = signal<UserScreen>(screens.includes(location.pathname.slice(1) as UserScreen) ? location.pathname.slice(1) as UserScreen : 'login');
   readonly toast = signal('');
   readonly interviewOpen = signal(false);
@@ -62,6 +63,10 @@ export class UserApp {
   addToWarehouseOrder(name: string): void {
     this.warehouseOrder.update((order) => order.includes(name) ? order : [...order, name]);
     this.notify('Prodotto aggiunto all’ordine');
+  }
+  requestLowStock(name: string): void {
+    this.lowStockRequests.update((requests) => requests.includes(name) ? requests : [...requests, name]);
+    this.notify('Richiesta restock inoltrata');
   }
   login(): void { this.go('home'); }
   identifyBeneficiary(): void { this.go('card'); }
