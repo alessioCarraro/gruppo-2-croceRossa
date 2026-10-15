@@ -20,21 +20,19 @@ interface Product {
   styleUrls: ['./admin-warehouse-component.css']
 })
 export class AdminWarehouseComponent {
-  // Stato
   searchQuery = signal<string>('');
   activeCategory = signal<string>('Tutti');
   categories = ['Tutti', 'Pasta', 'Omogeneizzati', 'Carne'];
   
-  // Dati di mock basati sull'immagine
   products = signal<Product[]>([
     {
       id: '1',
       name: 'Pasta di semola 500g',
-      stock: 420,
+      stock: 1200,
       expiryDate: '15/05/2026',
       weightInfo: '20 T',
       icon: 'bag',
-      addedToOrder: false,
+      addedToOrder: true,
       category: 'Pasta'
     },
     {
@@ -44,13 +42,13 @@ export class AdminWarehouseComponent {
       expiryDate: '02/11/2025',
       weightInfo: '22 T',
       icon: 'bag',
-      addedToOrder: false,
+      addedToOrder: true,
       category: 'Pasta'
     },
     {
       id: '3',
       name: 'Petto di pollo 1kg',
-      stock: 25,
+      stock: 26,
       expiryDate: '30/10/2025',
       weightInfo: '40 T',
       icon: 'meat',
@@ -63,33 +61,44 @@ export class AdminWarehouseComponent {
       stock: 0,
       weightInfo: '30 T',
       icon: 'jar',
-      addedToOrder: true,
+      addedToOrder: false,
       category: 'Omogeneizzati'
     }
   ]);
 
-  // Derivazioni
   filteredProducts = computed(() => {
     const category = this.activeCategory();
     const query = this.searchQuery().toLowerCase();
     
-    return this.products().filter(p => {
-      const matchCategory = category === 'Tutti' || p.category === category;
-      const matchQuery = p.name.toLowerCase().includes(query);
+    return this.products().filter(product => {
+      const matchCategory = category === 'Tutti' || product.category === category;
+      const matchQuery = product.name.toLowerCase().includes(query);
       return matchCategory && matchQuery;
     });
   });
 
-  orderCount = computed(() => this.products().filter(p => p.addedToOrder).length);
+  // Somma numerica dello stock totale
+  readonly totalArticles = computed(() => {
+    return this.products().reduce((total, product) => total + product.stock, 0);
+  });
 
-  // Azioni
+  // Formattazione nativa in standard italiano
+  readonly formattedTotalArticles = computed(() => {
+    return new Intl.NumberFormat('it-IT').format(this.totalArticles());
+  });
+
+  // Calcolo dei prodotti aggiunti all'ordine (riflette il badge blu sullo scontrino)
+  readonly orderCount = computed(() => {
+    return this.products().filter(product => product.addedToOrder).length;
+  });
+
   setCategory(category: string): void {
     this.activeCategory.set(category);
   }
 
   addToOrder(productId: string): void {
     this.products.update(products => 
-      products.map(p => p.id === productId ? { ...p, addedToOrder: true } : p)
+      products.map(product => product.id === productId ? { ...product, addedToOrder: true } : product)
     );
   }
 }
