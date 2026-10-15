@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -42,10 +42,20 @@
       </section>
     }
     @case ('catalog') {
-      <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Nuova consegna</h1><span class="chip">{{ remaining() }} T</span></div>
-        <div class="input"><input [(ngModel)]="search" placeholder="Cerca un prodotto…"></div><div class="filters">@for (c of ['Tutti','Dispensa','Freschi','Infanzia']; track c) {<button [class.on]="category === c" (click)="category = c">{{ c }}</button>}</div>
-        @for (product of filtered(); track product.name) {<article class="product"><div class="grow"><b>{{ product.name }}</b><small>{{ product.category }} · {{ product.cost }} token</small></div><div class="stepper"><button (click)="remove(product.name)">−</button><b>{{ cart()[product.name] ?? 0 }}</b><button (click)="add(product.name)">+</button></div></article>}
-        <button class="btn primary wide bottom-action" (click)="go('summary')">Riepilogo consegna · {{ count() }}</button>
+      <section class="catalog-page">
+        <div class="catalog-title"><button class="back" (click)="go('card')">‹</button><h1>Mario Rossi</h1><span class="token-badge"><i>T</i>{{ remaining() }}</span></div>
+        <div class="input catalog-search"><span>⌕</span><input [(ngModel)]="search" placeholder="Cerca un prodotto..."></div>
+        <div class="filters">@for (c of ['Tutti','Pasta','Omogeneizzati','Carne','Dispensa']; track c) {<button [class.on]="category === c" (click)="category = c">{{ c }}</button>}</div>
+        <div class="catalog-list">
+          @for (product of filtered(); track product.name) {
+            <article class="catalog-product" [class.out-of-stock]="product.stock === 0">
+              <div class="product-icon">{{ product.icon }}</div>
+              <div class="catalog-product-info"><b>{{ product.name }}</b>@if (product.stock > 0) {<small>Stock {{ product.stock }} · scad <em [class.near-expiry]="product.expiry === '02/11/2025' || product.expiry === '30/10/2025'">{{ product.expiry }}</em></small>} @else {<small class="out-label">Esaurito</small>}</div>
+              @if (product.stock > 0) {<div class="catalog-product-actions"><strong>{{ product.cost }} <i>T</i></strong><div class="stepper"><button (click)="remove(product.name)">−</button><b>{{ cart()[product.name] ?? 0 }}</b><button (click)="add(product.name)">+</button></div></div>} @else {<button class="report-button" (click)="notify('Segnalazione inviata')">△ <span>Segnala</span></button>}
+            </article>
+          }
+        </div>
+        <button class="catalog-summary" (click)="go('summary')"><span>🛒</span> Riepilogo <b>{{ count() }}</b></button>
       </section>
     }
     @case ('summary') {
@@ -77,6 +87,6 @@
       <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
     }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
