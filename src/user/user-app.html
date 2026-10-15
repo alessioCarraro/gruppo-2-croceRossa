@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -18,12 +18,20 @@
       </section>
     }
     @case ('home') {
-      <section class="page">
-        <div class="profile"><div class="avatar">MR</div><div><small>La tua tessera famiglia</small><h1>Ciao, Mario</h1><code>ID-2024-0481</code></div></div>
-        <article class="token-card"><div class="between"><div><small>Token disponibili</small><strong>{{ remaining() }}</strong><small>di 575 token famiglia</small></div><span class="coin">T</span></div><div class="progress"><i [style.width.%]="remaining() / 575 * 100"></i></div></article>
-        <button class="btn primary wide" (click)="go('catalog')">Inizia una nuova consegna</button>
-        <h2>Azioni rapide</h2><div class="quick"><button class="card" (click)="go('card')"><b>▣</b><small>Mostra QR tessera</small></button><button class="card" (click)="go('card')"><b>↗</b><small>Verifica profilo</small></button></div>
-        <h2>Ultima consegna</h2><article class="card"><div class="between"><div><b>03 ottobre 2025</b><small>3 prodotti · Negozio Legnano</small></div><span class="chip ok">Completata</span></div><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="go('history')">Dettagli consegna</button></article>
+      <section class="user-dashboard">
+        <header class="dashboard-user-header"><div class="avatar">MT</div><div class="dashboard-user-copy"><small>Negozio Legnano · Via Gilardelli</small><h1>Ciao, Marco</h1></div><span class="user-badge">User</span></header>
+        <button class="btn primary wide identify-button" (click)="go('card')"><span class="identify-icon">⌾</span> Identifica beneficiario</button>
+        <h2>Oggi</h2>
+        <div class="dashboard-kpis">
+          <article class="dashboard-kpi"><strong>34</strong><b>Consegne registrate</b><small>solo riepilogo</small></article>
+          <button class="dashboard-kpi" (click)="notify('Dettaglio colli in arrivo')"><strong class="blue-number">5</strong><span class="kpi-arrow">›</span><b>Colli in arrivo</b><small class="blue-note">vedi dettaglio</small></button>
+          <button class="dashboard-kpi" (click)="notify('Prodotti in esaurimento')"><strong class="red-number">7</strong><span class="kpi-arrow">›</span><b>Prodotti in esaurimento</b><small class="red-note">riordina</small></button>
+          <button class="dashboard-kpi" (click)="notify('Prodotti prossimi a scadenza')"><strong class="gold-number">12</strong><span class="kpi-arrow">›</span><b>Prossimi a scadenza</b><small class="gold-note">entro 14 gg</small></button>
+        </div>
+        <h2>Stato magazzino</h2>
+        <article class="stock-card"><div class="between"><div><b>Scorte sede</b><small>1.284 articoli · 4 categorie</small></div><strong>82%</strong></div><div class="stock-progress"><i></i></div></article>
+        <h2>Cerca prodotto</h2>
+        <div class="input dashboard-search"><span>⌕</span><input [(ngModel)]="search" placeholder="Cerca un prodotto nel catalogo..."></div>
       </section>
     }
     @case ('catalog') {
