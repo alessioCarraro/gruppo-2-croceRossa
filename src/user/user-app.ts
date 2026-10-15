@@ -23,6 +23,7 @@ export class UserApp {
   readonly cart = signal<Record<string, number>>({ 'Pasta di semola 500g': 1 });
   readonly screen = signal<UserScreen>(screens.includes(location.pathname.slice(1) as UserScreen) ? location.pathname.slice(1) as UserScreen : 'login');
   readonly toast = signal('');
+  readonly interviewOpen = signal(false);
   username = 'm.turelli';
   password = 'password';
   beneficiaryId = 'ID-2024-0481';
@@ -45,5 +46,6 @@ export class UserApp {
   remove(name: string): void { this.cart.update((cart) => { const next = { ...cart, [name]: (cart[name] ?? 1) - 1 }; if (next[name] <= 0) delete next[name]; return next; }); }
   login(): void { this.go('home'); }
   identifyBeneficiary(): void { this.go('card'); }
+  toggleInterview(): void { this.interviewOpen.update((open) => !open); }
   notify(message: string): void { this.toast.set(message); window.setTimeout(() => this.toast.set(''), 2200); }
 }

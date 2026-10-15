@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -58,12 +58,25 @@
       <section class="page success"><div class="success-icon">✓</div><h1>Consegna registrata</h1><p>La tua consegna è stata salvata.</p><article class="card wide"><div class="kv"><span>Prodotti</span><b>{{ count() }}</b></div><div class="kv"><span>Token utilizzati</span><b>{{ used() }}</b></div><div class="kv"><span>Token residui</span><b>{{ remaining() }}</b></div></article><button class="btn primary wide" (click)="go('home')">Torna alla home</button><button class="btn ghost wide" (click)="go('catalog')">Nuova consegna</button></section>
     }
     @case ('card') {
-      <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>La mia tessera</h1></div><article class="card card-qr"><div class="qr">ID-2024-0481</div><h3>Mario Rossi</h3><small>Mostra questo codice all’operatore del negozio.</small></article><article class="token-card"><small>Token famiglia disponibili</small><strong>{{ remaining() }}</strong><small>2 adulti · 1 minore · 575 token iniziali</small></article><button class="btn ghost wide" (click)="notify('Dati del profilo verificati')">Verifica identità</button></section>
+      <section class="person-page">
+        <header class="person-header"><button class="person-back" (click)="go('identify')">‹</button><h1>Scheda persona</h1><button class="person-more" aria-label="Altre azioni" (click)="notify('Altre azioni disponibili')">···</button></header>
+        <article class="person-card">
+          <div class="person-main"><div class="person-avatar">MR</div><div class="person-data"><b>Mario Rossi</b><code>ID-2024-0481</code><small>Nato il 14/03/1982</small><small>Via Roma 24, Legnano (MI)</small></div><div class="person-status"><span>Idoneo</span><strong><i>T</i> {{ remaining() }}</strong></div></div>
+          <div class="person-token"><div class="between"><b>Token famiglia</b><span><strong>{{ remaining() }}</strong> / 575</span></div><div class="person-progress"><i [style.width.%]="remaining() / 575 * 100"></i></div></div>
+          <button class="interview-toggle" [class.open]="interviewOpen()" (click)="toggleInterview()">Verifica identità · intervista <span>⌄</span></button>
+          @if (interviewOpen()) { <div class="interview-copy">Identità verificata in sede. Nessuna variazione al nucleo familiare.</div> }
+        </article>
+        <h2>Nucleo familiare</h2>
+        <div class="family-grid"><article><strong>2</strong><small>Adulti · 250 cad.</small></article><article><strong>1</strong><small>Minori · 75 cad.</small></article><article><strong>575</strong><small>Token iniziali</small></article></div>
+        <h2>Storico mensile</h2>
+        <article class="history-timeline"><div class="history-entry"><span class="timeline-dot"></span><div><small>03 ott · Negozio Legnano · op. M. Turelli</small><b>Consegna · 3 prodotti</b><span>Token usati: 95</span><button (click)="notify('Dettagli e ripeti ordine')">Dettagli e ripeti ordine ›</button></div></div><div class="history-entry"><span class="timeline-dot"></span><div><small>14 set · Parabiago · op. G. Carraro</small><b>Consegna · 2 prodotti</b><span>Token usati: 60</span><button (click)="notify('Dettagli e ripeti ordine')">Dettagli e ripeti ordine ›</button></div></div></article>
+        <button class="btn primary wide person-cta" (click)="go('catalog')">Avvia consegna</button>
+      </section>
     }
     @case ('history') {
       <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
     }
   }
-  @if (screen() !== 'login' && screen() !== 'identify') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
