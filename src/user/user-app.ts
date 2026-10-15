@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AppBarComponent } from '../app/shared/app-bar.component';
 
 type Product = { name: string; cost: number; category: string };
-type UserScreen = 'home' | 'catalog' | 'summary' | 'success' | 'card' | 'history';
-const screens: UserScreen[] = ['home', 'catalog', 'summary', 'success', 'card', 'history'];
+type UserScreen = 'login' | 'home' | 'catalog' | 'summary' | 'success' | 'card' | 'history';
+const screens: UserScreen[] = ['login', 'home', 'catalog', 'summary', 'success', 'card', 'history'];
 
 @Component({
   selector: 'app-root',
@@ -21,8 +21,10 @@ export class UserApp {
     { name: 'Omogeneizzato carne', cost: 30, category: 'Infanzia' },
   ];
   readonly cart = signal<Record<string, number>>({ 'Pasta di semola 500g': 1 });
-  readonly screen = signal<UserScreen>(screens.includes(location.pathname.slice(1) as UserScreen) ? location.pathname.slice(1) as UserScreen : 'home');
+  readonly screen = signal<UserScreen>(screens.includes(location.pathname.slice(1) as UserScreen) ? location.pathname.slice(1) as UserScreen : 'login');
   readonly toast = signal('');
+  username = 'm.turelli';
+  password = 'password';
   search = '';
   category = 'Tutti';
   readonly filtered = computed(() => this.products.filter((product) =>
@@ -40,5 +42,6 @@ export class UserApp {
   }
   add(name: string): void { this.cart.update((cart) => ({ ...cart, [name]: (cart[name] ?? 0) + 1 })); }
   remove(name: string): void { this.cart.update((cart) => { const next = { ...cart, [name]: (cart[name] ?? 1) - 1 }; if (next[name] <= 0) delete next[name]; return next; }); }
+  login(): void { this.go('home'); }
   notify(message: string): void { this.toast.set(message); window.setTimeout(() => this.toast.set(''), 2200); }
 }

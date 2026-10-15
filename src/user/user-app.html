@@ -1,6 +1,22 @@
 <main class="user-shell">
-  <app-bar role="BENEFICIARIO"></app-bar>
+  @if (screen() !== 'login') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
+    @case ('login') {
+      <section class="login-page">
+        <div class="login-brand"><b>FOOD</b><b>NETWORK</b><small>AID PROJECT</small></div>
+        <div class="login-copy"><h1>Accedi</h1><p>Entra nel punto di distribuzione per iniziare le operazioni.</p></div>
+        <form (ngSubmit)="login()">
+          <label for="username">Nome utente</label>
+          <div class="login-input"><span class="user-field-icon">♙</span><input id="username" name="username" [(ngModel)]="username" autocomplete="username"></div>
+          <label for="password">Password</label>
+          <div class="login-input"><span class="lock-field-icon">▢</span><input id="password" name="password" type="password" [(ngModel)]="password" autocomplete="current-password"></div>
+          <label for="distribution-point">Punto di distribuzione</label>
+          <div class="login-input"><span class="pin-field-icon">⌖</span><select id="distribution-point" name="distributionPoint"><option>Negozio Legnano — Via Gilardelli</option></select></div>
+          <button class="btn primary wide login-submit" type="submit">Accedi <span>→</span></button>
+        </form>
+        <small class="login-note">Validazione simulata via AuthService · dati sintetici</small>
+      </section>
+    }
     @case ('home') {
       <section class="page">
         <div class="profile"><div class="avatar">MR</div><div><small>La tua tessera famiglia</small><h1>Ciao, Mario</h1><code>ID-2024-0481</code></div></div>
@@ -33,6 +49,6 @@
       <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
     }
   }
-  <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav>
+  @if (screen() !== 'login') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
