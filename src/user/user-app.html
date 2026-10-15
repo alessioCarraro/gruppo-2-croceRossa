@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -109,7 +109,17 @@
     @case ('history') {
       <section class="page"><div class="app-title"><button class="back" (click)="go('home')">‹</button><h1>Storico consegne</h1></div><article class="card history-item"><span class="chip ok">Completata</span><b>03 ottobre 2025</b><small>Negozio Legnano · 3 prodotti</small><div class="kv"><span>Token utilizzati</span><b>95 T</b></div><button class="btn ghost wide" (click)="notify('Dettagli consegna visualizzati')">Dettagli e ripeti ordine</button></article><article class="card history-item"><span class="chip ok">Completata</span><b>14 settembre 2025</b><small>Parabiago · 2 prodotti</small><div class="kv"><span>Token utilizzati</span><b>60 T</b></div></article></section>
     }
+    @case ('network') {
+      <section class="network-page">
+        <header class="network-header"><button class="back" (click)="go('home')">‹</button><h1>Altre sedi</h1></header>
+        <div class="input network-search"><span>⌕</span><input [(ngModel)]="networkProduct" aria-label="Cerca prodotto nelle altre sedi"></div>
+        <article class="network-product"><div class="network-product-icon">♙</div><div><b>{{ networkProduct }}</b><small>esaurito nel tuo negozio</small></div></article>
+        <h2>Disponibile, per vicinanza</h2>
+        <div class="network-table"><div class="network-row network-heading"><span>Sede</span><span>Disp.</span><span>Distanza</span></div><div class="network-row"><span>Parabiago</span><strong>120</strong><span>4,2 km</span></div><div class="network-row"><span>S. Vittore Olona</span><strong>80</strong><span>5,1 km</span></div><div class="network-row"><span>Caneg​​rate</span><em>25</em><span>6,0 km</span></div><div class="network-row"><span>Busto Garolfo</span><em>0</em><span>7,8 km</span></div></div>
+        <div class="network-note"><b>ⓘ</b><span>Le sedi sono ordinate dalla più vicina. Vista in sola lettura della disponibilità.</span></div>
+      </section>
+    }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>

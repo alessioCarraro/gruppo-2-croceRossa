@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AppBarComponent } from '../app/shared/app-bar.component';
 
 type Product = { name: string; cost: number; category: string; stock: number; expiry: string; icon: string };
-type UserScreen = 'login' | 'home' | 'identify' | 'catalog' | 'summary' | 'success' | 'card' | 'history';
-const screens: UserScreen[] = ['login', 'home', 'identify', 'catalog', 'summary', 'success', 'card', 'history'];
+type UserScreen = 'login' | 'home' | 'identify' | 'catalog' | 'summary' | 'success' | 'card' | 'history' | 'network';
+const screens: UserScreen[] = ['login', 'home', 'identify', 'catalog', 'summary', 'success', 'card', 'history', 'network'];
 
 @Component({
   selector: 'app-root',
@@ -30,6 +30,7 @@ export class UserApp {
   password = 'password';
   beneficiaryId = 'ID-2024-0481';
   search = '';
+  networkProduct = 'Pannolini taglia 4';
   category = 'Tutti';
   readonly filtered = computed(() => this.products.filter((product) =>
     (this.category === 'Tutti' || product.category === this.category) &&
