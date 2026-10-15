@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AppBarComponent } from '../app/shared/app-bar.component';
 
 type Product = { name: string; cost: number; category: string; stock: number; expiry: string; icon: string };
-type UserScreen = 'login' | 'home' | 'identify' | 'catalog' | 'summary' | 'success' | 'card' | 'history' | 'network' | 'warehouse' | 'shipments';
-const screens: UserScreen[] = ['login', 'home', 'identify', 'catalog', 'summary', 'success', 'card', 'history', 'network', 'warehouse', 'shipments'];
+type UserScreen = 'login' | 'home' | 'identify' | 'catalog' | 'summary' | 'success' | 'card' | 'history' | 'network' | 'warehouse' | 'shipments' | 'shipment-detail';
+const screens: UserScreen[] = ['login', 'home', 'identify', 'catalog', 'summary', 'success', 'card', 'history', 'network', 'warehouse', 'shipments', 'shipment-detail'];
 
 @Component({
   selector: 'app-root',

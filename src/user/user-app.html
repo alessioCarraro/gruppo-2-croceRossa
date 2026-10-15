@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -141,11 +141,20 @@
         <p class="shipments-intro">Colli in transito dal magazzino centrale. Tocca un collo per vedere i prodotti.</p>
         <section class="shipments-list">
           <button class="shipment-row" (click)="notify('COL-7781 · Dettaglio collo')"><span class="shipment-icon">▱</span><span class="shipment-info"><b>COL-7781</b><small>Alimentari · 24 colli</small></span><strong class="shipment-status transit">In transito</strong></button>
-          <button class="shipment-row" (click)="notify('COL-7780 · Dettaglio collo')"><span class="shipment-icon">▱</span><span class="shipment-info"><b>COL-7780</b><small>Igiene · 12 colli</small></span><strong class="shipment-status delivery">In consegna</strong></button>
+          <button class="shipment-row" (click)="go('shipment-detail')"><span class="shipment-icon">▱</span><span class="shipment-info"><b>COL-7780</b><small>Igiene · 12 colli</small></span><strong class="shipment-status delivery">In consegna</strong></button>
         </section>
       </section>
     }
+    @case ('shipment-detail') {
+      <section class="shipment-detail-page">
+        <header class="shipment-detail-header"><button class="back" (click)="go('shipments')">‹</button><h1>Collo COL-7780</h1><span class="shipment-status delivery">In consegna</span></header>
+        <article class="shipment-meta"><div><span>Da</span><b>Magazzino Centrale</b></div><div><span>Categoria</span><b>Igiene</b></div><div><span>Totale colli</span><b>12</b></div></article>
+        <h2>Prodotti nel collo</h2>
+        <article class="shipment-products"><div><b>Bagno schiuma 250ml</b><small>Lotto H-3301 · scad 10/03/2027</small><strong>×48</strong></div><div><b>Dentifricio</b><small>Lotto H-3290 · scad 15/06/2027</small><strong>×60</strong></div><div><b>Salviette</b><small>Lotto H-3285 · scad 20/11/2026</small><strong>×30</strong></div></article>
+        <div class="shipment-note"><b>ⓘ</b><span>Vista informativa: la conferma di ricezione è gestita dal magazzino centrale.</span></div>
+      </section>
+    }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
