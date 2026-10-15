@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -119,7 +119,23 @@
         <div class="network-note"><b>ⓘ</b><span>Le sedi sono ordinate dalla più vicina. Vista in sola lettura della disponibilità.</span></div>
       </section>
     }
+    @case ('warehouse') {
+      <section class="warehouse-page">
+        <header class="warehouse-header"><button class="back" (click)="go('home')">‹</button><h1>Magazzino</h1><span class="warehouse-count">1.284 art.</span><button class="warehouse-order-button" aria-label="Ordine al magazzino" (click)="notify(warehouseOrderCount() + ' prodotti nell’ordine')">▣<b>{{ warehouseOrderCount() }}</b></button></header>
+        <div class="input warehouse-search"><span>⌕</span><input [(ngModel)]="search" placeholder="Cerca nel catalogo..."></div>
+        <div class="filters">@for (c of ['Tutti','Pasta','Omogeneizzati','Carne','Dispensa']; track c) {<button [class.on]="category === c" (click)="category = c">{{ c }}</button>}</div>
+        <div class="warehouse-list">
+          @for (product of warehouseFiltered(); track product.name) {
+            <article class="warehouse-product" [class.warehouse-empty]="product.stock === 0">
+              <div class="product-icon">{{ product.icon }}</div>
+              <div class="warehouse-product-info"><b>{{ product.name }}</b>@if (product.stock > 0) {<small>Stock {{ product.stock }} · scad <em [class.near-expiry]="product.expiry === '02/11/2025' || product.expiry === '30/10/2025'">{{ product.expiry }}</em> · {{ product.cost }} T</small>} @else {<small class="out-label">Esaurito <span>· {{ product.cost }} T</span></small>}</div>
+              <button class="restock-button" [class.added]="warehouseOrder().includes(product.name)" [class.empty-restock]="product.stock === 0" [disabled]="warehouseOrder().includes(product.name)" (click)="addToWarehouseOrder(product.name)">{{ warehouseOrder().includes(product.name) ? 'Nell’ordine' : 'Restock' }}</button>
+            </article>
+          }
+        </div>
+      </section>
+    }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
