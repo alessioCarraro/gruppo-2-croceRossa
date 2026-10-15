@@ -1,5 +1,5 @@
 <main class="user-shell">
-  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock') { <app-bar role="BENEFICIARIO"></app-bar> }
+  @if (screen() !== 'login' && screen() !== 'home' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock' && screen() !== 'expiring') { <app-bar role="BENEFICIARIO"></app-bar> }
   @switch (screen()) {
     @case ('login') {
       <section class="login-page">
@@ -15,6 +15,13 @@
           <button class="btn primary wide login-submit" type="submit">Accedi <span>→</span></button>
         </form>
         <small class="login-note">Validazione simulata via AuthService · dati sintetici</small>
+      </section>
+    }
+    @case ('expiring') {
+      <section class="expiring-page">
+        <header class="expiring-header"><button class="back" (click)="go('home')">‹</button><h1>Prossimi a scadenza</h1><span class="expiring-count">12</span></header>
+        <section class="expiring-table"><div class="expiring-row expiring-heading"><span>Prodotto</span><span>Lotto</span><span>Qtà</span><span>Scad.</span></div><div class="expiring-row"><span>Petto di pollo 1kg</span><code>C-8841</code><span>25</span><strong class="expiry-urgent">30/10/2025</strong></div><div class="expiring-row"><span>Pasta integrale 500g</span><code>C-8830</code><span>58</span><strong class="expiry-urgent">02/11/2025</strong></div><div class="expiring-row"><span>Omogeneizzato frutta</span><code>C-8795</code><span>40</span><strong class="expiry-normal">05/12/2025</strong></div></section>
+        <div class="expiring-note"><b>ⓘ</b><span>Dai priorità a questi prodotti nelle prossime consegne.</span></div>
       </section>
     }
     @case ('low-stock') {
@@ -36,7 +43,7 @@
           <article class="dashboard-kpi"><strong>34</strong><b>Consegne registrate</b><small>solo riepilogo</small></article>
           <button class="dashboard-kpi" (click)="go('shipments')"><strong class="blue-number">5</strong><span class="kpi-arrow">›</span><b>Colli in arrivo</b><small class="blue-note">vedi dettaglio</small></button>
           <button class="dashboard-kpi" (click)="go('low-stock')"><strong class="red-number">7</strong><span class="kpi-arrow">›</span><b>Prodotti in esaurimento</b><small class="red-note">riordina</small></button>
-          <button class="dashboard-kpi" (click)="notify('Prodotti prossimi a scadenza')"><strong class="gold-number">12</strong><span class="kpi-arrow">›</span><b>Prossimi a scadenza</b><small class="gold-note">entro 14 gg</small></button>
+          <button class="dashboard-kpi" (click)="go('expiring')"><strong class="gold-number">12</strong><span class="kpi-arrow">›</span><b>Prossimi a scadenza</b><small class="gold-note">entro 14 gg</small></button>
         </div>
         <h2>Stato magazzino</h2>
         <article class="stock-card"><div class="between"><div><b>Scorte sede</b><small>1.284 articoli · 4 categorie</small></div><strong>82%</strong></div><div class="stock-progress"><i></i></div></article>
@@ -165,6 +172,6 @@
       </section>
     }
   }
-  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
+  @if (screen() !== 'login' && screen() !== 'identify' && screen() !== 'card' && screen() !== 'catalog' && screen() !== 'summary' && screen() !== 'success' && screen() !== 'network' && screen() !== 'warehouse' && screen() !== 'shipments' && screen() !== 'shipment-detail' && screen() !== 'low-stock' && screen() !== 'expiring') { <nav class="tabbar"><button [class.active]="screen() === 'home'" (click)="go('home')">⌂<small>Home</small></button><button [class.active]="screen() === 'catalog' || screen() === 'summary'" (click)="go('catalog')">▣<small>Consegne</small></button><button [class.active]="screen() === 'card'" (click)="go('card')">◉<small>Tessera</small></button><button [class.active]="screen() === 'history'" (click)="go('history')">☰<small>Profilo</small></button></nav> }
   @if (toast()) { <div class="toast">{{ toast() }}</div> }
 </main>
