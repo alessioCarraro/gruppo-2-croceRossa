@@ -4,11 +4,12 @@ import { ScannerComponent } from './component/scanner-component/scanner-componen
 import { QrScannerComponent } from './component/scanner1-component/scanner1-component';
 import { PersonProfileComponent } from './component/person-profile-component/person-profile-component';
 import { ProductCatalogComponent } from './component/product-catalog-component/product-catalog-component';
+import { ExitComponent } from './exit-component/exit-component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent],
+  imports: [LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
