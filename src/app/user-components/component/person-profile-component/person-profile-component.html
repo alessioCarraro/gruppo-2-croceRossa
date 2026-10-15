@@ -8,14 +8,6 @@
             </svg>
         </button>
         <h1 class="page-title">Scheda persona</h1>
-        <button class="icon-btn" (click)="openOptions()" aria-label="Opzioni">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="19" cy="12" r="1"></circle>
-                <circle cx="5" cy="12" r="1"></circle>
-            </svg>
-        </button>
     </header>
 
     <div class="scrollable-content">
@@ -34,7 +26,8 @@
                 <div class="status-badges">
                     <span class="badge badge-success">{{ personDetails().status }}</span>
                     <div class="token-badge">
-                        <span class="token-icon">T {{ personDetails().currentTokens }}/{{ personDetails().maxTokens }}</span>
+                        <span class="token-icon">T</span>
+                        <span>{{ personDetails().currentTokens }}/{{ personDetails().maxTokens }}</span>
                     </div>
                 </div>
             </div>
