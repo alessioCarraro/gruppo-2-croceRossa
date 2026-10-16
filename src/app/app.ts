@@ -31,6 +31,7 @@ import { AdminMetroAddExistingItemComponent } from './user-metro-components/comp
 import { AdminMetroAddNewItemComponent } from './user-metro-components/component/admin-metro-add-new-item-component/admin-metro-add-new-item-component';
 import { AdminMetroRestockComponent } from './user-metro-components/component/admin-metro-restock-component/admin-metro-restock-component';
 import { AdminMetroRestockSingleStoreComponent } from './user-metro-components/component/admin-metro-restock-sigle-store-component/admin-metro-restock-sigle-store-component';
+import { AdminMetroRestockSummary } from './user-metro-components/component/admin-metro-restock-summary/admin-metro-restock-summary';
 
 
 
@@ -44,7 +45,8 @@ import { AdminMetroRestockSingleStoreComponent } from './user-metro-components/c
     RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent,
     AdminStoreLocatorComponent, ExpiringProductsComponent, UserMetroDashboardComponent, AdminMetroProfileComponent, AdminMetroStockComponent,
     AdminMetroExpiringProductsComponent, AdminMetroAdminLocationsComponent, AdminMetroUserLocationsComponent, AdminMetroLoadItemComponent,
-    AdminMetroAddExistingItemComponent, AdminMetroAddNewItemComponent, AdminMetroRestockComponent, AdminMetroRestockComponent, AdminMetroRestockSingleStoreComponent
+    AdminMetroAddExistingItemComponent, AdminMetroAddNewItemComponent, AdminMetroRestockComponent, AdminMetroRestockComponent, AdminMetroRestockSingleStoreComponent,
+     AdminMetroRestockSummary
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
