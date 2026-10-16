@@ -20,6 +20,7 @@ import { AdminTrackingNumberComponent } from './admin-components/component/admin
 import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
 import { AdminStoreLocatorComponent } from './admin-components/component/admin-stor-locator-component/admin-stor-locator-component';
 import { ExpiringProductsComponent } from './admin-components/component/expiring-products-component/expiring-products-component';
+import { UserMetroDashboardComponent } from './user-metro-components/component/user-metro-dashboard-component/user-metro-dashboard-component';
 
 
 @Component({
@@ -29,7 +30,7 @@ import { ExpiringProductsComponent } from './admin-components/component/expiring
     RouterOutlet, LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, 
     DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, 
     RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent,
-    AdminStoreLocatorComponent, ExpiringProductsComponent 
+    AdminStoreLocatorComponent, ExpiringProductsComponent, UserMetroDashboardComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
