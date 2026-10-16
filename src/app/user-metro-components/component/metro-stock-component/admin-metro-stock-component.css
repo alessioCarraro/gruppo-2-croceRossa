@@ -1,0 +1,212 @@
+:host {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  background-color: #ffffff;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #1A1A1A;
+}
+
+.inventory-screen {
+  padding: 16px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  background: #F2EFE9;
+  border: none;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+}
+
+.total-badge {
+  background: #EAE6DF;
+  color: #6B6862;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.search-section {
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #F7F5F0;
+  border: 1px solid #EBE7E0;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.search-icon {
+  margin-right: 12px;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 16px;
+  color: #1A1A1A;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #A3A09A;
+}
+
+.filter-chips {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+}
+
+.filter-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  background: #F7F5F0;
+  border: 1px solid #EAE6DF;
+  color: #6B6862;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip.active {
+  background: #E8F0FE;
+  border-color: #2B6BBD;
+  color: #2B6BBD;
+}
+
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  background: #E8F0FE;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.info-icon {
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.info-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #2B6BBD;
+}
+
+.inventory-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.inventory-card {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #EBE7E0;
+}
+
+.inventory-card:last-child {
+  border-bottom: none;
+}
+
+.item-icon-wrapper {
+  background: #ffffff;
+  border: 1px solid #EBE7E0;
+  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.item-meta {
+  font-size: 14px;
+  color: #8E8E93;
+  margin: 0;
+}
+
+.item-meta strong {
+  color: #1A1A1A;
+}
+
+.expiring-soon {
+  color: #B66B26;
+  font-weight: 700;
+}
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: #B66B26;
+}
+
+.quantity-badge {
+  background: #B66B26;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
