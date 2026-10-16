@@ -1,0 +1,70 @@
+<main class="stock-screen">
+  <header class="header">
+    <button class="back-button" aria-label="Torna indietro">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18L9 12L15 6" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <h1 class="title">Aggiungi carico</h1>
+  </header>
+
+  <p class="subtitle">Registra la merce in ingresso da donazioni. Cerca il tipo di prodotto.</p>
+
+  <section class="search-section">
+    <div class="search-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Cerca prodotto in magazzino..." 
+        [value]="searchQuery()" 
+        (input)="updateSearch($event)"
+      />
+    </div>
+
+    @if (searchResult(); as result) {
+      <div class="search-result-card">
+        <div class="result-info">
+          <span class="result-name">{{ result.name }}</span>
+          <span class="result-weight">{{ result.weight }}</span>
+        </div>
+        <div class="result-actions">
+          <button class="add-button" (click)="addToStock()">+</button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="options-container">
+    @for (option of stockOptions(); track option.id) {
+      <button class="option-card">
+        <div class="option-icon-wrapper">
+          @if (option.icon === 'box') {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          } @else {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B66B26" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          }
+        </div>
+        
+        <div class="option-text">
+          <h2 class="option-title">{{ option.title }}</h2>
+          <p class="option-desc">{{ option.description }}</p>
+        </div>
+
+        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    }
+  </section>
+</main>
