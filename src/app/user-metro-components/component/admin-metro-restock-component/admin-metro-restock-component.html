@@ -1,0 +1,53 @@
+<div class="app-container">
+  
+  <main class="main-content">
+    <header class="header">
+      <button class="back-btn" (click)="goBack()" aria-label="Torna indietro">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A2B3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <h1 class="screen-title">Rifornitura sedi</h1>
+    </header>
+
+    <p class="subtitle">Scegli una sede per preparare l'ordine di rifornimento.</p>
+
+    <section class="locations-card">
+      <ul class="locations-list">
+        @for (location of locations(); track location.id) {
+          <li class="location-item" (click)="selectLocation(location)">
+            <div class="location-icon-wrapper">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            
+            <div class="location-details">
+              <h2 class="location-name">{{ location.name }}</h2>
+              <p class="location-requests">Richieste: <strong>{{ location.requests }}</strong></p>
+            </div>
+
+            <div class="badge" [class.badge-active]="location.requests > 0" [class.badge-empty]="location.requests === 0">
+              {{ location.requests }}
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <ul class="nav-list">
+      @for (item of navItems(); track item.id) {
+        <li class="nav-item" [class.active]="item.isActive" (click)="changeTab(item.id)">
+          <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="item.iconPath"></path>
+          </svg>
+          <span class="nav-label">{{ item.label }}</span>
+        </li>
+      }
+    </ul>
+  </nav>
+
+</div>
