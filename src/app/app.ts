@@ -16,12 +16,9 @@ import { AdminHomeComponent } from './admin-components/component/admin-home-comp
 import { RequestsComponent } from './admin-components/component/admin-requests-component/admin-requests-component';
 import { AdminPersonProfileComponent } from './admin-components/component/admin-personal-profile-component/admin-personal-profile-component';
 import { AdminQrScannerComponent } from './admin-components/component/admin-qr-scanner-component/admin-qr-scanner-component';
-import { AdminSummaryComponent } from './admin-components/component/admin-summary-component/admin-summary-component';
-import { AdminWarehouseComponent } from './admin-components/component/admin-warehouse-component/admin-warehouse-component';
 import { AdminTrackingNumberComponent } from './admin-components/component/admin-tracking-number/admin-tracking-number';
-import { AdminOrderComponent } from './admin-components/component/admin-order-component/admin-order-component';
-import { AdminTrackingNumberDitailsComponent } from './admin-components/component/admin-tracking-number-ditails-component/admin-tracking-number-ditails-component';
 import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
+
 
 @Component({
   selector: 'app-root',
@@ -29,8 +26,7 @@ import { LowStockComponent } from './admin-components/component/admin-low-stock-
   imports: [
     RouterOutlet, LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, 
     DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, 
-    RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent,AdminWarehouseComponent, AdminSummaryComponent,
-    AdminOrderComponent, AdminTrackingNumberDitailsComponent, LowStockComponent
+    RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
