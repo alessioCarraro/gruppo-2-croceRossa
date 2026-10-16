@@ -20,10 +20,11 @@ import { AdminTrackingNumberComponent } from './admin-components/component/admin
 import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
 import { AdminStoreLocatorComponent } from './admin-components/component/admin-stor-locator-component/admin-stor-locator-component';
 import { ExpiringProductsComponent } from './admin-components/component/expiring-products-component/expiring-products-component';
-import { UserMetroDashboardComponent } from './user-metro-components/component/user-metro-dashboard-component/user-metro-dashboard-component';
+import { UserMetroDashboardComponent } from './user-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
 import { AdminMetroProfileComponent } from './user-metro-components/component/admin-metro-profile/admin-metro-profile';
-import { AdminMetroStockComponent } from './user-metro-components/component/metro-stock-component/admin-metro-stock-component';
+import { AdminMetroStockComponent } from './user-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
 import { AdminMetroExpiringProductsComponent } from './user-metro-components/component/admin-metro-expiring-products-component/admin-metro-expiring-products-component';
+import { AdminMetroAdminLocationsComponent } from './user-metro-components/component/admin-metro-admin-locations/admin-metro-admin-locations';
 
 
 
@@ -35,7 +36,7 @@ import { AdminMetroExpiringProductsComponent } from './user-metro-components/com
     DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, 
     RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent,
     AdminStoreLocatorComponent, ExpiringProductsComponent, UserMetroDashboardComponent, AdminMetroProfileComponent, AdminMetroStockComponent,
-    AdminMetroExpiringProductsComponent
+    AdminMetroExpiringProductsComponent, AdminMetroAdminLocationsComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
