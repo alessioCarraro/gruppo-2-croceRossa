@@ -15,6 +15,16 @@ export class AdminMetroAddExistingItemComponent {
   public expiryDate = signal<string>('');
   public quantity = signal<string>('0');
 
+  public updateExpiryDate(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.expiryDate.set(input.value);
+  }
+
+  public updateQuantity(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.quantity.set(input.value);
+  }
+
   public saveLoad(): void {
     console.log('Salvataggio carico in corso...', {
       macro: this.macroCategory(),

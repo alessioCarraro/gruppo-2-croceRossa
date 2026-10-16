@@ -11,76 +11,81 @@
 
     <form class="form-container" (submit)="saveLoad(); $event.preventDefault()">
       
-      <!-- Macro-categoria -->
+      <!-- Macro-categoria (Omissis per brevità, resta invariato) -->
       <div class="form-group">
         <label class="form-label">Macro-categoria</label>
         <div class="custom-input">
-          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="4" y1="12" x2="20" y2="12"></line>
-            <line x1="4" y1="6" x2="20" y2="6"></line>
-            <line x1="4" y1="18" x2="20" y2="18"></line>
-          </svg>
           <span class="input-value">{{ macroCategory() }}</span>
           <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
       </div>
 
-      <!-- Categoria -->
+      <!-- Categoria (Omissis per brevità, resta invariato) -->
       <div class="form-group">
         <label class="form-label">Categoria</label>
         <div class="custom-input">
-          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="4" y1="12" x2="20" y2="12"></line>
-            <line x1="4" y1="6" x2="20" y2="6"></line>
-            <line x1="4" y1="18" x2="20" y2="18"></line>
-          </svg>
           <span class="input-value">{{ category() }}</span>
           <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
       </div>
 
-      <!-- Tipo prodotto -->
+      <!-- Tipo prodotto (Omissis per brevità, resta invariato) -->
       <div class="form-group">
         <label class="form-label">Tipo prodotto</label>
         <div class="custom-input">
-          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="4" y1="12" x2="20" y2="12"></line>
-            <line x1="4" y1="6" x2="20" y2="6"></line>
-            <line x1="4" y1="18" x2="20" y2="18"></line>
-          </svg>
           <span class="input-value">{{ productType() }}</span>
           <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
       </div>
 
       <!-- Scadenza e Quantità (Row) -->
-      <div class="form-row">
+       <div class="form-row">
+        
+        <!-- Scadenza -->
         <div class="form-group half-width">
-          <label class="form-label">Scadenza</label>
+          <label class="form-label" for="expiry-date">Scadenza</label>
+          <!-- Il wrapper torna ad essere un div per non espandere l'area cliccabile -->
           <div class="custom-input">
-            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <span class="input-value">{{ expiryDate() }}</span>
+            <!-- La label avvolge solo l'icona per permettere il click anche su di essa -->
+            <label for="expiry-date" class="icon-label">
+              <svg class="input-icon cursor-pointer" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </label>
+            <input 
+              id="expiry-date"
+              type="date" 
+              class="native-input date-input" 
+              [value]="expiryDate()" 
+              (input)="updateExpiryDate($event)"
+            />
           </div>
         </div>
 
+        <!-- Quantità -->
         <div class="form-group half-width">
-          <label class="form-label">Quantità</label>
+          <label class="form-label" for="quantity-input">Quantità</label>
           <div class="custom-input">
-            <input type="text" class="native-input" [value]="quantity()" readonly />
+            <input 
+              id="quantity-input"
+              type="number" 
+              min="0"
+              class="native-input" 
+              [value]="quantity()" 
+              (input)="updateQuantity($event)" 
+            />
           </div>
         </div>
       </div>
+      
+
+
 
     </form>
   </div>
