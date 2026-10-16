@@ -1,0 +1,163 @@
+:host {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1a1a1a;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 100%;
+  gap: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #f0e6d2;
+  background: #fcf9f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex: 1;
+  color: #1a2b3c;
+}
+
+/* Badge implementato come pillola fluida */
+.badge-notification {
+  background-color: #fdf3e1;
+  color: #a37c2c;
+  font-size: 0.85rem;
+  font-weight: 700;
+  height: 28px;
+  min-width: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Tabella Card */
+.table-card {
+  background-color: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout Griglia Tabella */
+.table-header, .table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.5fr 1.2fr;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 8px;
+}
+
+.table-header {
+  border-bottom: 1px solid #eee;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.table-row {
+  font-size: 0.85rem;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #eee;
+}
+
+.text-dark {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.text-gray {
+  color: #666;
+}
+
+/* Allineamenti Colonne */
+.col-qta {
+  text-align: center;
+}
+
+.col-scad {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Badge Scadenza in Tabella */
+.scadenza-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-urgent {
+  background-color: #fdf3e1;
+  color: #a37c2c;
+}
+
+.badge-normal {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+/* Banner Informativo */
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background-color: #faecd4;
+  border-radius: 8px;
+  padding: 16px;
+  color: #8c6a23;
+}
+
+.info-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
