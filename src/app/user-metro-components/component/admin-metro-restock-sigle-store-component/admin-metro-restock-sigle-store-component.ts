@@ -1,21 +1,20 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-interface ProductRequest {
+interface BaseProduct {
   id: string;
   name: string;
   stockMagazzino: number;
   stockSede: number;
-  expiryDate?: string;
   requestedQty: number;
   isAvailable: boolean;
 }
 
-interface CatalogItem {
-  id: string;
-  name: string;
-  stockMagazzino: number;
-  stockSede: number;
+interface ProductRequest extends BaseProduct {
+  expiryDate?: string;
+}
+
+interface CatalogItem extends BaseProduct {
   expiryDate: string;
   isExpiringSoon: boolean;
 }
@@ -27,13 +26,13 @@ interface CatalogItem {
   templateUrl: './admin-metro-restock-sigle-store-component.html',
   styleUrls: ['./admin-metro-restock-sigle-store-component.css']
 })
-export class AdminMetroRestockSigleStoreComponent {
+export class AdminMetroRestockSingleStoreComponent {
+  // Signal che tiene traccia del numero totale di articoli (singole unità) nel carrello
   public cartCount = signal<number>(0);
-  public activeCategory = signal<string>('Tutti');
   
+  public activeCategory = signal<string>('Tutti');
   public categories = signal<string[]>(['Tutti', 'Pasta', 'Omogeneizzati', 'Carne', 'Bevande']);
 
-  // Dati fedeli alla sezione "Richieste della sede"
   public storeRequests = signal<ProductRequest[]>([
     {
       id: 'req_1',
@@ -58,12 +57,11 @@ export class AdminMetroRestockSigleStoreComponent {
       stockMagazzino: 540,
       stockSede: 5,
       expiryDate: '05/12/2025',
-      requestedQty: 60,
+      requestedQty: 0,
       isAvailable: true
     }
   ]);
 
-  // Dati fedeli alla sezione "Catalogo Magazzino" con aggiunte per allungare la lista
   public storeCatalog = signal<CatalogItem[]>([
     {
       id: 'cat_1',
@@ -71,7 +69,9 @@ export class AdminMetroRestockSigleStoreComponent {
       stockMagazzino: 820,
       stockSede: 8,
       expiryDate: '03/11/2025',
-      isExpiringSoon: true
+      isExpiringSoon: true,
+      requestedQty: 0,
+      isAvailable: true
     },
     {
       id: 'cat_2',
@@ -79,15 +79,9 @@ export class AdminMetroRestockSigleStoreComponent {
       stockMagazzino: 1200,
       stockSede: 24,
       expiryDate: '10/08/2026',
-      isExpiringSoon: false
-    },
-    {
-      id: 'cat_3',
-      name: 'Passata di pomodoro 700g',
-      stockMagazzino: 4500,
-      stockSede: 45,
-      expiryDate: '22/01/2027',
-      isExpiringSoon: false
+      isExpiringSoon: false,
+      requestedQty: 0,
+      isAvailable: true
     }
   ]);
 
@@ -99,24 +93,55 @@ export class AdminMetroRestockSigleStoreComponent {
     this.activeCategory.set(category);
   }
 
-  public updateQuantity(item: ProductRequest, delta: number): void {
-    if (!item.isAvailable) return;
-    const newQty = item.requestedQty + delta;
-    if (newQty >= 0) {
-      item.requestedQty = newQty;
-      // In uno scenario reale, cloneremmo l'array per preservare l'immutabilità dello stato
-      this.storeRequests.update(reqs => [...reqs]);
+  // --- Gestione Richieste Sede ---
+  public updateRequestQuantity(itemId: string, delta: number): void {
+    this.storeRequests.update(reqs => 
+      reqs.map(req => {
+        if (req.id === itemId && req.isAvailable) {
+          return { ...req, requestedQty: Math.max(0, req.requestedQty + delta) };
+        }
+        return req;
+      })
+    );
+  }
+
+  public addRequestToCart(item: ProductRequest): void {
+    if (item.isAvailable && item.requestedQty > 0) {
+      // FIX: Aggiungiamo la quantità richiesta effettivamente, non "+ 1"
+      this.cartCount.update(count => count + item.requestedQty);
+      
+      // Rimuove l'elemento dalle richieste dopo l'aggiunta al carrello
+      this.storeRequests.update(reqs => reqs.filter(r => r.id !== item.id));
+      console.log(`Aggiunti ${item.requestedQty} pezzi di ${item.name} dalle richieste`);
     }
   }
 
-  public addToCart(item: ProductRequest): void {
+  // --- Gestione Catalogo Magazzino ---
+  public updateCatalogQuantity(itemId: string, delta: number): void {
+    this.storeCatalog.update(cats => 
+      cats.map(cat => {
+        if (cat.id === itemId && cat.isAvailable) {
+          return { ...cat, requestedQty: Math.max(0, cat.requestedQty + delta) };
+        }
+        return cat;
+      })
+    );
+  }
+
+  public addCatalogToCart(item: CatalogItem): void {
     if (item.isAvailable && item.requestedQty > 0) {
-      this.cartCount.update(count => count + 1);
-      console.log(`Aggiunto ${item.requestedQty} di ${item.name}`);
+      // FIX: Aggiungiamo la quantità richiesta effettivamente, non "+ 1"
+      this.cartCount.update(count => count + item.requestedQty);
+      
+      // Resetta la quantità del catalogo dopo l'aggiunta, senza far sparire la card
+      this.storeCatalog.update(cats => 
+        cats.map(cat => cat.id === item.id ? { ...cat, requestedQty: 0 } : cat)
+      );
+      console.log(`Aggiunti ${item.requestedQty} pezzi di ${item.name} dal catalogo`);
     }
   }
 
   public reviewOrder(): void {
-    console.log('Revisione ordine in corso...');
+    console.log(`Revisione ordine in corso... (Totale pezzi: ${this.cartCount()})`);
   }
 }

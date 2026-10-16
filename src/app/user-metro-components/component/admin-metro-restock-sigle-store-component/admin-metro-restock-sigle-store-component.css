@@ -1,4 +1,4 @@
-/* Custom Properties (Design System Tokens) */
+
 :host {
   --bg-color: #FFFFFF;
   --bg-secondary: #F8F7F3;
@@ -21,7 +21,6 @@
   overflow: hidden;
 }
 
-/* Reset base */
 h1, h2, h3, p { margin: 0; padding: 0; }
 button { background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
 
@@ -32,7 +31,6 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
   position: relative;
 }
 
-/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -43,7 +41,7 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
 .header-left-group {
   display: flex;
   align-items: center;
-  gap: 12px; /* Regola questo valore per aumentare/diminuire lo spazio tra bottone e testo */
+  gap: 12px; 
 }
 
 .back-btn, .cart-btn {
@@ -80,7 +78,6 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
   border: 2px solid var(--bg-color);
 }
 
-/* Ricerca */
 .search-section {
   padding: 0 20px 16px;
 }
@@ -105,7 +102,6 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
 }
 .search-input::placeholder { color: var(--text-muted); }
 
-/* Categorie Scroller */
 .categories-scroller {
   display: flex;
   gap: 8px;
@@ -133,7 +129,6 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
   color: var(--primary-blue);
 }
 
-/* Area di scorrimento principale */
 .scrollable-content {
   flex: 1;
   overflow-y: auto;
@@ -161,7 +156,6 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
   margin-right: 8px;
 }
 
-/* Liste e Cards */
 .items-list {
   display: flex;
   flex-direction: column;
@@ -170,7 +164,7 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
 }
 
 .pb-fab {
-  padding-bottom: 100px; /* Spazio per evitare che l'ultima card sia coperta dal FAB */
+  padding-bottom: 100px;
 }
 
 .product-card {
@@ -266,12 +260,18 @@ button { background: none; border: none; cursor: pointer; padding: 0; font-famil
 
 .spacer { flex: 1; }
 
-/* Stile speciale per Catalogo Card */
 .catalog-card {
   display: flex;
+  flex-direction: column; /* Cambiato da row a column per ospitare le actions sotto */
   gap: 16px;
   padding: 16px;
 }
+
+.catalog-card-header {
+  display: flex;
+  gap: 16px;
+}
+
 .catalog-icon {
   width: 48px;
   height: 48px;
