@@ -1,0 +1,41 @@
+<main class="app-container">
+  
+  <div class="content-wrapper">
+    <!-- Icona di Successo -->
+    <div class="success-icon-container">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <!-- Intestazione -->
+    <h1 class="success-title">Richiesta inviata</h1>
+    <p class="success-subtitle">
+      L'ordine di rifornimento è stato inviato e<br>
+      attende l'approvazione del superadmin.
+    </p>
+
+    <!-- Card Riepilogativa -->
+    <section class="summary-card">
+      <div class="summary-row">
+        <span class="row-label">Sede destinataria</span>
+        <span class="row-value">{{ destinationStore() }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">Numero prodotti</span>
+        <span class="row-value">{{ totalProductsSent() }}</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- Area Bottoni (Call to Action) -->
+  <footer class="action-footer">
+    <button class="btn-primary" (click)="navigateToDashboard()">
+      Torna a Rifornitura sedi
+    </button>
+    <button class="btn-secondary" (click)="startNewOrder()">
+      Torna alla dashboard
+    </button>
+  </footer>
+
+</main>
