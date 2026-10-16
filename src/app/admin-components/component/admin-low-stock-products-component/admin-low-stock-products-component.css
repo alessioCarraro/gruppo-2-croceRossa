@@ -1,0 +1,172 @@
+:host {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1a1a1a;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: #f9f8f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.badge-notification {
+  /* Colori mantenuti come richiesto, ignorando quelli della foto 2 */
+  background-color: #fce8e8;
+  color: #d32f2f;
+  font-size: 0.85rem;
+  font-weight: 700;
+  
+  /* Layout aggiornato per l'effetto "pillola" */
+  height: 28px;
+  min-width: 28px;           /* Garantisce che non sia mai più piccolo di un cerchio se c'è solo un numero */
+  padding: 0 10px;           /* Spaziatura orizzontale per distanziare il testo dai bordi */
+  border-radius: 999px;      /* Un valore in px molto alto garantisce sempre l'effetto pillola */
+  
+  /* Flexbox per l'allineamento perfetto */
+  display: inline-flex;      /* Si adatta alla larghezza del contenuto */
+  align-items: center;
+  justify-content: center;
+  
+  /* Previene che il testo vada a capo forzatamente */
+  white-space: nowrap;
+}
+
+/* Descrizione */
+.description {
+  font-size: 0.85rem;
+  color: #888;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+/* Card Prodotti */
+.products-card {
+  background-color: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 12px;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #eee;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.product-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.product-status {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.text-red {
+  color: #d32f2f;
+}
+
+.text-warning {
+  color: #b77b1b;
+}
+
+/* Azioni / Bottoni */
+.add-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-btn:active, .add-btn:hover {
+  background-color: #f0f0f0;
+}
+
+/* Stili aggiornati per il bottone di annullamento ordine */
+.status-added {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef5f9;
+  color: #2b7095;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer; /* Indica che l'elemento è interattivo */
+  font-family: inherit;
+  transition: all 0.2s ease-in-out;
+}
+
+.status-added:hover {
+  background: #d8eaf5;
+  border-color: #2b7095;
+}
+
+.status-added:active {
+  background: #c4def0;
+}
