@@ -28,6 +28,7 @@ import { AdminMetroAdminLocationsComponent } from './user-metro-components/compo
 import { AdminMetroUserLocationsComponent } from './user-metro-components/component/admin-metro-user-locations/admin-metro-user-locations';
 import { AdminMetroLoadItemComponent } from './user-metro-components/component/admin-metro-load-item-component/admin-metro-load-item-component';
 import { AdminMetroAddExistingItemComponent } from './user-metro-components/component/admin-metro-add-existing-item-component/admin-metro-add-existing-item-component';
+import { AdminMetroAddNewItemComponent } from './user-metro-components/component/admin-metro-add-new-item-component/admin-metro-add-new-item-component';
 
 
 
@@ -40,7 +41,7 @@ import { AdminMetroAddExistingItemComponent } from './user-metro-components/comp
     RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent,
     AdminStoreLocatorComponent, ExpiringProductsComponent, UserMetroDashboardComponent, AdminMetroProfileComponent, AdminMetroStockComponent,
     AdminMetroExpiringProductsComponent, AdminMetroAdminLocationsComponent, AdminMetroUserLocationsComponent, AdminMetroLoadItemComponent,
-    AdminMetroAddExistingItemComponent
+    AdminMetroAddExistingItemComponent, AdminMetroAddNewItemComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
