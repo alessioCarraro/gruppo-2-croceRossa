@@ -18,6 +18,7 @@ import { AdminPersonProfileComponent } from './admin-components/component/admin-
 import { AdminQrScannerComponent } from './admin-components/component/admin-qr-scanner-component/admin-qr-scanner-component';
 import { AdminTrackingNumberComponent } from './admin-components/component/admin-tracking-number/admin-tracking-number';
 import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
+import { AdminStoreLocatorComponent } from './admin-components/component/admin-stor-locator-component/admin-stor-locator-component';
 
 
 @Component({
@@ -26,7 +27,8 @@ import { LowStockComponent } from './admin-components/component/admin-low-stock-
   imports: [
     RouterOutlet, LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, 
     DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, 
-    RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent
+    RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent,
+    AdminStoreLocatorComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
