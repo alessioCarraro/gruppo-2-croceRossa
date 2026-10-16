@@ -1,0 +1,72 @@
+<div class="app-layout">
+  
+  <!-- Main Scrollable Content -->
+  <main class="main-content">
+    
+    <!-- Top Header -->
+    <header class="header">
+      <button class="icon-btn" (click)="goBack()" aria-label="Torna indietro">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h1 class="page-title">Profilo</h1>
+    </header>
+
+    <!-- Profile Overview Card -->
+    <section class="profile-card">
+      <div class="avatar">{{ user().initials }}</div>
+      <h2 class="user-name">{{ user().name }}</h2>
+      <p class="user-location">{{ user().location }}</p>
+      <div class="badge">{{ user().badge }}</div>
+    </section>
+
+    <!-- Data List Section -->
+    <section class="data-section">
+      <!-- Container modificato per allineare titolo e bottone -->
+      <div class="section-header-wrapper">
+        <div class="section-header">
+          <span class="dash"></span>
+          <h3 class="section-title">DATI</h3>
+        </div>
+        <!-- Nuovo pulsante di modifica con stile icon-btn rimpicciolito -->
+        <button class="icon-btn small-btn" (click)="onEditProfile()" aria-label="Modifica dati personali">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <article class="data-card">
+        @for (item of infoItems(); track item.id) {
+          <div class="data-row">
+            <span class="data-label">{{ item.label }}</span>
+            <span class="data-value" [class.monospace]="item.isMonospace">{{ item.value }}</span>
+          </div>
+        }
+      </article>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    @for (nav of navItems(); track nav.id) {
+      <button class="nav-item" [class.active]="nav.isActive" (click)="onNavClick(nav.id)">
+        <div class="nav-icon">
+           @if (nav.iconName === 'home') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+           } @else if (nav.iconName === 'inventory') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+           } @else if (nav.iconName === 'upload') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+           } @else {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+           }
+        </div>
+        <span class="nav-label">{{ nav.label }}</span>
+      </button>
+    }
+  </nav>
+
+</div>
