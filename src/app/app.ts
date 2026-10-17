@@ -46,6 +46,7 @@ import { SuperAdminRestoockComponent } from './super-admin-components/component/
 import { SuperAdminRestockSingleStoreComponent } from './super-admin-components/component/super-admin-restock-single-store-component/super-admin-restock-single-store-component';
 import { SuperAdminRestockSummary } from './super-admin-components/component/super-admin-restock-summary-component/super-admin-restock-summary-component';
 import { SuperAdminOrderSentConfirmationComponent } from './super-admin-components/component/super-admin-order-sent-confirmation-component/super-admin-order-sent-confirmation-component';
+import { SuperAdminApprovalRequestsComponent } from './super-admin-components/component/super-admin-approval-requests-component/super-admin-approval-requests-component';
 
 
 
@@ -63,7 +64,7 @@ import { SuperAdminOrderSentConfirmationComponent } from './super-admin-componen
      AdminMetroRestockSummary, AdminMetroRequestSentComponent, SuperAdminDashboardComponent, SuperAdminProfileComponent, SuperAdminMetroStockComponent,
      SuperAdminExpiringProductsComponent, SuperAdminAdminLocationsComponent, SuperAdminUserLocationsComponent, SuperAdminLoadItemComponent,
      SuperAdminAddExistingItemComponent, SuperAdminAddNewItemComponent, SuperAdminRestoockComponent, SuperAdminRestockSingleStoreComponent,
-     SuperAdminRestockSummary, SuperAdminOrderSentConfirmationComponent
+     SuperAdminRestockSummary, SuperAdminOrderSentConfirmationComponent, SuperAdminApprovalRequestsComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

@@ -1,0 +1,91 @@
+<div class="app-layout">
+  
+  <main class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <button class="back-btn" (click)="goBack()" aria-label="Indietro">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h1 class="page-title">Approvazioni</h1>
+      <span class="total-badge">{{ totalRequests() }}</span>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-bar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Cerca per sede..." />
+      </div>
+    </div>
+
+    <!-- Helper Text -->
+    <p class="helper-text">
+      Richieste d'ordine dalle sedi, in attesa di conferma.
+    </p>
+
+    <!-- Approvals List Container -->
+    <section class="approvals-container">
+      @for (req of requests(); track req.id) {
+        <article class="approval-item" (click)="selectRequest(req)">
+          <div class="approval-avatar">
+            {{ req.initials }}
+          </div>
+          
+          <div class="approval-details">
+            <h2 class="approval-location">{{ req.location }}</h2>
+            <p class="approval-meta">
+              {{ req.userName }} · {{ req.productCount }} prodotti · {{ req.date }} {{ req.time }}
+            </p>
+          </div>
+
+          <!-- Sostituito il badge con l'icona chevron -->
+          <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </article>
+      }
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    @for (nav of navItems(); track nav.id) {
+      <button class="nav-item" [class.active]="nav.isActive" (click)="onNavClick(nav.id)">
+        <div class="nav-icon">
+           @if (nav.iconName === 'home') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+             </svg>
+           } @else if (nav.iconName === 'inventory') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+             </svg>
+           } @else if (nav.iconName === 'upload') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+             </svg>
+           } @else if (nav.iconName === 'restock') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <rect x="1" y="3" width="15" height="13"></rect>
+               <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+               <circle cx="5.5" cy="18.5" r="2.5"></circle>
+               <circle cx="18.5" cy="18.5" r="2.5"></circle>
+             </svg>
+           } @else if (nav.iconName === 'approve') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M9 11l3 3L22 4"></path>
+               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+             </svg>
+           }
+        </div>
+        <span class="nav-label">{{ nav.label }}</span>
+      </button>
+    }
+  </nav>
+
+</div>
