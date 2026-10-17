@@ -2,11 +2,10 @@
 
     <!-- Header -->
     <header class="header">
-        <button class="back-btn" aria-label="Indietro">
+        <button class="back-btn" (click)="goBack()" aria-label="Indietro">
             <span class="icon-back"></span>
         </button>
         <h1 class="page-title">Riepilogo</h1>
-        <span class="name">{{ userInfo().name }}</span>
     </header>
 
     <main class="main-content">
@@ -22,12 +21,12 @@
             @for (product of products(); track product.id; let isLast = $last) {
             <article class="product-item">
                 <div class="product-details">
-                    <h4 class="product-name">{{ product.name }} <span>{{ product.weight }}</span></h4>
-                    <p class="product-cost">{{ product.unitTokenCost }} token cad.</p>
+                    <h4 class="product-name">{{ product.name }}</h4>
+                    <p class="product-cost">{{ product.price }} token cad.</p>
                 </div>
                 <div class="product-actions">
                     <div class="product-total-tokens">
-                        <span class="token-value-small">{{ product.unitTokenCost * product.quantity }}</span>
+                        <span class="token-value-small">{{ product.price * product.quantity }}</span>
                         <span class="token-icon small-icon">T</span>
                     </div>
                     <div class="quantity-selector">
@@ -58,7 +57,7 @@
                 <p class="summary-text">Token residui dopo l'ordine</p>
                 <div class="token-badge large-badge">
                     <span class="token-icon">T</span>
-                    <span class="token-value">{{ userInfo().remainingTokens }}</span>
+                    <span class="token-value">{{ remainingTokens() }}</span>
                 </div>
             </div>
         </section>
@@ -67,7 +66,7 @@
     <!-- Bottom Action Bar -->
     <footer class="bottom-bar">
         <button class="primary-btn" (click)="confirmDelivery()">
-            Conferma consegna
+            Consegna confermata
         </button>
     </footer>
 </div>

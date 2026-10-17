@@ -6,6 +6,7 @@ import { StoreLocatorComponent } from './user-components/store-locator-component
 import { PersonProfileComponent } from './user-components/person-profile-component/person-profile-component';
 import { PersonProfileNotokenComponent } from './user-components/person-profile-notoken/person-profile-notoken';
 import { ProductCatalogComponent } from './user-components/product-catalog-component/product-catalog-component';
+import { SummaryComponent } from './user-components/summary-component/summary-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'person-profile', component: PersonProfileComponent },
   { path: 'person-profile-no-token', component: PersonProfileNotokenComponent },
   { path: 'product-catalog', component: ProductCatalogComponent },
+  { path: 'summary', component: SummaryComponent },
   { path: '**', redirectTo: 'login' }
 ];
