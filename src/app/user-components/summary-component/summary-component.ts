@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { CartStateService, CatalogProduct } from '../../services/user-services/cart-service';
+import { CartStateService } from '../../services/user-services/cart-service';
 
 @Component({
   selector: 'app-summary',
@@ -38,6 +38,11 @@ export class SummaryComponent {
   }
 
   public confirmDelivery(): void {
+    if (this.products().length === 0) {
+      console.warn('Impossibile confermare: nessun prodotto selezionato.');
+      return;
+    }
     console.log('Consegna confermata. Token utilizzati:', this.totalTokensUsed());
+    // Eventuale navigazione successiva o reset del carrello
   }
 }
