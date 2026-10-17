@@ -1,0 +1,95 @@
+<div class="app-layout">
+  
+  <main class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <button class="back-btn" (click)="goBack()" aria-label="Indietro">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h1 class="page-title">Richiesta d'ordine</h1>
+    </header>
+
+    <!-- Order Info Card -->
+    <section class="info-card">
+      <div class="info-row">
+        <span class="info-label">Sede</span>
+        <span class="info-value">{{ orderInfo().location }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Richiedente</span>
+        <span class="info-value">{{ orderInfo().admin }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Inviata</span>
+        <span class="info-value">{{ orderInfo().date }} · {{ orderInfo().time }}</span>
+      </div>
+    </section>
+
+    <!-- Section Title -->
+    <div class="section-header">
+      <span class="dash"></span>
+      <h2 class="section-title">PRODOTTI RICHIESTI</h2>
+    </div>
+
+    <!-- Products List Container -->
+    <section class="products-container">
+      @for (product of requestedProducts(); track product.id) {
+        <article class="product-item">
+          <div class="product-details">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-category">{{ product.category }}</p>
+          </div>
+          
+          <div class="product-actions">
+            <!-- Controlli Quantità -->
+            <div class="quantity-control">
+              <span class="product-quantity">{{ product.quantity }}</span>
+              <div class="quantity-arrows">
+                <button class="arrow-btn" (click)="increaseQuantity(product.id)" aria-label="Aumenta quantità">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                </button>
+                <button class="arrow-btn" (click)="decreaseQuantity(product.id)" aria-label="Diminuisci quantità">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Pulsante Elimina -->
+            <button class="remove-btn" (click)="removeProduct(product.id)" aria-label="Rimuovi prodotto">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </article>
+      }
+      
+      @if (requestedProducts().length === 0) {
+        <div class="empty-state">
+          Nessun prodotto richiesto presente.
+        </div>
+      }
+    </section>
+  </main>
+
+  <!-- Bottom Actions -->
+  <footer class="bottom-actions">
+    <button class="btn btn-primary" (click)="confirmRequest()" [disabled]="requestedProducts().length === 0">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      Conferma richiesta
+    </button>
+    <button class="btn btn-secondary" (click)="returnToApprovals()">
+      Torna alle approvazioni
+    </button>
+  </footer>
+
+</div>
