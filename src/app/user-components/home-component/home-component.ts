@@ -28,16 +28,11 @@ export class HomeComponent {
         return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
     });
 
-    // successfulScan(): void {
-    //     this.processBeneficiary(this.scanId());
-    // }
-
     searchById(): void {
         this.processBeneficiary(this.scanId());
     }
 
     scan(): void {
-        // this.scanId.set(identifier);
         this.processBeneficiary(this.scanId());
     }
 
