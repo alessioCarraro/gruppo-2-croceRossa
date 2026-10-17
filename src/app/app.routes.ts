@@ -7,6 +7,7 @@ import { PersonProfileComponent } from './user-components/person-profile-compone
 import { PersonProfileNotokenComponent } from './user-components/person-profile-notoken/person-profile-notoken';
 import { ProductCatalogComponent } from './user-components/product-catalog-component/product-catalog-component';
 import { SummaryComponent } from './user-components/summary-component/summary-component';
+import { DeliverySuccessComponent } from './user-components/delivery-success-component/delivery-success-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,5 +19,7 @@ export const routes: Routes = [
   { path: 'person-profile-no-token', component: PersonProfileNotokenComponent },
   { path: 'product-catalog', component: ProductCatalogComponent },
   { path: 'summary', component: SummaryComponent },
+  { path: 'delivery-success', component: DeliverySuccessComponent },
+
   { path: '**', redirectTo: 'login' }
 ];

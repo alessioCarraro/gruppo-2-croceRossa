@@ -1,21 +1,38 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PersonProfileComponent } from './person-profile-component';
+import { Component, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { CartStateService } from '../../services/user-services/cart-service';
 
-describe('PersonProfileComponent', () => {
-  let component: PersonProfileComponent;
-  let fixture: ComponentFixture<PersonProfileComponent>;
+@Component({
+    selector: 'app-person-profile',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './person-profile-component.html',
+    styleUrls: ['./person-profile-component.css']
+})
+export class PersonProfileComponent {
+    private readonly router = inject(Router);
+    private readonly cartState = inject(CartStateService);
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PersonProfileComponent],
-    }).compileComponents();
+    readonly personDetails = computed(() => ({
+        initials: this.cartState.personInitials(),
+        name: this.cartState.beneficiaryName(),
+        id: this.cartState.personId(),
+        birthDate: this.cartState.birthDate(),
+        address: this.cartState.address(),
+        status: this.cartState.personStatus(),
+        currentTokens: this.cartState.remainingTokens(),
+        maxTokens: this.cartState.initialTokens()
+    }));
 
-    fixture = TestBed.createComponent(PersonProfileComponent);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
-  });
+    readonly familyNucleus = this.cartState.familyNucleus;
+    readonly history = this.cartState.history;
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    goBack(): void {
+        this.router.navigate(['/home']);
+    }
+
+    startDelivery(): void {
+        this.router.navigate(['/product-catalog']);
+    }
+}

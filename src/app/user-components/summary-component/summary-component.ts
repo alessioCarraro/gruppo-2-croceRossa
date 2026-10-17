@@ -17,7 +17,9 @@ export class SummaryComponent {
   readonly products = this.cartState.selectedProducts;
   readonly totalTokensUsed = this.cartState.usedTokens;
   readonly beneficiaryName = this.cartState.beneficiaryName;
-  readonly remainingTokens = this.cartState.availableTokens;
+  readonly remainingTokens = this.cartState.remainingTokens;
+  readonly initialTokens = this.cartState.initialTokens;
+  readonly totalItemsCount = this.cartState.totalItemsCount;
 
   public incrementQuantity(productId: string): void {
     const product = this.cartState.products().find(p => p.id === productId);
@@ -43,6 +45,6 @@ export class SummaryComponent {
       return;
     }
     console.log('Consegna confermata. Token utilizzati:', this.totalTokensUsed());
-    // Eventuale navigazione successiva o reset del carrello
+    this.router.navigate(['/delivery-success']);
   }
 }
