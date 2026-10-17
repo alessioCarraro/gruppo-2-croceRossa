@@ -1,0 +1,55 @@
+<div class="app-container">
+  
+  <main class="scrollable-content">
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <button class="back-btn" (click)="goBack()" aria-label="Torna indietro">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1C2B39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18L9 12L15 6"/>
+          </svg>
+        </button>
+        <h1 class="screen-title">Ordine di rifornimento</h1>
+      </div>
+      <span class="header-location">{{ locationLabel() }}</span>
+    </header>
+
+
+    <!-- Products List -->
+    <section class="content-section">
+      <h3 class="section-heading">Prodotti nell'ordine</h3>
+      
+      <div class="card-container">
+        @if (orderItems().length === 0) {
+          <div class="empty-state">Nessun prodotto nel carrello</div>
+        } @else {
+          <ul class="products-list">
+            @for (item of orderItems(); track item.id) {
+              <li class="product-list-item">
+                <span class="product-name">{{ item.name }}</span>
+                <span class="product-quantity">{{ item.quantity }}</span>
+                <button class="delete-btn" (click)="removeItem(item.id)" aria-label="Rimuovi prodotto">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </section>
+
+
+  </main>
+
+  <!-- Sticky Footer -->
+  <footer class="sticky-footer">
+    <button class="primary-button" (click)="submitOrder()" [disabled]="orderItems().length === 0">
+      Invia ordine
+    </button>
+  </footer>
+
+</div>
