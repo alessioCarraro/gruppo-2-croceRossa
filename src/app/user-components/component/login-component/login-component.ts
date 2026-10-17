@@ -15,10 +15,10 @@ export class LoginComponent {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
-    username = signal<string>('n.turelli');
-    password = signal<string>('password');
-    distributionPoint = signal<string>('Negozio Legnano');
-    loginError = signal<string | null>(null);
+    readonly username = signal<string>('n.turelli');
+    readonly password = signal<string>('password');
+    readonly distributionPoint = signal<string>('Negozio Legnano');
+    readonly loginError = signal<string | null>(null);
 
     updateUsername(event: Event): void {
         const val = (event.target as HTMLInputElement).value;
