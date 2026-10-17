@@ -65,6 +65,7 @@ export interface Beneficiary {
     adults: number;
     minors: number;
     tokens: number;
+    hasTokens: boolean;
 }
 
 /** Dati minimi mostrati nei risultati di ricerca (privacy) */
@@ -193,10 +194,10 @@ export const SEED_PRODUCTS: Product[] = [
 ];
 
 export const SEED_BENEFICIARIES: Beneficiary[] = [
-    { id: 'b-1', code: 'ID-2024-0481', firstName: 'Mario', lastName: 'Rossi', taxCode: 'RSSMRA82C14F205X', birthDate: '1982-03-14', address: 'Via Roma 24, Legnano (MI)', hasAllergies: false, hasIntolerances: false, status: 'Attivo', adults: 2, minors: 1, tokens: 420 },
-    { id: 'b-2', code: 'ID-2024-0502', firstName: 'Pietro', lastName: 'Moretti', taxCode: 'MRTPTR90A01F205Y', birthDate: '1990-01-01', address: 'Via Milano 3, Legnano (MI)', hasAllergies: true, hasIntolerances: false, status: 'Attivo', adults: 1, minors: 0, tokens: 250 },
-    { id: 'b-3', code: 'ID-2024-0517', firstName: 'Alessandro', lastName: 'Fina', taxCode: 'FNILSN85B02F205Z', birthDate: '1985-02-02', address: 'Via Verdi 8, Parabiago (MI)', hasAllergies: false, hasIntolerances: true, status: 'Sospeso', adults: 2, minors: 2, tokens: 0 },
-    { id: 'b-4', code: 'ID-2024-0533', firstName: 'Simone', lastName: 'Ruggeri', taxCode: 'RGGSMN95C03F205W', birthDate: '1995-03-03', address: 'Via Dante 12, Legnano (MI)', hasAllergies: false, hasIntolerances: false, status: 'Scaduto', adults: 1, minors: 1, tokens: 0 },
+    { id: 'b-1', code: 'ID-2024-0481', firstName: 'Mario', lastName: 'Rossi', taxCode: 'RSSMRA82C14F205X', birthDate: '1982-03-14', address: 'Via Roma 24, Legnano (MI)', hasAllergies: false, hasIntolerances: false, status: 'Attivo', adults: 2, minors: 1, tokens: 420, hasTokens: true },
+    { id: 'b-2', code: 'ID-2024-0502', firstName: 'Pietro', lastName: 'Moretti', taxCode: 'MRTPTR90A01F205Y', birthDate: '1990-01-01', address: 'Via Milano 3, Legnano (MI)', hasAllergies: true, hasIntolerances: false, status: 'Attivo', adults: 1, minors: 0, tokens: 250, hasTokens: true },
+    { id: 'b-3', code: 'ID-2024-0517', firstName: 'Alessandro', lastName: 'Fina', taxCode: 'FNILSN85B02F205Z', birthDate: '1985-02-02', address: 'Via Verdi 8, Parabiago (MI)', hasAllergies: false, hasIntolerances: true, status: 'Sospeso', adults: 2, minors: 2, tokens: 0, hasTokens: false },
+    { id: 'b-4', code: 'ID-2024-0533', firstName: 'Simone', lastName: 'Ruggeri', taxCode: 'RGGSMN95C03F205W', birthDate: '1995-03-03', address: 'Via Dante 12, Legnano (MI)', hasAllergies: false, hasIntolerances: false, status: 'Scaduto', adults: 1, minors: 1, tokens: 0, hasTokens: false },
 ];
 
 export const SEED_DELIVERIES: Delivery[] = [

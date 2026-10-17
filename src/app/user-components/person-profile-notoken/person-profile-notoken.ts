@@ -1,6 +1,7 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Transaction } from '../person-profile-component/person-profile-component';
+import { Router } from '@angular/router';
 
 interface PersonData {
     initials: string;
@@ -20,6 +21,7 @@ interface PersonData {
     styleUrls: ['./person-profile-notoken.css']
 })
 export class PersonProfileNotokenComponent {
+    private readonly router = inject(Router);
     // Gestione dello stato tramite Signals
     readonly personDetails = signal({
         initials: 'MR',
@@ -70,7 +72,7 @@ export class PersonProfileNotokenComponent {
     });
 
     goBack(): void {
-        console.log('Naviga indietro');
+        this.router.navigate(['/home']);
     }
 
     openOptions(): void {
