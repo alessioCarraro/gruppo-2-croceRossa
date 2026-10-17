@@ -1,95 +1,68 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface CategoryFilter {
-  id: string;
-  label: string;
-  selected: boolean;
-}
-
-interface CatalogItem {
-  id: string;
-  name: string;
-  weight?: string;
-  stock: number;
-  expirationDate?: string;
-  isExpiringSoon?: boolean;
-  tokenCost: number;
-  iconType: 'bag' | 'meat' | 'jar';
-}
+import { Product, ProductCategory, SEED_PRODUCTS } from '../../../utils';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-warehouse-component',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './local-warehouse-component.html',
-  styleUrls: ['./local-warehouse-component.css']
+    selector: 'app-warehouse-component',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './local-warehouse-component.html',
+    styleUrls: ['./local-warehouse-component.css']
 })
 export class LocalWarehouseComponent {
-  // Stato Globale della Schermata
-  public readonly pageTitle = signal<string>('Magazzino');
-  public readonly totalArticles = signal<string>('1.284 art.');
+    // Stato Globale della Schermata
+    private readonly router = inject(Router);
+    public readonly pageTitle = signal<string>('Magazzino');
+    public readonly totalArticles = signal<string>('1.284 art.');
+    readonly products = signal<Product[]>(SEED_PRODUCTS);
+    readonly searchQry = signal<string>('');
+    readonly selectedCategory = signal<ProductCategory | 'ALL'>('ALL');
 
-  // Filtri di Categoria
-  public readonly filters = signal<CategoryFilter[]>([
-    { id: 'all', label: 'Tutti', selected: true },
-    { id: 'pasta', label: 'Pasta', selected: false },
-    { id: 'baby-food', label: 'Omogeneizzati', selected: false },
-    { id: 'meat', label: 'Carne', selected: false }
-  ]);
+    // Filtri di Categoria
+    public readonly filteredProducts = computed(() => {
+        const query = this.searchQry().toLocaleLowerCase();
+        const category = this.selectedCategory();
 
-  // Catalogo Prodotti
-  public readonly catalog = signal<CatalogItem[]>([
-    {
-      id: '1',
-      name: 'Pasta di semola',
-      weight: '500g',
-      stock: 420,
-      expirationDate: '15/05/2026',
-      tokenCost: 20,
-      iconType: 'bag'
-    },
-    {
-      id: '2',
-      name: 'Pasta integrale',
-      weight: '500g',
-      stock: 58,
-      expirationDate: '02/11/2025',
-      isExpiringSoon: true,
-      tokenCost: 22,
-      iconType: 'bag'
-    },
-    {
-      id: '3',
-      name: 'Petto di pollo',
-      weight: '1kg',
-      stock: 25,
-      expirationDate: '30/10/2025',
-      isExpiringSoon: true,
-      tokenCost: 40,
-      iconType: 'meat'
-    },
-    {
-      id: '4',
-      name: 'Omogeneizzato carne',
-      stock: 0, // 0 indica "Esaurito"
-      tokenCost: 30,
-      iconType: 'jar'
+        return this.products().filter(product => {
+            const matchesQry = product.name.toLocaleLowerCase().includes(query);
+            const matchesCategory = category === 'ALL' || product.category === category;
+            return matchesQry && matchesCategory;
+        });
+    });
+
+    updateStock(productId: string, quantityChange: number): void {
+        this.products.update(currentProducts =>
+            currentProducts.map(product => {
+                if (product.id === productId) {
+                    const newStock = Math.max(0, product.stock + quantityChange);
+                    return { ...product, stock: newStock};
+                }
+                return product;
+            })
+        );
     }
-  ]);
 
-  // Azioni
-  public goBack(): void {
-    console.log('Navigazione: Indietro');
-  }
+    setSearchQry(query: string): void {
+        this.searchQry.set(query)
+    }
 
-  public selectFilter(filterId: string): void {
-    this.filters.update(currentFilters =>
-      currentFilters.map(f => ({ ...f, selected: f.id === filterId }))
-    );
-  }
+    setCategory(category: ProductCategory | 'ALL'): void {
+        this.selectedCategory.set(category);
+    }
 
-  public restockItem(item: CatalogItem): void {
-    console.log(`Richiesta restock per: ${item.name}`);
-  }
+    // Azioni
+    public goBack(): void {
+       this.router.navigate(['/home']);
+    }
+
+    // public selectFilter(filterId: string): void {
+    //     this.filters.update(currentFilters =>
+    //         currentFilters.map(f => ({ ...f, selected: f.id === filterId }))
+    //     );
+    // }
+
+    // public restockItem(item: CatalogItem): void {
+    //     console.log(`Richiesta restock per: ${item.name}`);
+    // }
 }

@@ -14,60 +14,119 @@
         <!-- Barra di ricerca -->
         <div class="search-bar">
             <span class="icon-search" aria-hidden="true"></span>
-            <input type="text" placeholder="Cerca nel catalogo..." aria-label="Cerca nel catalogo" />
+            <input type="text" [value]="searchQry()" (input)="setSearchQry($any($event.target).value)"
+                placeholder="Cerca nel catalogo..." aria-label="Cerca nel catalogo" />
         </div>
 
         <!-- Filtri orizzontali -->
         <nav class="filters-container" aria-label="Filtri categoria">
-            @for (filter of filters(); track filter.id) {
-            <button class="chip" [class.chip-selected]="filter.selected" (click)="selectFilter(filter.id)">
-                {{ filter.label }}
+            <button class="chip" [class.active]="selectedCategory() === 'ALL'" (click)="setCategory('ALL')">
+                Tutti
             </button>
-            }
+            <button class="chip" [class.active]="selectedCategory() === 'Pasta'" (click)="setCategory('Pasta')">
+                Pasta
+            </button>
+            <button class="chip" [class.active]="selectedCategory() === 'Carne'" (click)="setCategory('Carne')">
+                Carne
+            </button>
         </nav>
 
         <!-- Lista Catalogo -->
         <section class="catalog-list" aria-label="Catalogo prodotti">
-            @for (item of catalog(); track item.id; let isLast = $last) {
+            @for (product of filteredProducts(); track product.id) {
             <article class="catalog-item">
 
                 <div class="item-icon-box">
                     <!-- Placeholder visivo per le icone specifiche basato sull'iconType -->
-                    <span class="icon-placeholder" [ngClass]="'icon-' + item.iconType"></span>
+                    <span class="icon-placeholder" [ngClass]="'icon-' + product.iconType"></span>
                 </div>
 
                 <div class="item-details">
                     <h2 class="item-name">
-                        {{ item.name }} <span class="item-weight" *ngIf="item.weight">{{ item.weight }}</span>
+                        {{ product.name }} <!-- <span class="item-weight" *ngIf="product.weight">{{ product.weight }} </span> -->
                     </h2>
 
                     <div class="item-meta">
-                        @if (item.stock > 0) {
+                        @if (product.stock > 0) {
                         <span class="meta-label">Stock</span>
-                        <span class="meta-value">{{ item.stock }}</span>
+                        <span class="meta-value">{{ product.stock }}</span>
                         <span class="meta-separator">·</span>
                         <span class="meta-label">scad</span>
-                        <span class="meta-value" [class.text-warning]="item.isExpiringSoon">
-                            {{ item.expirationDate }}
+                        <span class="meta-value" [class.text-warning]="product.isExpiringSoon">
+                            {{ product.expiry }}
                         </span>
                         } @else {
                         <span class="text-danger fw-bold">Esaurito</span>
                         }
                         <span class="meta-separator">·</span>
-                        <span class="meta-label">{{ item.tokenCost }} T</span>
+                        <span class="meta-label">{{ product.price }} T</span>
                     </div>
                 </div>
 
-                <button class="btn-restock" [class.btn-restock-danger]="item.stock === 0" (click)="restockItem(item)">
+                <button class="btn-restock"
+                [class.btn-restock-danger]="product.stock === 0"
+                (click)="updateStock(product.id, 6)">
                     Richiedi
                 </button>
             </article>
-
-            @if (!isLast) {
-            <hr class="divider" />
-            }
+            } @empty {
+                <p class="no-products">Nessun prodotto trovato</p>
             }
         </section>
 
     </main>
 </div>
+
+
+
+
+<!-- src/app/components/local-warehouse-component.html -->
+<!-- <div class="warehouse-container">
+    <header class="warehouse-header">
+        <h2>Magazzino Locale</h2>
+        <p>Gestione beni, token e scadenze</p>
+    </header>
+
+    <div class="filters-section">
+        <input type="text" [value]="searchQry()" (input)="setSearchQry($any($event.target).value)"
+            placeholder="Cerca prodotto..." class="search-input" />
+
+        <div class="category-filters">
+            <button [class.active]="selectedCategory() === 'ALL'" (click)="setCategory('ALL')">
+                Tutti
+            </button>
+            <button [class.active]="selectedCategory() === 'Pasta'" (click)="setCategory('Pasta')">
+                Alimentari
+            </button>
+            <button [class.active]="selectedCategory() === 'Altro'" (click)="setCategory('Altro')">
+                Igiene
+            </button>
+        </div>
+    </div>
+
+    <main class="product-grid">
+        @for (product of filteredProducts(); track product.id) {
+        <div class="product-card">
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <span class="category-badge">{{ product.category }}</span>
+            </div>
+
+            <div class="product-details">
+                <p>Stock: <strong>{{ product.stock }}</strong> {{ product.unit }}</p>
+                <p>Costo: <strong>{{ product.price }}</strong> Token</p>
+                @if (product.expiry) {
+                <p class="expiry">Scadenza: {{ product.expiry }}</p>
+                }
+            </div>
+
+            <div class="product-actions">
+                <button (click)="updateStock(product.id, -1)" [disabled]="product.stock <= 0">-</button>
+                <button (click)="updateStock(product.id, 1)">+</button>
+            </div>
+        </div>
+        } @empty {
+            <p class="no-products">Nessun prodotto trovato.</p>
+            }
+    </main>
+</div> -->

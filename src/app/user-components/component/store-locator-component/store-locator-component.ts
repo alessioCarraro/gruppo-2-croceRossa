@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface StoreLocation {
   id: number;
@@ -16,6 +17,7 @@ interface StoreLocation {
   styleUrls: ['./store-locator-component.css']
 })
 export class StoreLocatorComponent {
+  private readonly router = inject(Router);
   public readonly searchQuery = signal<string>('Pannolini taglia 4');
   public readonly productName = signal<string>('Pannolini taglia 4');
   public readonly productStatus = signal<string>('esaurito nel tuo negozio');
@@ -28,7 +30,7 @@ export class StoreLocatorComponent {
   ]);
 
   public goBack(): void {
-    console.log('Navigazione: Torna indietro');
+    this.router.navigate(['/home']);
   }
 
   public getAvailabilityColor(availability: number): string {

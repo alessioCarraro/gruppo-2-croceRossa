@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     imports: [FormsModule],
@@ -10,6 +11,7 @@ import { AuthService } from '../../../auth.service';
 })
 export class HomeComponent {
     private readonly authService = inject(AuthService);
+    private readonly router = inject(Router);
 
     readonly currentUser = this.authService.currentUser;
     readonly currentSite = this.authService.currentSite;
@@ -36,5 +38,11 @@ export class HomeComponent {
 
     setTab(tab: string): void {
         this.activeTab.set(tab);
+        if (tab === 'magazzino') {
+            this.router.navigate(['/warehouse']);
+        }
+        if (tab === 'sedie') {
+            this.router.navigate(['/store-locator']);
+        }
     }
 }
