@@ -45,7 +45,10 @@ export interface Product {
     minStock: number;
     price: number;
     expiry: string;              // 'YYYY-MM-DD'
+    isExpiringSoon: boolean;
+    isExpired: boolean;
     maxPerBeneficiary: number;
+    iconType: 'bag' | 'meat' | 'jar';
 }
 
 export interface Beneficiary {
@@ -182,11 +185,11 @@ export const SEED_OPERATORS: Operator[] = [
 ];
 
 export const SEED_PRODUCTS: Product[] = [
-    { id: 'p-1', name: 'Pasta di semola 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 420, minStock: 50, price: 20, expiry: '2027-05-15', maxPerBeneficiary: 5 },
-    { id: 'p-2', name: 'Pasta integrale 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 58, minStock: 60, price: 22, expiry: '2026-10-25', maxPerBeneficiary: 3 },
-    { id: 'p-3', name: 'Passata di pomodoro 700g', category: 'Verdura', unit: 'Scatola', icon: 'bottle', stock: 300, minStock: 40, price: 15, expiry: '2027-08-20', maxPerBeneficiary: 4 },
-    { id: 'p-4', name: 'Petto di pollo 1kg', category: 'Carne', unit: 'Kg', icon: 'meat', stock: 25, minStock: 30, price: 40, expiry: '2026-10-20', maxPerBeneficiary: 2 },
-    { id: 'p-5', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0, minStock: 20, price: 12, expiry: '2027-01-10', maxPerBeneficiary: 6 },
+    { id: 'p-1', name: 'Pasta di semola 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 420, minStock: 50, price: 20, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 5, iconType: 'bag' },
+    { id: 'p-2', name: 'Pasta integrale 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 58, minStock: 60, price: 22, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 3, iconType: 'bag' },
+    { id: 'p-3', name: 'Passata di pomodoro 700g', category: 'Verdura', unit: 'Scatola', icon: 'bottle', stock: 300, minStock: 40, price: 15, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 4, iconType: 'bag' },
+    { id: 'p-4', name: 'Petto di pollo 1kg', category: 'Carne', unit: 'Kg', icon: 'meat', stock: 25, minStock: 30, price: 40, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 2, iconType: 'meat' },
+    { id: 'p-5', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0, minStock: 20, price: 12, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true, maxPerBeneficiary: 6, iconType: 'jar' },
 ];
 
 export const SEED_BENEFICIARIES: Beneficiary[] = [
