@@ -43,6 +43,7 @@ import { SuperAdminLoadItemComponent } from './super-admin-components/component/
 import { SuperAdminAddExistingItemComponent } from './super-admin-components/component/super-admin-add-existing-item/super-admin-add-existing-item';
 import { SuperAdminAddNewItemComponent } from './super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component';
 import { SuperAdminRestoockComponent } from './super-admin-components/component/super-admin-restoock-component/super-admin-restoock-component';
+import { SuperAdminRestockSingleStoreComponent } from './super-admin-components/component/super-admin-restock-single-store-component/super-admin-restock-single-store-component';
 
 
 
@@ -59,7 +60,7 @@ import { SuperAdminRestoockComponent } from './super-admin-components/component/
     AdminMetroAddExistingItemComponent, AdminMetroAddNewItemComponent, AdminMetroRestockComponent, AdminMetroRestockComponent, AdminMetroRestockSingleStoreComponent,
      AdminMetroRestockSummary, AdminMetroRequestSentComponent, SuperAdminDashboardComponent, SuperAdminProfileComponent, SuperAdminMetroStockComponent,
      SuperAdminExpiringProductsComponent, SuperAdminAdminLocationsComponent, SuperAdminUserLocationsComponent, SuperAdminLoadItemComponent,
-     SuperAdminAddExistingItemComponent, SuperAdminAddNewItemComponent, SuperAdminRestoockComponent
+     SuperAdminAddExistingItemComponent, SuperAdminAddNewItemComponent, SuperAdminRestoockComponent, SuperAdminRestockSingleStoreComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
