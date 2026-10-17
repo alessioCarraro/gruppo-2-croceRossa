@@ -1,0 +1,175 @@
+<div class="app-layout">
+  
+  <!-- Content Area (Scrollable) -->
+  <main class="main-content">
+    
+    <!-- Header Area -->
+    <header class="header">
+      <button class="icon-btn logout-btn" (click)="onLogout()" aria-label="Esci dall'account">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+
+      <div class="header-right">
+        <div class="user-info">
+          <span class="user-name">{{ user().name }}</span>
+          <span class="role-badge">Super Admin</span>
+        </div>
+        <button class="icon-btn profile-btn" (click)="onProfile()" aria-label="Profilo utente">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sezione Statistiche -->
+    <section class="section">
+      <div class="section-header">
+        <span class="dash"></span>
+        <h2 class="section-title">STATISTICHE</h2>
+      </div>
+
+      <!-- Dropdown Selezione Sede -->
+      <div class="dropdown-container">
+        <button class="dropdown-button" (click)="toggleDropdown()" [attr.aria-expanded]="isDropdownOpen()">
+          <div class="dropdown-icon-text">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+            <span>{{ selectedLocation() }}</span>
+          </div>
+          <svg class="dropdown-arrow" [class.open]="isDropdownOpen()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        
+        @if (isDropdownOpen()) {
+          <ul class="dropdown-menu">
+            @for (location of locations(); track location) {
+              <li class="dropdown-item" (click)="selectLocation(location)">
+                {{ location }}
+              </li>
+            }
+          </ul>
+        }
+      </div>
+      
+      <div class="metrics-grid">
+        @for (metric of metrics(); track metric.id) {
+          <article class="metric-card">
+            <div class="metric-value" [ngClass]="metric.colorClass">{{ metric.value }}</div>
+            <p class="metric-label">{{ metric.label }}</p>
+            
+            @if (metric.actionLabel) {
+              <div class="metric-action" [ngClass]="metric.colorClass">
+                <a href="javascript:void(0)" class="action-link">{{ metric.actionLabel }}</a>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+            }
+          </article>
+        }
+      </div>
+    </section>
+
+ <!-- Sezione personale -->
+    <section class="section">
+      <div class="section-header">
+        <span class="dash"></span>
+        <h2 class="section-title">PERSONAL NELLE VARIE SEDI</h2>
+      </div>
+
+      <div class="controls-list">
+        @for (control of controls(); track control.id) {
+          <article class="control-card">
+            <div class="control-icon-wrapper">
+              @if (control.iconName === 'clock') {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b77b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              } @else {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d648b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              }
+            </div>
+            
+            <div class="control-content">
+              <h3 class="control-card-title">{{ control.title }}</h3>
+              <p class="control-card-subtitle">{{ control.subtitle }}</p>
+            </div>
+
+            <div class="control-badge" [ngClass]="control.badgeClass">
+              {{ control.badgeValue }}
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+     
+
+    <!-- Sezione Cerca -->
+    <section class="section">
+      <div class="section-header">
+        <span class="dash"></span>
+        <h2 class="section-title">CERCA PRODOTTO</h2>
+      </div>
+
+      <div class="search-bar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Cerca un prodotto in magazzino..." />
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Aggiornata -->
+  <nav class="bottom-nav">
+    @for (nav of navItems(); track nav.id) {
+      <button class="nav-item" [class.active]="nav.isActive" (click)="onNavClick(nav.id)">
+        <div class="nav-icon">
+           @if (nav.iconName === 'home') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+             </svg>
+           } @else if (nav.iconName === 'inventory') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+             </svg>
+           } @else if (nav.iconName === 'upload') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+             </svg>
+           } @else if (nav.iconName === 'restock') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <rect x="1" y="3" width="15" height="13"></rect>
+               <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+               <circle cx="5.5" cy="18.5" r="2.5"></circle>
+               <circle cx="18.5" cy="18.5" r="2.5"></circle>
+             </svg>
+           } @else if (nav.iconName === 'approve') {
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M9 11l3 3L22 4"></path>
+               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+             </svg>
+           }
+        </div>
+        <span class="nav-label">{{ nav.label }}</span>
+      </button>
+    }
+  </nav>
+
+</div>
