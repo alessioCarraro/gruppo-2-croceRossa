@@ -17,8 +17,6 @@
     <section class="profile-card">
       <div class="avatar">{{ user().initials }}</div>
       <h2 class="user-name">{{ user().name }}</h2>
-      <p class="user-location">{{ user().location }}</p>
-      <div class="badge">{{ user().badge }}</div>
     </section>
 
     <!-- Data List Section -->
@@ -49,24 +47,5 @@
     </section>
   </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    @for (nav of navItems(); track nav.id) {
-      <button class="nav-item" [class.active]="nav.isActive" (click)="onNavClick(nav.id)">
-        <div class="nav-icon">
-           @if (nav.iconName === 'home') {
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-           } @else if (nav.iconName === 'inventory') {
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-           } @else if (nav.iconName === 'upload') {
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
-           } @else {
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-           }
-        </div>
-        <span class="nav-label">{{ nav.label }}</span>
-      </button>
-    }
-  </nav>
 
 </div>

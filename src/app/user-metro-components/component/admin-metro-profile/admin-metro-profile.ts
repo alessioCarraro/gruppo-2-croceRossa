@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 interface UserData {
   initials: string;
   name: string;
-  location: string;
-  badge: string;
 }
 
 interface InfoItem {
@@ -35,14 +33,12 @@ export class AdminMetroProfileComponent {
   readonly user = signal<UserData>({
     initials: 'GF',
     name: 'Giulia Ferri',
-    location: 'Magazzino Centrale · Legnano',
-    badge: 'Admin magazzino'
   });
 
   // Gestione dei dati della lista
   readonly infoItems = signal<InfoItem[]>([
-    { id: 'role', label: 'Ruolo', value: 'Admin magazzino centrale' },
-    { id: 'location', label: 'Sede', value: 'Magazzino Centrale — Legnano' },
+    { id: 'role', label: 'Ruolo', value: 'Admin' },
+    { id: 'location', label: 'Sede', value: 'Magazzino Centrale' },
     { id: 'email', label: 'Email', value: 'g.ferri@foodnetwork.it', isMonospace: true },
     { id: 'phone', label: 'Telefono', value: '+39 340 9988776', isMonospace: true }
   ]);
