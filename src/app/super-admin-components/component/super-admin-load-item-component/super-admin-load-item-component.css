@@ -1,0 +1,205 @@
+:host {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  background-color: #ffffff;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1A1A1A;
+}
+
+.stock-screen {
+  padding: 24px 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.back-button {
+  background: #F5EFE6;
+  border: none;
+  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #8E8E93;
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+}
+
+.search-section {
+  margin-bottom: 24px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #F7F5F0;
+  border: 1px solid #EBE7E0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 16px;
+  margin-left: 10px;
+  color: #1A1A1A;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #A3A09A;
+}
+
+.search-result-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #EBEBEB;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.result-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.result-weight {
+  font-size: 13px;
+  color: #8E8E93;
+}
+
+.result-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Nuove regole CSS per il Token */
+.token-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.token-number {
+  color: #B66B26;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.token-circle {
+  background-color: #B66B26;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button {
+  background: #2D6A4F;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #EBEBEB;
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.option-card:active {
+  background-color: #F7F5F0;
+}
+
+.option-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #EBEBEB;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.option-text {
+  flex: 1;
+}
+
+.option-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1C2B39;
+  margin: 0 0 4px 0;
+}
+
+.option-desc {
+  font-size: 13px;
+  color: #8E8E93;
+  margin: 0;
+}
+
+.chevron {
+  flex-shrink: 0;
+  margin-left: 12px;
+}
