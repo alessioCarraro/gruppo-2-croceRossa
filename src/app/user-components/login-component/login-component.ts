@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../auth.service';
+import { AuthService } from '../../auth.service';
 import { Router } from '@angular/router';
 
 @Component({

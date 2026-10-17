@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product, ProductCategory, SEED_PRODUCTS } from '../../../utils';
+import { Product, ProductCategory, SEED_PRODUCTS } from '../../utils';
 import { Router } from '@angular/router';
 
 @Component({
