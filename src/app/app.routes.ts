@@ -5,6 +5,7 @@ import { LocalWarehouseComponent } from './user-components/local-warehouse-compo
 import { StoreLocatorComponent } from './user-components/store-locator-component/store-locator-component';
 import { PersonProfileComponent } from './user-components/person-profile-component/person-profile-component';
 import { PersonProfileNotokenComponent } from './user-components/person-profile-notoken/person-profile-notoken';
+import { ProductCatalogComponent } from './user-components/product-catalog-component/product-catalog-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'store-locator', component: StoreLocatorComponent },
   { path: 'person-profile', component: PersonProfileComponent },
   { path: 'person-profile-no-token', component: PersonProfileNotokenComponent },
+  { path: 'product-catalog', component: ProductCatalogComponent },
   { path: '**', redirectTo: 'login' }
 ];

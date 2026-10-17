@@ -65,6 +65,6 @@ export class PersonProfileComponent {
     }
 
     startDelivery(): void {
-        console.log('Avvia consegna');
+        this.router.navigate(['/product-catalog']);
     }
 }
