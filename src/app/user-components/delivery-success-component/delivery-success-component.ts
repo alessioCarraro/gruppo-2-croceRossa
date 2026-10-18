@@ -49,6 +49,6 @@ export class DeliverySuccessComponent {
     ]);
 
     navigateToDashboard(): void {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/user-home']);
     }
 }
