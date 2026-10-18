@@ -12,6 +12,7 @@ export type ApprovalType = 'Nuovo beneficiario' | 'Token extra' | 'Riordino';
 export type ApprovalStatus = 'In attesa' | 'Approvata' | 'Rifiutata';
 export type ShipmentStatus = 'Ordinato' | 'In transito' | 'Arrivato';
 
+
 export interface Site {
     id: string;
     name: string;
@@ -49,6 +50,24 @@ export interface Product {
     isExpired: boolean;
     maxPerBeneficiary: number;
     iconType: 'bag' | 'meat' | 'jar';
+}
+
+export interface SiteInventory {
+    siteId: string;
+    productId: string;
+    productName: string;
+    weight: string;
+    stock: number;
+    expiry: string; // 'YYYY-MM-DD'
+    isExpiringSoon: boolean;
+    isExpired: boolean;
+}
+
+export interface StoreAvailabilityResult {
+    siteId: string;
+    siteName: string;
+    stock: number;
+    distance: string;
 }
 
 export interface Beneficiary {
@@ -173,8 +192,8 @@ const STORAGE_PREFIX = 'cri_';              // prefisso delle chiavi nel localSt
 
 export const SEED_SITES: Site[] = [
     { id: 's-metro', name: 'Metro Milano', type: 'Metro', address: 'Via Fantoli 1', city: 'Milano', province: 'MI' },
-    { id: 's-legnano', name: 'Negozio Legnano', type: 'EnteDistributore', address: 'Via Gilardelli', city: 'Legnano', province: 'MI' },
-    { id: 's-parabiago', name: 'Parabiago', type: 'EnteDistributore', address: 'Via Santa Maria 10', city: 'Parabiago', province: 'MI' },
+    { id: 's-legnano', name: 'Sede Legnano', type: 'EnteDistributore', address: 'Via Gilardelli', city: 'Legnano', province: 'MI' },
+    { id: 's-parabiago', name: 'Sede Busto Arsizio', type: 'EnteDistributore', address: 'Via Santa Maria 10', city: 'Parabiago', province: 'MI' },
 ];
 
 // Password in chiaro SOLO perché sono dati finti per la demo
@@ -186,11 +205,34 @@ export const SEED_OPERATORS: Operator[] = [
 ];
 
 export const SEED_PRODUCTS: Product[] = [
-    { id: 'p-1', name: 'Pasta di semola 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 420, minStock: 50, price: 20, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 5, iconType: 'bag' },
-    { id: 'p-2', name: 'Pasta integrale 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 58, minStock: 60, price: 22, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 3, iconType: 'bag' },
+    { id: 'p-1', name: 'Pasta penne 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 420, minStock: 50, price: 20, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 5, iconType: 'bag' },
+    { id: 'p-2', name: 'Pasta spaghetti 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 58, minStock: 60, price: 22, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 3, iconType: 'bag' },
     { id: 'p-3', name: 'Passata di pomodoro 700g', category: 'Verdura', unit: 'Scatola', icon: 'bottle', stock: 300, minStock: 40, price: 15, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 4, iconType: 'bag' },
     { id: 'p-4', name: 'Petto di pollo 1kg', category: 'Carne', unit: 'Kg', icon: 'meat', stock: 25, minStock: 30, price: 40, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 2, iconType: 'meat' },
     { id: 'p-5', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0, minStock: 20, price: 12, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true, maxPerBeneficiary: 6, iconType: 'jar' },
+];
+
+export const SEED_INVENTORIES: SiteInventory[] = [
+    // Sede Legnano
+    { siteId: 's-legnano', productId: 'p-1', productName: 'Pasta penne', weight: '500g', stock: 120, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false },
+    { siteId: 's-legnano', productId: 'p-2', productName: 'Pasta spaghetti', weight: '500g', stock: 18, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false },
+    { siteId: 's-legnano', productId: 'p-3', productName: 'Petto di pollo', weight: '450g', stock: 1, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false },
+    { siteId: 's-legnano', productId: 'p-4', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 4, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false },
+    { siteId: 's-legnano', productId: 'p-5', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true },
+
+    // Sede Busto Arsizio
+    { siteId: 's-busto', productId: 'p-1', productName: 'Pasta penne', weight: '500g', stock: 100, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false },
+    { siteId: 's-busto', productId: 'p-2', productName: 'Pasta spaghetti', weight: '500g', stock: 20, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false },
+    { siteId: 's-busto', productId: 'p-3', productName: 'Petto di pollo', weight: '450g', stock: 1, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false },
+    { siteId: 's-busto', productId: 'p-4', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 25, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false },
+    { siteId: 's-busto', productId: 'p-5', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true },
+
+    // Metro
+    { siteId: 's-metro', productId: 'p-1', productName: 'Pasta penne', weight: '500g', stock: 420, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false },
+    { siteId: 's-metro', productId: 'p-2', productName: 'Pasta spaghetti', weight: '500g', stock: 58, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false },
+    { siteId: 's-metro', productId: 'p-3', productName: 'Petto di pollo', weight: '450g', stock: 5, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false },
+    { siteId: 's-metro', productId: 'p-4', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 25, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false },
+    { siteId: 's-metro', productId: 'p-5', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true },
 ];
 
 export const SEED_BENEFICIARIES: Beneficiary[] = [
@@ -418,5 +460,55 @@ export class MockBackendService {
         this._lastDelivery.set(null);
     }
 
-  // BENEFICIARI
+    //AVAILABILITY EACH STORE
+
+    private readonly _inventories = signal<SiteInventory[]>(this.load('inventories', SEED_INVENTORIES));
+    readonly inventories = this._inventories.asReadonly();
+
+   
+searchInventoryProducts(query: string): { productId: string; productName: string }[] {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+
+    const inventories = this._inventories();
+    const uniqueMap = new Map<string, string>();
+
+    for (const inv of inventories) {
+        if (inv.productName.toLowerCase().includes(q)) {
+            uniqueMap.set(inv.productId, inv.productName);
+        }
+    }
+
+    return Array.from(uniqueMap.entries()).map(([productId, productName]) => ({
+        productId,
+        productName
+    }));
+}
+
+    /** Restituisce la disponibilità di un prodotto specifico in tutte le sedi */
+    getInventoriesForProduct(productId: string): StoreAvailabilityResult[] {
+        const sites = this._sites();
+        const inventories = this._inventories();
+
+        // Distanze simulate fisse per demo tra le sedi
+        const distances: Record<string, string> = {
+            's-metro': '4,2 km',
+            's-legnano': '0,0 km',
+            's-parabiago': '5,1 km',
+            's-busto': '6,5 km'
+        };
+
+        return sites.map(site => {
+            // Cerca l'inventario per questa sede e questo prodotto
+            const inv = inventories.find(i => i.siteId === site.id && i.productId === productId);
+            return {
+                siteId: site.id,
+                siteName: site.name,
+                stock: inv ? inv.stock : 0,
+                distance: distances[site.id] ?? '5,0 km'
+            };
+        });
+    }
+
+    // BENEFICIARI
 }

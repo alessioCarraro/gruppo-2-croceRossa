@@ -1,13 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-
-interface StoreLocation {
-  id: number;
-  name: string;
-  availability: number;
-  distance: string;
-}
+import { Router, ActivatedRoute } from '@angular/router';
+import { MockBackendService, StoreAvailabilityResult } from '../../utils';
 
 @Component({
   selector: 'app-store-locator',
@@ -18,23 +12,59 @@ interface StoreLocation {
 })
 export class StoreLocatorComponent {
   private readonly router = inject(Router);
-  public readonly searchQuery = signal<string>('Pannolini taglia 4');
-  public readonly productName = signal<string>('Pannolini taglia 4');
-  public readonly productStatus = signal<string>('esaurito nel tuo negozio');
+  private readonly route = inject(ActivatedRoute);
+  private readonly backendService = inject(MockBackendService);
 
-  public readonly locations = signal<StoreLocation[]>([
-    { id: 1, name: 'Parabiago', availability: 120, distance: '4,2 km' },
-    { id: 2, name: 'S. Vittore Olona', availability: 80, distance: '5,1 km' },
-    { id: 3, name: 'Canegrate', availability: 25, distance: '6,0 km' },
-    { id: 4, name: 'Busto Garolfo', availability: 0, distance: '7,8 km' }
-  ]);
+  public readonly searchQuery = signal<string>(
+    this.route.snapshot.queryParamMap.get('query') ?? ''
+  );
+
+  public onSearchInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+  }
+
+  // Risoluzione basata esclusivamente su SiteInventory
+  public readonly matchedProduct = computed<{ productId: string; productName: string } | undefined>(() => {
+    const query = this.searchQuery();
+    const results = this.backendService.searchInventoryProducts(query);
+    return results.length > 0 ? results[0] : undefined;
+  });
+
+  public readonly productName = computed<string>(() => {
+    const prod = this.matchedProduct();
+    if (prod) return prod.productName;
+    const query = this.searchQuery().trim();
+    return query ? query : 'Nessun prodotto cercato';
+  });
+
+  public readonly productStatus = computed<string>(() => {
+    const query = this.searchQuery().trim();
+    if (!query) return 'Digita il nome di un prodotto (es. Biscotti, Pasta, Pollo)...';
+    
+    const prod = this.matchedProduct();
+    if (!prod) return 'Articolo non trovato nelle sedi';
+    
+    const locations = this.backendService.getInventoriesForProduct(prod.productId);
+    const totalStock = locations.reduce((acc, curr) => acc + curr.stock, 0);
+
+    return totalStock > 0 
+      ? `Disponibile nel sistema (${totalStock} unità totali)` 
+      : 'Prodotto esaurito in tutte le sedi';
+  });
+
+  public readonly locations = computed<StoreAvailabilityResult[]>(() => {
+    const prod = this.matchedProduct();
+    if (!prod) return [];
+    return this.backendService.getInventoriesForProduct(prod.productId);
+  });
 
   public goBack(): void {
     this.router.navigate(['/home']);
   }
 
   public getAvailabilityColor(availability: number): string {
-    if (availability >= 80) return 'text-green';
+    if (availability >= 50) return 'text-green';
     if (availability > 0) return 'text-orange';
     return 'text-grey';
   }

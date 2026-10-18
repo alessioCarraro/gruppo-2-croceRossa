@@ -4,18 +4,19 @@
     <button class="back-btn" (click)="goBack()" aria-label="Indietro">
       <span class="icon-back"></span>
     </button>
-    <h1 class="page-title">Altre sedi</h1>
+    <h1 class="page-title">Cerca in altre sedi</h1>
   </header>
 
   <main class="main-content">
-    <!-- Search Bar -->
+    <!-- Search Bar Interattiva -->
     <div class="search-container">
       <span class="icon-search" aria-hidden="true"></span>
       <input 
         type="text" 
         class="search-input" 
         [value]="searchQuery()" 
-        readonly
+        (input)="onSearchInput($event)"
+        placeholder="Cerca un prodotto (es. Biscotti, Pasta, Pollo)..."
         aria-label="Cerca prodotto" />
     </div>
 
@@ -33,7 +34,7 @@
     <!-- Section Title -->
     <div class="section-header">
       <span class="dash"></span>
-      <h3 class="section-title">DISPONIBILE, PER VICINANZA</h3>
+      <h3 class="section-title">DISPONIBILITÀ PER SEDE</h3>
     </div>
 
     <!-- Data Table -->
@@ -45,17 +46,22 @@
       </div>
       
       <div class="table-body">
-        @for (loc of locations(); track loc.id; let isLast = $last) {
+        @for (loc of locations(); track loc.siteId; let isLast = $last) {
           <div class="table-row">
-            <span class="col-sede row-name">{{ loc.name }}</span>
-            <span class="col-disp row-value" [ngClass]="getAvailabilityColor(loc.availability)">
-              {{ loc.availability }}
+            <span class="col-sede row-name">{{ loc.siteName }}</span>
+            <span class="col-disp row-value" [ngClass]="getAvailabilityColor(loc.stock)">
+              {{ loc.stock }}
             </span>
             <span class="col-dist row-distance">{{ loc.distance }}</span>
           </div>
           @if (!isLast) {
             <hr class="divider" />
           }
+        }
+        @if (!matchedProduct()) {
+          <div class="empty-state" style="padding: 1.5rem; text-align: center; color: #666;">
+            Nessun articolo trovato nell'inventario delle sedi. Prova a digitare "Biscotti", "Pasta" o "Pollo".
+          </div>
         }
       </div>
     </div>
@@ -64,7 +70,7 @@
     <div class="info-banner" role="note">
       <span class="icon-info" aria-hidden="true">i</span>
       <p class="info-text">
-        Le sedi sono ordinate dalla più vicina. Vista in sola lettura della disponibilità.
+        La ricerca scansiona direttamente i registri di magazzino delle singole sedi di distribuzione.
       </p>
     </div>
   </main>
