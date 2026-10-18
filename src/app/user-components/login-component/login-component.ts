@@ -46,7 +46,7 @@ export class LoginComponent {
             );
             
             // Reindirizzamento eseguito solo dopo la risoluzione e il salvataggio dello stato
-            await this.router.navigate(['/home']);
+            await this.router.navigate(['/user-home']);
         } catch (err: any) {
             this.loginError.set(err.message || "Credenziali non valide o utente non autorizzato.");
         }

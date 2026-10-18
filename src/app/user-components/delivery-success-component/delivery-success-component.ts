@@ -1,37 +1,54 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { CartStateService } from '../../services/user-services/cart-service';
 
 interface SummaryItem {
-  label: string;
-  value: string | number;
-  highlight?: boolean;
+    label: string;
+    value: string | number;
+    highlight?: boolean;
 }
 
 @Component({
-  selector: 'app-delivery-success',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './delivery-success-component.html',
-  styleUrls: ['./delivery-success-component.css']
+    selector: 'app-delivery-success',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './delivery-success-component.html',
+    styleUrls: ['./delivery-success-component.css']
 })
 export class DeliverySuccessComponent {
-  // Stato del componente gestito tramite Signals
-  public readonly pageTitle = signal<string>('Consegna registrata');
-  public readonly pageSubtitle = signal<string>('Consegna salvata e stock locale aggiornato.');
-  
-  public readonly summaryDetails = signal<SummaryItem[]>([
-    { label: 'Beneficiario', value: 'Mario Rossi' },
-    { label: 'Numero prodotti', value: 3 },
-    { label: 'Token usati', value: 50 },
-    { label: 'Token residui', value: '370 / 575', highlight: true }
-  ]);
+    private readonly router = inject(Router);
+    private readonly cartState = inject(CartStateService);
 
-  // Azioni
-  public navigateToDashboard(): void {
-    console.log('Navigazione verso la dashboard...');
-  }
+    readonly pageTitle = signal('Consegna completata');
+    readonly pageSubtitle = signal('L’operazione è stata registrata con successo nel sistema.');
 
-  public startNewIdentification(): void {
-    console.log('Avvio nuova identificazione...');
-  }
+    // Mappa reattivamente i dati dinamici presi dal servizio condiviso
+    readonly summaryDetails = computed<SummaryItem[]>(() => [
+        { 
+            label: 'Beneficiario', 
+            value: this.cartState.beneficiaryName() 
+        },
+        { 
+            label: 'Prodotti consegnati', 
+            value: `${this.cartState.totalItemsCount()}` 
+        },
+        { 
+            label: 'Token utilizzati', 
+            value: `${this.cartState.usedTokens()} T` 
+        },
+        { 
+            label: 'Token residui', 
+            value: `${this.cartState.remainingTokens()} T`, 
+            highlight: true 
+        },
+        { 
+            label: 'Token totali', 
+            value: `${this.cartState.initialTokens()} T` 
+        }
+    ]);
+
+    navigateToDashboard(): void {
+        this.router.navigate(['/home']);
+    }
 }
