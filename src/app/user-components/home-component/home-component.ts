@@ -14,7 +14,7 @@ export class HomeComponent {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
-    readonly currentUser = this.authService.currentUser;
+    readonly currentUser = this.authService.currentOperator;
     readonly currentSite = this.authService.currentSite;
     readonly beneficiaries = signal<Beneficiary[]>(SEED_BENEFICIARIES);
     readonly userName = computed(() => this.currentUser()?.firstName ?? 'Ospite');

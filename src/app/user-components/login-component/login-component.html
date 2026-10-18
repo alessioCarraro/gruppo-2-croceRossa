@@ -56,8 +56,12 @@
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                 </svg>
-                <input id="distributionPoint" type="text" class="form-input" [value]="distributionPoint()"
-                    (input)="updateDistributionPoint($event)" placeholder="Negozio Legnano — Via Gilardelli" />
+                <select id="distributionPoint" class="form-input" (change)="updateDistributionPoint($event)">
+                    <option value="" disabled selected>Seleziona una sede</option>
+                    @for (site of availableSites(); track site.id) {
+                        <option [value]="site.name">{{ site.name }}</option>
+                    }
+                </select>
             </div>
         </div>
 
