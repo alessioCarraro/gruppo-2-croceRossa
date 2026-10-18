@@ -3,7 +3,9 @@
     <!-- Header -->
     <header class="header">
         <button class="btn-icon" (click)="goBack()" aria-label="Indietro">
-            <span class="icon-back"></span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
         </button>
         <h1 class="page-title">{{ pageTitle() }}</h1>
         <div class="badge-articles">{{ totalArticles() }}</div>
@@ -43,7 +45,7 @@
 
                 <div class="item-details">
                     <h2 class="item-name">
-                        {{ product.name }} <!-- <span class="item-weight" *ngIf="product.weight">{{ product.weight }} </span> -->
+                        {{ product.name }}
                     </h2>
 
                     <div class="item-meta">
@@ -64,9 +66,10 @@
                 </div>
 
                 <button class="btn-restock"
-                [class.btn-restock-danger]="product.stock === 0"
-                (click)="updateStock(product.id, 6)">
-                    Richiedi
+                [class.btn-restock-danger]="product.stock === 0 && !isRequested(product.id)"
+                [class.btn-restock-success]="isRequested(product.id)"
+                (click)="toggleRestockRequest(product.id)">
+                    {{ isRequested(product.id) ? 'Richiesto' : 'Richiedi' }}
                 </button>
             </article>
             } @empty {
@@ -76,57 +79,3 @@
 
     </main>
 </div>
-
-
-
-
-<!-- src/app/components/local-warehouse-component.html -->
-<!-- <div class="warehouse-container">
-    <header class="warehouse-header">
-        <h2>Magazzino Locale</h2>
-        <p>Gestione beni, token e scadenze</p>
-    </header>
-
-    <div class="filters-section">
-        <input type="text" [value]="searchQry()" (input)="setSearchQry($any($event.target).value)"
-            placeholder="Cerca prodotto..." class="search-input" />
-
-        <div class="category-filters">
-            <button [class.active]="selectedCategory() === 'ALL'" (click)="setCategory('ALL')">
-                Tutti
-            </button>
-            <button [class.active]="selectedCategory() === 'Pasta'" (click)="setCategory('Pasta')">
-                Alimentari
-            </button>
-            <button [class.active]="selectedCategory() === 'Altro'" (click)="setCategory('Altro')">
-                Igiene
-            </button>
-        </div>
-    </div>
-
-    <main class="product-grid">
-        @for (product of filteredProducts(); track product.id) {
-        <div class="product-card">
-            <div class="product-info">
-                <h3>{{ product.name }}</h3>
-                <span class="category-badge">{{ product.category }}</span>
-            </div>
-
-            <div class="product-details">
-                <p>Stock: <strong>{{ product.stock }}</strong> {{ product.unit }}</p>
-                <p>Costo: <strong>{{ product.price }}</strong> Token</p>
-                @if (product.expiry) {
-                <p class="expiry">Scadenza: {{ product.expiry }}</p>
-                }
-            </div>
-
-            <div class="product-actions">
-                <button (click)="updateStock(product.id, -1)" [disabled]="product.stock <= 0">-</button>
-                <button (click)="updateStock(product.id, 1)">+</button>
-            </div>
-        </div>
-        } @empty {
-            <p class="no-products">Nessun prodotto trovato.</p>
-            }
-    </main>
-</div> -->

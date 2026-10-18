@@ -11,15 +11,17 @@ import { Router } from '@angular/router';
     styleUrls: ['./local-warehouse-component.css']
 })
 export class LocalWarehouseComponent {
-    // Stato Globale della Schermata
     private readonly router = inject(Router);
+    
     public readonly pageTitle = signal<string>('Magazzino');
     public readonly totalArticles = signal<string>('1.284 art.');
     readonly products = signal<Product[]>(SEED_PRODUCTS);
     readonly searchQry = signal<string>('');
     readonly selectedCategory = signal<ProductCategory | 'ALL'>('ALL');
 
-    // Filtri di Categoria
+    // Traccia gli ID dei prodotti per cui è stata fatta la richiesta (senza toccare lo stock)
+    readonly requestedProductIds = signal<Set<string>>(new Set<string>());
+
     public readonly filteredProducts = computed(() => {
         const query = this.searchQry().toLocaleLowerCase();
         const category = this.selectedCategory();
@@ -31,38 +33,31 @@ export class LocalWarehouseComponent {
         });
     });
 
-    updateStock(productId: string, quantityChange: number): void {
-        this.products.update(currentProducts =>
-            currentProducts.map(product => {
-                if (product.id === productId) {
-                    const newStock = Math.max(0, product.stock + quantityChange);
-                    return { ...product, stock: newStock};
-                }
-                return product;
-            })
-        );
+    toggleRestockRequest(productId: string): void {
+        this.requestedProductIds.update(currentRequests => {
+            const updatedRequests = new Set(currentRequests);
+            if (updatedRequests.has(productId)) {
+                updatedRequests.delete(productId);
+            } else {
+                updatedRequests.add(productId);
+            }
+            return updatedRequests;
+        });
+    }
+
+    isRequested(productId: string): boolean {
+        return this.requestedProductIds().has(productId);
     }
 
     setSearchQry(query: string): void {
-        this.searchQry.set(query)
+        this.searchQry.set(query);
     }
 
     setCategory(category: ProductCategory | 'ALL'): void {
         this.selectedCategory.set(category);
     }
 
-    // Azioni
     public goBack(): void {
-       this.router.navigate(['/home']);
+        this.router.navigate(['/user-home']);
     }
-
-    // public selectFilter(filterId: string): void {
-    //     this.filters.update(currentFilters =>
-    //         currentFilters.map(f => ({ ...f, selected: f.id === filterId }))
-    //     );
-    // }
-
-    // public restockItem(item: CatalogItem): void {
-    //     console.log(`Richiesta restock per: ${item.name}`);
-    // }
 }
