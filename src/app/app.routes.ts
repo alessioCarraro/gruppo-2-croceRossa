@@ -10,8 +10,8 @@ import { SummaryComponent } from './user-components/summary-component/summary-co
 import { DeliverySuccessComponent } from './user-components/delivery-success-component/delivery-success-component';
 import { AdminHomeComponent } from './admin-components/component/admin-home-component/admin-home-component';
 import { SuperAdminDashboardComponent } from './super-admin-components/component/super-admin-dashboard/super-admin-dashboard';
-import { UserMetroDashboardComponent } from './user-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
-import { AdminMetroProfileComponent } from './user-metro-components/component/admin-metro-profile/admin-metro-profile';
+import { UserMetroDashboardComponent } from './admin-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
+import { AdminMetroProfileComponent } from './admin-metro-components/component/admin-metro-profile/admin-metro-profile';
 import { SuperAdminProfileComponent } from './super-admin-components/component/super-admin-profile-component/super-admin-profile-component';
 import { SuperAdminMetroStockComponent } from './super-admin-components/component/super-admin-metro-stock/super-admin-metro-stock';
 import { SuperAdminLoadItemComponent } from './super-admin-components/component/super-admin-load-item-component/super-admin-load-item-component';
@@ -20,21 +20,23 @@ import { SuperAdminExpiringProductsComponent } from './super-admin-components/co
 import { SuperAdminRestoockComponent } from './super-admin-components/component/super-admin-restoock-component/super-admin-restoock-component';
 import { SuperAdminAdminLocationsComponent } from './super-admin-components/component/super-admin-admin-locations/super-admin-admin-locations';
 import { SuperAdminUserLocationsComponent } from './super-admin-components/component/super-admin-user-locations/super-admin-user-locations';
-import { AdminMetroStockComponent } from './user-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
-import { AdminMetroLoadItemComponent } from './user-metro-components/component/admin-metro-load-item-component/admin-metro-load-item-component';
+import { AdminMetroStockComponent } from './admin-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
+import { AdminMetroLoadItemComponent } from './admin-metro-components/component/admin-metro-load-item-component/admin-metro-load-item-component';
 import { SuperAdminAddExistingItemComponent } from './super-admin-components/component/super-admin-add-existing-item/super-admin-add-existing-item';
 import { SuperAdminAddNewItemComponent } from './super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component';
-import { AdminMetroRestockComponent } from './user-metro-components/component/admin-metro-restock-component/admin-metro-restock-component';
-import { AdminMetroAdminLocationsComponent } from './user-metro-components/component/admin-metro-admin-locations/admin-metro-admin-locations';
-import { AdminMetroUserLocationsComponent } from './user-metro-components/component/admin-metro-user-locations/admin-metro-user-locations';
+import { AdminMetroRestockComponent } from './admin-metro-components/component/admin-metro-restock-component/admin-metro-restock-component';
+import { AdminWarehouseComponent } from './admin-components/component/admin-warehouse-component/admin-warehouse-component';
+import { AdminQrScannerComponent } from './admin-components/component/admin-qr-scanner-component/admin-qr-scanner-component';
+import { AdminStoreLocatorComponent } from './admin-components/component/admin-stor-locator-component/admin-stor-locator-component';
+import { RequestsComponent } from './admin-components/component/admin-requests-component/admin-requests-component';
+import { AdminPersonProfileComponent } from './admin-components/component/admin-personal-profile-component/admin-personal-profile-component';
+import { AdminTrackingNumberComponent } from './admin-components/component/admin-tracking-number/admin-tracking-number';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'user-home', component: HomeComponent },
   { path: 'user-metro-dashboard', component: UserMetroDashboardComponent },
-  { path: 'admin-home', component: AdminHomeComponent },
-  { path: 's-admin-home', component: SuperAdminDashboardComponent },
   { path: 'warehouse', component: LocalWarehouseComponent },
   { path: 'store-locator', component: StoreLocatorComponent },
   { path: 'person-profile', component: PersonProfileComponent },
@@ -42,16 +44,21 @@ export const routes: Routes = [
   { path: 'product-catalog', component: ProductCatalogComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'delivery-success', component: DeliverySuccessComponent },
-
+  
   // Rotte admin
-  { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
-  { path: 'admin-metro-stock', component: AdminMetroStockComponent },
-  { path: 'admin-metro-load-item', component: AdminMetroLoadItemComponent },
-  { path: 'admin-metro-restock', component: AdminMetroRestockComponent },
-  { path: 'admin-metro-admin-locations', component: AdminMetroAdminLocationsComponent },
-  { path: 'admin-metro-user-locations', component: AdminMetroUserLocationsComponent },
+  { path: 'admin-home', component: AdminHomeComponent },
+  { path: 'admin-profile', component: AdminPersonProfileComponent },
+  { path: 'admin-stock', component: AdminMetroStockComponent },
+  { path: 'admin-load-item', component: AdminMetroLoadItemComponent },
+  { path: 'admin-restock', component: AdminMetroRestockComponent },
+  { path: 'admin-warehouse', component: AdminWarehouseComponent },
+  { path: 'admin-qr-scanner', component: AdminQrScannerComponent },
+  { path: 'admin-store-locator', component: AdminStoreLocatorComponent },
+  { path: 'admin-requests', component: RequestsComponent },
+  { path: 'admin-tracking-number', component: AdminTrackingNumberComponent },
   
   // Rotte Super Admin
+  { path: 's-admin-home', component: SuperAdminDashboardComponent },
   { path: 's-admin-profile', component: SuperAdminProfileComponent },
   { path: 's-admin-metro-stock', component: SuperAdminMetroStockComponent },
   { path: 's-admin-load-item', component: SuperAdminLoadItemComponent },
@@ -62,6 +69,6 @@ export const routes: Routes = [
   { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
   { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
   { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
-
+  
   { path: '**', redirectTo: 'login' }
 ];

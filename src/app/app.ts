@@ -20,19 +20,19 @@ import { AdminTrackingNumberComponent } from './admin-components/component/admin
 import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
 import { AdminStoreLocatorComponent } from './admin-components/component/admin-stor-locator-component/admin-stor-locator-component';
 import { ExpiringProductsComponent } from './admin-components/component/expiring-products-component/expiring-products-component';
-import { UserMetroDashboardComponent } from './user-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
-import { AdminMetroProfileComponent } from './user-metro-components/component/admin-metro-profile/admin-metro-profile';
-import { AdminMetroStockComponent } from './user-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
-import { AdminMetroExpiringProductsComponent } from './user-metro-components/component/admin-metro-expiring-products-component/admin-metro-expiring-products-component';
-import { AdminMetroAdminLocationsComponent } from './user-metro-components/component/admin-metro-admin-locations/admin-metro-admin-locations';
-import { AdminMetroUserLocationsComponent } from './user-metro-components/component/admin-metro-user-locations/admin-metro-user-locations';
-import { AdminMetroLoadItemComponent } from './user-metro-components/component/admin-metro-load-item-component/admin-metro-load-item-component';
-import { AdminMetroAddExistingItemComponent } from './user-metro-components/component/admin-metro-add-existing-item-component/admin-metro-add-existing-item-component';
-import { AdminMetroAddNewItemComponent } from './user-metro-components/component/admin-metro-add-new-item-component/admin-metro-add-new-item-component';
-import { AdminMetroRestockComponent } from './user-metro-components/component/admin-metro-restock-component/admin-metro-restock-component';
-import { AdminMetroRestockSingleStoreComponent } from './user-metro-components/component/admin-metro-restock-sigle-store-component/admin-metro-restock-sigle-store-component';
-import { AdminMetroRestockSummary } from './user-metro-components/component/admin-metro-restock-summary/admin-metro-restock-summary';
-import { AdminMetroRequestSentComponent } from './user-metro-components/component/admin-metro-request-sent-component/admin-metro-request-sent-component';
+import { UserMetroDashboardComponent } from './admin-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
+import { AdminMetroProfileComponent } from './admin-metro-components/component/admin-metro-profile/admin-metro-profile';
+import { AdminMetroStockComponent } from './admin-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
+import { AdminMetroExpiringProductsComponent } from './admin-metro-components/component/admin-metro-expiring-products-component/admin-metro-expiring-products-component';
+import { AdminMetroAdminLocationsComponent } from './admin-metro-components/component/admin-metro-admin-locations/admin-metro-admin-locations';
+import { AdminMetroUserLocationsComponent } from './admin-metro-components/component/admin-metro-user-locations/admin-metro-user-locations';
+import { AdminMetroLoadItemComponent } from './admin-metro-components/component/admin-metro-load-item-component/admin-metro-load-item-component';
+import { AdminMetroAddExistingItemComponent } from './admin-metro-components/component/admin-metro-add-existing-item-component/admin-metro-add-existing-item-component';
+import { AdminMetroAddNewItemComponent } from './admin-metro-components/component/admin-metro-add-new-item-component/admin-metro-add-new-item-component';
+import { AdminMetroRestockComponent } from './admin-metro-components/component/admin-metro-restock-component/admin-metro-restock-component';
+import { AdminMetroRestockSingleStoreComponent } from './admin-metro-components/component/admin-metro-restock-sigle-store-component/admin-metro-restock-sigle-store-component';
+import { AdminMetroRestockSummary } from './admin-metro-components/component/admin-metro-restock-summary/admin-metro-restock-summary';
+import { AdminMetroRequestSentComponent } from './admin-metro-components/component/admin-metro-request-sent-component/admin-metro-request-sent-component';
 import { SuperAdminDashboardComponent } from './super-admin-components/component/super-admin-dashboard/super-admin-dashboard';
 import { SuperAdminProfileComponent } from './super-admin-components/component/super-admin-profile-component/super-admin-profile-component';
 import { SuperAdminMetroStockComponent } from './super-admin-components/component/super-admin-metro-stock/super-admin-metro-stock';
@@ -62,7 +62,7 @@ import { SuperAdminRequestDetailsComponent } from './super-admin-components/comp
     RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent,
     AdminStoreLocatorComponent, ExpiringProductsComponent, UserMetroDashboardComponent, AdminMetroProfileComponent, AdminMetroStockComponent,
     AdminMetroExpiringProductsComponent, AdminMetroAdminLocationsComponent, AdminMetroUserLocationsComponent, AdminMetroLoadItemComponent,
-    AdminMetroAddExistingItemComponent, AdminMetroAddNewItemComponent, AdminMetroRestockComponent, AdminMetroRestockComponent, AdminMetroRestockSingleStoreComponent,
+    AdminMetroAddNewItemComponent, AdminMetroRestockComponent, AdminMetroRestockComponent, AdminMetroRestockSingleStoreComponent,
      AdminMetroRestockSummary, AdminMetroRequestSentComponent, SuperAdminDashboardComponent, SuperAdminProfileComponent, SuperAdminMetroStockComponent,
      SuperAdminExpiringProductsComponent, SuperAdminAdminLocationsComponent, SuperAdminUserLocationsComponent, SuperAdminLoadItemComponent,
      SuperAdminAddExistingItemComponent, SuperAdminAddNewItemComponent, SuperAdminRestoockComponent, SuperAdminRestockSingleStoreComponent,
