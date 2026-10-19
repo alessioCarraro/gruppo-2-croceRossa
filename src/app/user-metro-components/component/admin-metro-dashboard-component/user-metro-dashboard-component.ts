@@ -30,8 +30,8 @@ export class UserMetroDashboardComponent {
   ]);
 
   readonly controls = signal<ControlItem[]>([
-    { id: 'admins', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray', route: '/s-admin-admin-locations' },
-    { id: 'volunteers', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray', route: '/s-admin-user-locations' }
+    { id: 'admins', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray', route: '/admin-metro-admin-locations' },
+    { id: 'volunteers', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray', route: '/admin-metro-user-locations' }
   ]);
 
   readonly navItems = signal<NavItem[]>([
@@ -47,6 +47,12 @@ export class UserMetroDashboardComponent {
 
   public onProfile(): void {
     this.router.navigate(['/admin-metro-profile']);
+  }
+
+  public onMetricClick(route?: string): void {
+    if (route) {
+      this.router.navigate([route]);
+    }
   }
 
   public onControlClick(route: string): void {

@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, computed, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 
 interface UserContact {
   id: string;
@@ -17,7 +17,10 @@ interface UserContact {
   styleUrls: ['./admin-metro-user-locations.css']
 })
 export class AdminMetroUserLocationsComponent {
-  public userContacts = signal<UserContact[]>([
+  // Iniezione del servizio nativo Location per la gestione della cronologia
+  private readonly location = inject(Location);
+
+  public readonly userContacts = signal<UserContact[]>([
     {
       id: '1',
       initials: 'MR',
@@ -48,5 +51,13 @@ export class AdminMetroUserLocationsComponent {
     }
   ]);
 
-  public totalUsers = signal<number>(this.userContacts().length);
+  // Sostituzione del signal statico con un signal derivato reattivo (computed)
+  public readonly totalUsers = computed(() => this.userContacts().length);
+
+  /**
+   * Riporta l'utente alla schermata precedente (Dashboard)
+   */
+  public goBack(): void {
+    this.location.back();
+  }
 }

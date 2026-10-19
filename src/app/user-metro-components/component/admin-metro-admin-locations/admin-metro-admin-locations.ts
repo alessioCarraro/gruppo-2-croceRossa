@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, computed, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 
 interface AdminContact {
   id: string;
@@ -17,7 +17,10 @@ interface AdminContact {
   styleUrls: ['./admin-metro-admin-locations.css']
 })
 export class AdminMetroAdminLocationsComponent {
-  public adminContacts = signal<AdminContact[]>([
+  // 1. Inietta il servizio nativo Location per gestire la history del browser
+  private readonly location = inject(Location);
+
+  public readonly adminContacts = signal<AdminContact[]>([
     {
       id: '1',
       initials: 'MC',
@@ -62,5 +65,13 @@ export class AdminMetroAdminLocationsComponent {
     }
   ]);
 
-  public totalAdmins = signal<number>(this.adminContacts().length);
+  // 2. Utilizza computed() per calcolare dinamicamente e reattivamente il totale
+  public readonly totalAdmins = computed(() => this.adminContacts().length);
+
+  /**
+   * Riporta l'utente alla schermata precedente (Dashboard)
+   */
+  public goBack(): void {
+    this.location.back();
+  }
 }
