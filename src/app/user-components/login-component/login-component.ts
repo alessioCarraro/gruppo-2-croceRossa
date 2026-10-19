@@ -101,7 +101,6 @@ export class LoginComponent {
                     await this.router.navigate(['/user-metro-dashboard']);
                     break;
                 case 'User':
-                default:
                     await this.router.navigate(['/user-home']);
                     break;
             }
