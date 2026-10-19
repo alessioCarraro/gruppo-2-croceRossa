@@ -52,6 +52,8 @@ export const routes: Routes = [
   { path: 's-admin-expiring-products', component: SuperAdminExpiringProductsComponent },
   { path: 's-admin-admin-locations', component: SuperAdminAdminLocationsComponent },
   { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
+  { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
+  { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
 
   { path: '**', redirectTo: 'login' }
 ];
