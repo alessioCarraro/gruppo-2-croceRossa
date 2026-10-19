@@ -36,5 +36,16 @@ export const routes: Routes = [
   { path: 'summary', component: SummaryComponent },
   { path: 'delivery-success', component: DeliverySuccessComponent },
   { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
+  
+  // Rotte Super Admin
+  { path: 's-admin-profile', component: SuperAdminProfileComponent },
+  { path: 's-admin-metro-stock', component: SuperAdminMetroStockComponent },
+  { path: 's-admin-load-item', component: SuperAdminLoadItemComponent },
+  { path: 's-admin-restock', component: SuperAdminRestoockComponent },
+  { path: 's-admin-approval-requests', component: SuperAdminApprovalRequestsComponent },
+  { path: 's-admin-expiring-products', component: SuperAdminExpiringProductsComponent },
+  { path: 's-admin-admin-locations', component: SuperAdminAdminLocationsComponent },
+  { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
+
   { path: '**', redirectTo: 'login' }
 ];

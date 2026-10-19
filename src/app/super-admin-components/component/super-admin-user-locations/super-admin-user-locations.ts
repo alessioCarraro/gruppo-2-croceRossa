@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
 
 interface UserContact {
   id: string;
@@ -17,38 +19,38 @@ interface UserContact {
   styleUrls: ['./super-admin-user-locations.css']
 })
 export class SuperAdminUserLocationsComponent {
-  public userContacts = signal<UserContact[]>([
-    {
-      id: '1',
-      initials: 'MR',
-      name: 'Mario Rossi',
-      location: 'Negozio Legnano - Via Gilardelli',
-      role: 'User'
-    },
-    {
-      id: '2',
-      initials: 'GB',
-      name: 'Giulia Bianchi',
-      location: 'Negozio Parabiago',
-      role: 'User'
-    },
-    {
-      id: '3',
-      initials: 'AF',
-      name: 'Alessandro Ferrari',
-      location: 'S. Vittore Olona',
-      role: 'User'
-    },
-    {
-      id: '4',
-      initials: 'LC',
-      name: 'Laura Colombo',
-      location: 'Canegrate',
-      role: 'User'
-    }
-  ]);
+  private readonly router = inject(Router);
+  private readonly backendService: MockBackendService = inject(MockBackendService);
 
-  public totalUsers = signal<number>(this.userContacts().length);
+  // Generazione dinamica della lista utenti (volontari)
+  public readonly userContacts = computed<UserContact[]>(() => {
+    // Filtriamo gli operatori prendendo solo 'User' e 'Operator'
+    const users = this.backendService.operators().filter(op => op.role === 'User' || op.role === 'Operator');
+
+    return users.map(user => {
+      // Calcolo iniziali automatico
+      const initials = (user.firstName.charAt(0) + user.lastName.charAt(0)).toUpperCase();
+      
+      // Nome della sede dal service
+      const siteName = this.backendService.getSiteName(user.siteId);
+
+      return {
+        id: user.id,
+        initials: initials,
+        name: `${user.firstName} ${user.lastName}`,
+        location: siteName,
+        role: user.role
+      };
+    });
+  });
+
+  // Il conteggio si aggiorna in automatico
+  public readonly totalUsers = computed<number>(() => this.userContacts().length);
+
+  // Torna alla dashboard
+  goBack(): void {
+    this.router.navigate(['/s-admin-home']);
+  }
 
   editUser(user: UserContact): void {
     console.log('Modifica utente:', user.name);
