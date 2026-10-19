@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 
 interface StockOption {
   id: string;
@@ -21,6 +21,9 @@ interface SearchResult {
   styleUrls: ['./admin-metro-load-item-component.css']
 })
 export class AdminMetroLoadItemComponent {
+  // Iniezione del servizio Location per gestire la navigazione indietro
+  private readonly location = inject(Location);
+
   public searchQuery = signal<string>('Lattina di ceci');
   
   public searchResult = signal<SearchResult | null>({
@@ -50,5 +53,12 @@ export class AdminMetroLoadItemComponent {
 
   public addToStock(): void {
     console.info('Aggiunto al magazzino:', this.searchResult()?.name);
+  }
+
+  /**
+   * Riporta l'utente alla schermata precedente (es. Dashboard)
+   */
+  public goBack(): void {
+    this.location.back();
   }
 }

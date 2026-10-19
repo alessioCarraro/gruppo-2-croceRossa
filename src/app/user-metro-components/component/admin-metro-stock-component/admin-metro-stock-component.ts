@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 
 interface InventoryItem {
   id: string;
@@ -19,6 +19,9 @@ interface InventoryItem {
   styleUrls: ['./admin-metro-stock-component.css']
 })
 export class AdminMetroStockComponent {
+  // Iniezione del servizio Location per la navigazione nella history
+  private readonly location = inject(Location);
+
   public filters = signal<string[]>(['Tutti', 'Pasta', 'Omogeneizzati', 'Carne']);
   public activeFilter = signal<string>('Tutti');
   
@@ -72,5 +75,12 @@ export class AdminMetroStockComponent {
 
   public selectFilter(filter: string): void {
     this.activeFilter.set(filter);
+  }
+
+  /**
+   * Riporta l'utente alla schermata precedente (Dashboard)
+   */
+  public goBack(): void {
+    this.location.back();
   }
 }
