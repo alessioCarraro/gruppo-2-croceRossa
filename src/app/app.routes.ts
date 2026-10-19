@@ -11,7 +11,6 @@ import { DeliverySuccessComponent } from './user-components/delivery-success-com
 import { AdminHomeComponent } from './admin-components/component/admin-home-component/admin-home-component';
 import { SuperAdminDashboardComponent } from './super-admin-components/component/super-admin-dashboard/super-admin-dashboard';
 import { UserMetroDashboardComponent } from './admin-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
-import { AdminMetroProfileComponent } from './admin-metro-components/component/admin-metro-profile/admin-metro-profile';
 import { SuperAdminProfileComponent } from './super-admin-components/component/super-admin-profile-component/super-admin-profile-component';
 import { SuperAdminMetroStockComponent } from './super-admin-components/component/super-admin-metro-stock/super-admin-metro-stock';
 import { SuperAdminLoadItemComponent } from './super-admin-components/component/super-admin-load-item-component/super-admin-load-item-component';
@@ -69,6 +68,18 @@ export const routes: Routes = [
   { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
   { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
   { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
+
+  // Rotte Operator
+  { path: 'user-metro-home', component: AdminHomeComponent },
+  { path: 'user-metro-profile', component: AdminPersonProfileComponent },
+  { path: 'user-metro-stock', component: AdminMetroStockComponent },
+  { path: 'user-metro-load-item', component: AdminMetroLoadItemComponent },
+  { path: 'user-metro-restock', component: AdminMetroRestockComponent },
+  { path: 'user-metro-warehouse', component: AdminWarehouseComponent },
+  { path: 'user-metro-qr-scanner', component: AdminQrScannerComponent },
+  { path: 'user-metro-store-locator', component: AdminStoreLocatorComponent },
+  { path: 'user-metro-requests', component: RequestsComponent },
+  { path: 'user-metro-tracking-number', component: AdminTrackingNumberComponent },
   
   { path: '**', redirectTo: 'login' }
 ];
