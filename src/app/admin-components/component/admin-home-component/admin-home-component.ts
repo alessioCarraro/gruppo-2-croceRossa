@@ -33,9 +33,9 @@ export class AdminHomeComponent {
 
     readonly statsToday = signal([
         { value: '41', label: 'Consegne registrate', subLabel: 'rete locale', actionText: null, actionType: null },
-        { value: '5', label: 'Colli in arrivo', subLabel: null, actionText: 'conferma ricezione', actionType: 'primary' },
-        { value: '7', label: 'Prodotti in esaurimento', subLabel: null, actionText: 'aggiungi all\'ordine', actionType: 'danger' },
-        { value: '12', label: 'Prossimi a scadenza', subLabel: null, actionText: 'entro 14 gg', actionType: 'warning' }
+        { value: '5', label: 'Colli in arrivo', subLabel: null, actionText: 'conferma ricezione', actionType: 'primary', route: '/admin-tracking-number' },
+        { value: '7', label: 'Prodotti in esaurimento', subLabel: null, actionText: 'aggiungi all\'ordine', actionType: 'danger', route: '/admin-low-stock' },
+        { value: '12', label: 'Prossimi a scadenza', subLabel: null, actionText: 'entro 14 gg', actionType: 'warning', route: '/admin-expiring-product' }
     ]);
 
     setTab(tab: string): void {
@@ -62,5 +62,11 @@ export class AdminHomeComponent {
 
     onLogout(): void {
         this.router.navigate(['/login']);
+    }
+
+    navigateTo(route?: string): void {
+        if (route) {
+            this.router.navigate([route]);
+        }
     }
 }

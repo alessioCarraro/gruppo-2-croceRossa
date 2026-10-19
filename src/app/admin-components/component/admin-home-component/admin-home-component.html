@@ -51,7 +51,7 @@
             <h2 class="section-title"><span class="dash"></span> OGGI</h2>
             <div class="stats-grid">
                 @for (stat of statsToday(); track stat.label) {
-                <div class="stat-card">
+                <div class="stat-card" [class.clickable]="stat.route" (click)="navigateTo(stat.route)">
                     <div class="stat-header">
                         <span class="stat-value" [class.text-primary]="stat.actionType === 'primary'"
                             [class.text-danger]="stat.actionType === 'danger'"
