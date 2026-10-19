@@ -12,6 +12,14 @@ import { AdminHomeComponent } from './admin-components/component/admin-home-comp
 import { SuperAdminDashboardComponent } from './super-admin-components/component/super-admin-dashboard/super-admin-dashboard';
 import { UserMetroDashboardComponent } from './user-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
 import { AdminMetroProfileComponent } from './user-metro-components/component/admin-metro-profile/admin-metro-profile';
+import { SuperAdminProfileComponent } from './super-admin-components/component/super-admin-profile-component/super-admin-profile-component';
+import { SuperAdminMetroStockComponent } from './super-admin-components/component/super-admin-metro-stock/super-admin-metro-stock';
+import { SuperAdminLoadItemComponent } from './super-admin-components/component/super-admin-load-item-component/super-admin-load-item-component';
+import { SuperAdminApprovalRequestsComponent } from './super-admin-components/component/super-admin-approval-requests-component/super-admin-approval-requests-component';
+import { SuperAdminExpiringProductsComponent } from './super-admin-components/component/super-admin-expiring-products-component/super-admin-expiring-products-component';
+import { SuperAdminRestoockComponent } from './super-admin-components/component/super-admin-restoock-component/super-admin-restoock-component';
+import { SuperAdminAdminLocationsComponent } from './super-admin-components/component/super-admin-admin-locations/super-admin-admin-locations';
+import { SuperAdminUserLocationsComponent } from './super-admin-components/component/super-admin-user-locations/super-admin-user-locations';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -27,6 +35,5 @@ export const routes: Routes = [
   { path: 'product-catalog', component: ProductCatalogComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'delivery-success', component: DeliverySuccessComponent },
-  { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
   { path: '**', redirectTo: 'login' }
 ];
