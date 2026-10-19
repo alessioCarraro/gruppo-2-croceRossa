@@ -31,7 +31,7 @@ export class UserMetroDashboardComponent {
 
   readonly controls = signal<ControlItem[]>([
     { id: 'admins', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray', route: '/admin-metro-admin-locations' },
-    { id: 'volunteers', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray', route: '/admin-metro-user-locations' }
+    { id: 'volunteers', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 4, badgeClass: 'gray', route: '/admin-metro-user-locations' }
   ]);
 
   readonly navItems = signal<NavItem[]>([
