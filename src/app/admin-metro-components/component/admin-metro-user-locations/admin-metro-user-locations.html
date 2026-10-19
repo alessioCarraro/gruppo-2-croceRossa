@@ -1,0 +1,33 @@
+<main class="user-screen">
+  <header class="header">
+    <!-- Aggiunto il binding dell'evento (click) per scatenare la navigazione -->
+    <button class="back-button" aria-label="Torna indietro" (click)="goBack()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18L9 12L15 6" stroke="#1C2B39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <h1 class="title">Utenti delle sedi</h1>
+    <span class="count-badge">{{ totalUsers() }}</span>
+  </header>
+
+  <p class="subtitle">Utenti attualmente attivi, con la relativa sede.</p>
+
+  <section class="user-list-container">
+    @for (user of userContacts(); track user.id) {
+      <article class="user-card">
+        <div class="user-avatar">
+          {{ user.initials }}
+        </div>
+        
+        <div class="user-details">
+          <h2 class="user-name">{{ user.name }}</h2>
+          <p class="user-location">{{ user.location }}</p>
+        </div>
+
+        <div class="user-role-badge">
+          {{ user.role }}
+        </div>
+      </article>
+    }
+  </section>
+</main>

@@ -1,0 +1,33 @@
+<main class="admin-screen">
+  <header class="header">
+    <!-- 3. Aggiunto il binding (click)="goBack()" al pulsante indietro -->
+    <button class="back-button" aria-label="Torna indietro" (click)="goBack()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18L9 12L15 6" stroke="#1C2B39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <h1 class="title">Admin delle sedi</h1>
+    <span class="count-badge">{{ totalAdmins() }}</span>
+  </header>
+
+  <p class="subtitle">Referenti attualmente attivi, con la relativa sede.</p>
+
+  <section class="admin-list-container">
+    @for (admin of adminContacts(); track admin.id) {
+      <article class="admin-card">
+        <div class="admin-avatar">
+          {{ admin.initials }}
+        </div>
+        
+        <div class="admin-details">
+          <h2 class="admin-name">{{ admin.name }}</h2>
+          <p class="admin-location">{{ admin.location }}</p>
+        </div>
+
+        <div class="admin-role-badge">
+          {{ admin.role }}
+        </div>
+      </article>
+    }
+  </section>
+</main>
