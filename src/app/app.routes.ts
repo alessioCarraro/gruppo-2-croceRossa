@@ -30,6 +30,9 @@ import { AdminStoreLocatorComponent } from './admin-components/component/admin-s
 import { RequestsComponent } from './admin-components/component/admin-requests-component/admin-requests-component';
 import { AdminPersonProfileComponent } from './admin-components/component/admin-personal-profile-component/admin-personal-profile-component';
 import { AdminTrackingNumberComponent } from './admin-components/component/admin-tracking-number/admin-tracking-number';
+import { AdminMetroProfileComponent } from './admin-metro-components/component/admin-metro-profile/admin-metro-profile';
+import { AdminMetroAdminLocationsComponent } from './admin-metro-components/component/admin-metro-admin-locations/admin-metro-admin-locations';
+import { AdminMetroUserLocationsComponent } from './admin-metro-components/component/admin-metro-user-locations/admin-metro-user-locations';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -70,13 +73,12 @@ export const routes: Routes = [
   { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
 
   // Rotte Operator
-  { path: 'user-metro-home', component: AdminHomeComponent },
-  { path: 'user-metro-profile', component: AdminPersonProfileComponent },
+  { path: 'user-metro-profile', component: AdminMetroProfileComponent },
   { path: 'user-metro-stock', component: AdminMetroStockComponent },
   { path: 'user-metro-load-item', component: AdminMetroLoadItemComponent },
   { path: 'user-metro-restock', component: AdminMetroRestockComponent },
-  { path: 'user-metro-warehouse', component: AdminWarehouseComponent },
-  { path: 'user-metro-qr-scanner', component: AdminQrScannerComponent },
+  { path: 'user-metro-admin-location', component: AdminMetroAdminLocationsComponent },
+  { path: 'user-metro-user-location', component: AdminMetroUserLocationsComponent },
   { path: 'user-metro-store-locator', component: AdminStoreLocatorComponent },
   { path: 'user-metro-requests', component: RequestsComponent },
   { path: 'user-metro-tracking-number', component: AdminTrackingNumberComponent },

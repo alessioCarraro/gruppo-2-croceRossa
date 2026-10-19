@@ -32,8 +32,8 @@ export class UserMetroDashboardComponent {
   ]);
 
   readonly controls = signal<ControlItem[]>([
-    { id: 'admins', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray', route: '/admin-metro-admin-locations' },
-    { id: 'volunteers', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray', route: '/admin-metro-user-locations' }
+    { id: 'admins', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray', route: '/user-metro-admin-location' },
+    { id: 'volunteers', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray', route: '/user-metro-user-location' }
   ]);
 
   readonly navItems = signal<NavItem[]>([
@@ -46,16 +46,16 @@ export class UserMetroDashboardComponent {
   setTab(tab: string): void {
         this.activeTab.set(tab);
         if (tab === 'home') {
-            this.router.navigate(['/admin-home']);
+            this.router.navigate(['/user-metro-dashboard']);
         }
         if (tab === 'inventario') {
-            this.router.navigate(['/admin-warehouse']);
+            this.router.navigate(['/user-metro-stock']);
         }
         if (tab === 'carico') {
-            this.router.navigate(['/admin-store-locator']);
+            this.router.navigate(['/user-metro-load-item']);
         }
         if (tab === 'rifornitura') {
-            this.router.navigate(['/admin-requests']);
+            this.router.navigate(['/user-metro-restock']);
         }
     }
 
@@ -64,7 +64,7 @@ export class UserMetroDashboardComponent {
   }
 
   public onProfile(): void {
-    this.router.navigate(['/admin-metro-profile']);
+    this.router.navigate(['/user-metro-profile']);
   }
 
   public onMetricClick(route?: string): void {
