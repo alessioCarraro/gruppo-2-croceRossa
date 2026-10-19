@@ -7,10 +7,10 @@
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </button>
-      <h1 class="screen-title">Nome sede</h1>
+      <h1 class="screen-title">{{ siteName() }}</h1>
     </div>
 
-    <button class="cart-btn" aria-label="Carrello">
+    <button class="cart-btn" (click)="reviewOrder()" aria-label="Carrello">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A2B3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="9" cy="21" r="1"></circle>
         <circle cx="20" cy="21" r="1"></circle>
@@ -26,7 +26,12 @@
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" class="search-input" placeholder="Cerca un prodotto..." />
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Cerca un prodotto..." 
+        [value]="searchQuery()" 
+        (input)="updateSearchQuery($event)" />
     </div>
   </section>
 
@@ -46,14 +51,14 @@
     <!-- Sezione: Richieste della sede -->
     <h2 class="section-heading">Richieste della sede</h2>
     <div class="items-list">
-      @for (req of storeRequests(); track req.id) {
+      @for (req of filteredRequests(); track req.id) {
         <article class="product-card">
           <div class="card-header">
             <h3 class="product-title">{{ req.name }}</h3>
           </div>
           <div class="product-details">
             <p>
-              Quantità in Metro {{ req.stockSede }} 
+              Quantità in Metro <strong>{{ req.stockMagazzino }}</strong> &middot; In sede <strong>{{ req.stockSede }}</strong>
               @if (req.expiryDate) { &middot; scad {{ req.expiryDate }} }
             </p>
           </div>
@@ -76,16 +81,17 @@
             }
           </div>
         </article>
+      } @empty {
+        <p style="color: #8E8E93; font-size: 14px; padding: 4px 0;">Nessuna richiesta di riordino attiva per questa sede.</p>
       }
     </div>
 
     <!-- Sezione: Catalogo Magazzino -->
     <h2 class="section-heading">Catalogo magazzino</h2>
     <div class="items-list pb-fab">
-      @for (item of storeCatalog(); track item.id) {
+      @for (item of filteredCatalog(); track item.id) {
         <article class="product-card catalog-card">
           
-          <!-- Struttura Flex riadattata per includere le actions in basso -->
           <div class="catalog-card-header">
             <div class="catalog-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -98,14 +104,13 @@
               <h3 class="product-title">{{ item.name }}</h3>
               <div class="product-details">
                 <p>
-                  Quantità in Metro {{ item.stockSede }} &middot; 
+                  Quantità in Metro <strong>{{ item.stockMagazzino }}</strong> &middot; 
                   scad <span [class.text-warning]="item.isExpiringSoon">{{ item.expiryDate }}</span>
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Aggiunti i controlli del carrello per il Catalogo -->
           <div class="card-actions">
             @if (item.isAvailable) {
               <div class="qty-selector">
@@ -121,7 +126,17 @@
           </div>
 
         </article>
+      } @empty {
+        <p style="color: #8E8E93; font-size: 14px; padding: 4px 0;">Nessun prodotto trovato in catalogo.</p>
       }
     </div>
   </div>
+
+  <!-- Pulsante fluttuante (FAB) per confermare e inviare il rifornimento -->
+  @if (cartCount() > 0) {
+    <button class="fab-btn" (click)="reviewOrder()">
+      <span>Conferma rifornimento</span>
+      <span class="fab-badge">{{ cartCount() }}</span>
+    </button>
+  }
 </main>

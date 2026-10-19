@@ -38,6 +38,8 @@ import { AdminSummaryComponent } from './admin-components/component/admin-summar
 import { AdminDeliverySuccessComponent } from './admin-components/component/admin-delivery-success-component/admin-delivery-success-component';
 import { AdminOrderComponent } from './admin-components/component/admin-order-component/admin-order-component';
 import { SuperAdminRequestDetailsComponent } from './super-admin-components/component/super-admin-request-details-component/super-admin-request-details-component';
+import { SuperAdminRestockSingleStoreComponent } from './super-admin-components/component/super-admin-restock-single-store-component/super-admin-restock-single-store-component';
+import { SuperAdminRestockSummary } from './super-admin-components/component/super-admin-restock-summary-component/super-admin-restock-summary-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -81,6 +83,8 @@ export const routes: Routes = [
   { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
   { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
   { path: 's-admin-request-details', component: SuperAdminRequestDetailsComponent },
+  { path: 's-admin-restock-single-store', component: SuperAdminRestockSingleStoreComponent },
+  { path: 's-admin-restock-summary', component: SuperAdminRestockSummary },
 
   // Rotte Operator
   { path: 'user-metro-profile', component: AdminMetroProfileComponent },

@@ -32,7 +32,7 @@ export class SuperAdminRestoockComponent {
   // Carica le sedi dal MockBackendService calcolando le richieste di riordino associate
   readonly locations = computed<LocationRequest[]>(() => {
     const query = this.searchQuery().toLowerCase().trim();
-    
+
     // Prendiamo solo le sedi periferiche (EnteDistributore), escludendo la sede centrale "Metro"
     const sites = this.backendService.sites().filter(s => s.type !== 'Metro');
     const approvals = this.backendService.approvals();
@@ -41,12 +41,12 @@ export class SuperAdminRestoockComponent {
     const mappedLocations = sites.map(site => {
       // 1. Troviamo gli ID degli operatori che lavorano in questa specifica sede
       const siteOperatorsIds = operators.filter(o => o.siteId === site.id).map(o => o.id);
-      
+
       // 2. Contiamo le richieste di tipo "Riordino" associate a quegli operatori
       // (Prendiamo quelle 'In attesa' o 'Approvata' da spedire)
-      const requestsCount = approvals.filter(a => 
-        a.type === 'Riordino' && 
-        (a.status === 'In attesa' || a.status === 'Approvata') && 
+      const requestsCount = approvals.filter(a =>
+        a.type === 'Riordino' &&
+        (a.status === 'In attesa' || a.status === 'Approvata') &&
         siteOperatorsIds.includes(a.requestedBy)
       ).length;
 
@@ -82,7 +82,7 @@ export class SuperAdminRestoockComponent {
     // Naviga alla pagina di preparazione pacco passandogli l'id della sede
     // (Se non hai ancora una rotta specifica per preparare la spedizione, puoi modificare questo percorso in seguito)
     console.log(`Prepara spedizione per: ${loc.name}`);
-    this.router.navigate(['/s-admin-create-shipment'], { queryParams: { siteId: loc.id } });
+    this.router.navigate(['/s-admin-restock-single-store'], { queryParams: { siteId: loc.id } });
   }
 
   onNavClick(navId: string): void {
