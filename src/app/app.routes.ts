@@ -33,6 +33,10 @@ import { AdminTrackingNumberComponent } from './admin-components/component/admin
 import { AdminMetroProfileComponent } from './admin-metro-components/component/admin-metro-profile/admin-metro-profile';
 import { AdminMetroAdminLocationsComponent } from './admin-metro-components/component/admin-metro-admin-locations/admin-metro-admin-locations';
 import { AdminMetroUserLocationsComponent } from './admin-metro-components/component/admin-metro-user-locations/admin-metro-user-locations';
+import { AdminProductCatalogComponent } from './admin-components/component/admin-product-catalog-component/admin-product-catalog-component';
+import { AdminSummaryComponent } from './admin-components/component/admin-summary-component/admin-summary-component';
+import { AdminDeliverySuccessComponent } from './admin-components/component/admin-delivery-success-component/admin-delivery-success-component';
+import { AdminOrderComponent } from './admin-components/component/admin-order-component/admin-order-component';
 import { SuperAdminRequestDetailsComponent } from './super-admin-components/component/super-admin-request-details-component/super-admin-request-details-component';
 
 export const routes: Routes = [
@@ -59,6 +63,10 @@ export const routes: Routes = [
   { path: 'admin-store-locator', component: AdminStoreLocatorComponent },
   { path: 'admin-requests', component: RequestsComponent },
   { path: 'admin-tracking-number', component: AdminTrackingNumberComponent },
+  { path: 'admin-product-catalog', component: AdminProductCatalogComponent },
+  { path: 'admin-summary', component: AdminSummaryComponent },
+  { path: 'admin-delivery-success', component: AdminDeliverySuccessComponent },
+  { path: 'admin-order', component: AdminOrderComponent },
   
   // Rotte Super Admin
   { path: 's-admin-home', component: SuperAdminDashboardComponent },

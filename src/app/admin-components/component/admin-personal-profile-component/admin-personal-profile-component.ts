@@ -65,7 +65,7 @@ export class AdminPersonProfileComponent {
     }
 
     startDelivery(): void {
-        console.log('Avvia consegna');
+        this.router.navigate(['/admin-product-catalog'])
     }
 }
 
