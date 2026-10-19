@@ -37,61 +37,64 @@ import { AdminProductCatalogComponent } from './admin-components/component/admin
 import { AdminSummaryComponent } from './admin-components/component/admin-summary-component/admin-summary-component';
 import { AdminDeliverySuccessComponent } from './admin-components/component/admin-delivery-success-component/admin-delivery-success-component';
 import { AdminOrderComponent } from './admin-components/component/admin-order-component/admin-order-component';
+import { ExpiringProductsComponent } from './admin-components/component/expiring-products-component/expiring-products-component';
+import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
 import { SuperAdminRequestDetailsComponent } from './super-admin-components/component/super-admin-request-details-component/super-admin-request-details-component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'user-home', component: HomeComponent },
-  { path: 'user-metro-dashboard', component: UserMetroDashboardComponent },
-  { path: 'warehouse', component: LocalWarehouseComponent },
-  { path: 'store-locator', component: StoreLocatorComponent },
-  { path: 'person-profile', component: PersonProfileComponent },
-  { path: 'person-profile-no-token', component: PersonProfileNotokenComponent },
-  { path: 'product-catalog', component: ProductCatalogComponent },
-  { path: 'summary', component: SummaryComponent },
-  { path: 'delivery-success', component: DeliverySuccessComponent },
-  
-  // Rotte admin
-  { path: 'admin-home', component: AdminHomeComponent },
-  { path: 'admin-profile', component: AdminPersonProfileComponent },
-  { path: 'admin-stock', component: AdminMetroStockComponent },
-  { path: 'admin-load-item', component: AdminMetroLoadItemComponent },
-  { path: 'admin-restock', component: AdminMetroRestockComponent },
-  { path: 'admin-warehouse', component: AdminWarehouseComponent },
-  { path: 'admin-qr-scanner', component: AdminQrScannerComponent },
-  { path: 'admin-store-locator', component: AdminStoreLocatorComponent },
-  { path: 'admin-requests', component: RequestsComponent },
-  { path: 'admin-tracking-number', component: AdminTrackingNumberComponent },
-  { path: 'admin-product-catalog', component: AdminProductCatalogComponent },
-  { path: 'admin-summary', component: AdminSummaryComponent },
-  { path: 'admin-delivery-success', component: AdminDeliverySuccessComponent },
-  { path: 'admin-order', component: AdminOrderComponent },
-  
-  // Rotte Super Admin
-  { path: 's-admin-home', component: SuperAdminDashboardComponent },
-  { path: 's-admin-profile', component: SuperAdminProfileComponent },
-  { path: 's-admin-metro-stock', component: SuperAdminMetroStockComponent },
-  { path: 's-admin-load-item', component: SuperAdminLoadItemComponent },
-  { path: 's-admin-restock', component: SuperAdminRestoockComponent },
-  { path: 's-admin-approval-requests', component: SuperAdminApprovalRequestsComponent },
-  { path: 's-admin-expiring-products', component: SuperAdminExpiringProductsComponent },
-  { path: 's-admin-admin-locations', component: SuperAdminAdminLocationsComponent },
-  { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
-  { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
-  { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
-  { path: 's-admin-request-details', component: SuperAdminRequestDetailsComponent },
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
+    { path: 'user-home', component: HomeComponent },
+    { path: 'user-metro-dashboard', component: UserMetroDashboardComponent },
+    { path: 'warehouse', component: LocalWarehouseComponent },
+    { path: 'store-locator', component: StoreLocatorComponent },
+    { path: 'person-profile', component: PersonProfileComponent },
+    { path: 'person-profile-no-token', component: PersonProfileNotokenComponent },
+    { path: 'product-catalog', component: ProductCatalogComponent },
+    { path: 'summary', component: SummaryComponent },
+    { path: 'delivery-success', component: DeliverySuccessComponent },
 
-  // Rotte Operator
-  { path: 'user-metro-profile', component: AdminMetroProfileComponent },
-  { path: 'user-metro-stock', component: AdminMetroStockComponent },
-  { path: 'user-metro-load-item', component: AdminMetroLoadItemComponent },
-  { path: 'user-metro-restock', component: AdminMetroRestockComponent },
-  { path: 'user-metro-admin-location', component: AdminMetroAdminLocationsComponent },
-  { path: 'user-metro-user-location', component: AdminMetroUserLocationsComponent },
-  { path: 'user-metro-store-locator', component: AdminStoreLocatorComponent },
-  { path: 'user-metro-requests', component: RequestsComponent },
-  { path: 'user-metro-tracking-number', component: AdminTrackingNumberComponent },
-  
-  { path: '**', redirectTo: 'login' }
+    // Rotte admin
+    { path: 'admin-home', component: AdminHomeComponent },
+    { path: 'admin-profile', component: AdminPersonProfileComponent },
+    { path: 'admin-stock', component: AdminMetroStockComponent },
+    { path: 'admin-load-item', component: AdminMetroLoadItemComponent },
+    { path: 'admin-restock', component: AdminMetroRestockComponent },
+    { path: 'admin-warehouse', component: AdminWarehouseComponent },
+    { path: 'admin-qr-scanner', component: AdminQrScannerComponent },
+    { path: 'admin-store-locator', component: AdminStoreLocatorComponent },
+    { path: 'admin-requests', component: RequestsComponent },
+    { path: 'admin-tracking-number', component: AdminTrackingNumberComponent },
+    { path: 'admin-product-catalog', component: AdminProductCatalogComponent },
+    { path: 'admin-summary', component: AdminSummaryComponent },
+    { path: 'admin-delivery-success', component: AdminDeliverySuccessComponent },
+    { path: 'admin-order', component: AdminOrderComponent },
+    { path: 'admin-expiring-product', component: ExpiringProductsComponent },
+    { path: 'admin-low-stock', component: LowStockComponent },
+
+    // Rotte Super Admin
+    { path: 's-admin-home', component: SuperAdminDashboardComponent },
+    { path: 's-admin-profile', component: SuperAdminProfileComponent },
+    { path: 's-admin-metro-stock', component: SuperAdminMetroStockComponent },
+    { path: 's-admin-load-item', component: SuperAdminLoadItemComponent },
+    { path: 's-admin-restock', component: SuperAdminRestoockComponent },
+    { path: 's-admin-approval-requests', component: SuperAdminApprovalRequestsComponent },
+    { path: 's-admin-expiring-products', component: SuperAdminExpiringProductsComponent },
+    { path: 's-admin-admin-locations', component: SuperAdminAdminLocationsComponent },
+    { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
+    { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
+    { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
+
+    // Rotte Operator
+    { path: 'user-metro-profile', component: AdminMetroProfileComponent },
+    { path: 'user-metro-stock', component: AdminMetroStockComponent },
+    { path: 'user-metro-load-item', component: AdminMetroLoadItemComponent },
+    { path: 'user-metro-restock', component: AdminMetroRestockComponent },
+    { path: 'user-metro-admin-location', component: AdminMetroAdminLocationsComponent },
+    { path: 'user-metro-user-location', component: AdminMetroUserLocationsComponent },
+    { path: 'user-metro-store-locator', component: AdminStoreLocatorComponent },
+    { path: 'user-metro-requests', component: RequestsComponent },
+    { path: 'user-metro-tracking-number', component: AdminTrackingNumberComponent },
+
+    { path: '**', redirectTo: 'login' }
 ];
