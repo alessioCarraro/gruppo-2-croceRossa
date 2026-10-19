@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
 
-// Interfacce per tipizzazione stretta
 interface UserData {
   initials: string;
   name: string;
@@ -29,19 +30,40 @@ interface NavItem {
   styleUrls: ['./super-admin-profile-component.css']
 })
 export class SuperAdminProfileComponent {
-  // Gestione dello stato utente
-  readonly user = signal<UserData>({
-    initials: 'VB',
-    name: 'Valeria Bianchi',
+  private readonly router = inject(Router);
+  private readonly backendService = inject(MockBackendService);
+
+  // Gestione dinamica dello stato utente (Iniziali e Nome)
+  readonly user = computed<UserData>(() => {
+    const currentUser = this.backendService.currentOperator();
+    
+    // Fallback di sicurezza se non c'è utente loggato
+    if (!currentUser) {
+      return { initials: 'SA', name: 'Super Admin' };
+    }
+
+    return {
+      initials: (currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0)).toUpperCase(),
+      name: `${currentUser.firstName} ${currentUser.lastName}`
+    };
   });
 
-  // Gestione dei dati della lista
-  readonly infoItems = signal<InfoItem[]>([
-    { id: 'role', label: 'Ruolo', value: 'Super Admin' },
-    { id: 'location', label: 'Sede', value: 'Magazzino Centrale' },
-    { id: 'email', label: 'Email', value: 'v.bianchi@foodnetwork.it', isMonospace: true },
-    { id: 'phone', label: 'Telefono', value: '+39 340 9988776', isMonospace: true }
-  ]);
+  // Gestione dinamica dei dati della lista
+  readonly infoItems = computed<InfoItem[]>(() => {
+    const currentUser = this.backendService.currentOperator();
+    
+    if (!currentUser) return [];
+
+    const siteName = this.backendService.getSiteName(currentUser.siteId);
+
+    return [
+      { id: 'role', label: 'Ruolo', value: currentUser.role },
+      { id: 'location', label: 'Sede', value: siteName },
+      { id: 'email', label: 'Email', value: currentUser.email, isMonospace: true },
+      // Il campo telefono non è presente in Operator dentro utils.ts, lo lasciamo fisso per ora
+      { id: 'phone', label: 'Telefono', value: '+39 340 9988776', isMonospace: true }
+    ];
+  });
 
   // Bottom navigation state
   readonly navItems = signal<NavItem[]>([
@@ -52,7 +74,8 @@ export class SuperAdminProfileComponent {
   ]);
 
   goBack(): void {
-    console.log('Azione: Torna indietro');
+    // Naviga indietro alla dashboard del super admin
+    this.router.navigate(['/s-admin-home']);
   }
 
   onEditProfile(): void {
