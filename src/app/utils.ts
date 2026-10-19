@@ -632,6 +632,42 @@ export class MockBackendService {
         });
     }
 
+    // Aggiunge un prodotto completamente nuovo al catalogo e ne registra il primo carico
+    registerNewProductAndStock(
+        name: string,
+        category: string,
+        price: number,
+        quantity: number,
+        expiryDate: string
+    ): void {
+        const currentUser = this.currentOperator();
+        if (!currentUser) return;
+
+        const newProductId = this.newId();
+        const newProduct: Product = {
+            id: newProductId,
+            name: name,
+            category: category as any, // Cast per simulare l'inserimento libero
+            unit: 'Pacco',             // Default per i nuovi inserimenti
+            icon: 'bag',
+            stock: 0,
+            minStock: 10,
+            isOutOfStock: false,
+            price: price,
+            expiry: expiryDate,
+            isExpiringSoon: false,
+            isExpired: false,
+            maxPerBeneficiary: 5,
+            iconType: 'bag'
+        };
+
+        // 1. Aggiunge il nuovo prodotto all'inizio del catalogo globale
+        this._products.update(prods => [newProduct, ...prods]);
+
+        // 2. Sfrutta la funzione già esistente per caricare i pezzi nel magazzino della sede
+        this.addStockToInventory(newProductId, quantity, expiryDate);
+    }
+
     // --- METODI DI GESTIONE SPECIFICI PER I 4 RUOLI ---
 
     /** 1. Ente Distribuente - User: Registrazione consegne ai beneficiari */

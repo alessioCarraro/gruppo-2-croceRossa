@@ -92,6 +92,12 @@
   border-color: #16537A;
 }
 
+.custom-input.typing-mode {
+  background-color: #ffffff;
+  border-color: #16537A;
+  box-shadow: 0 0 0 2px rgba(22, 83, 122, 0.1);
+}
+
 .input-icon {
   margin-right: 12px;
   flex-shrink: 0;
@@ -108,7 +114,7 @@
   user-select: none;
 }
 
-/* Stili del Custom Dropdown */
+/* Stili del Custom Dropdown e Suggerimenti */
 .dropdown-list {
   position: absolute;
   top: calc(100% + 4px);
@@ -140,6 +146,20 @@
   color: #16537A;
 }
 
+.dropdown-item.action-item {
+  border-top: 1px solid #EAE6DF;
+  color: #16537A;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FAFAFA;
+}
+
+.dropdown-item.action-item:hover {
+  background-color: #F0F4F8;
+}
+
 .chevron-icon {
   margin-left: auto;
   flex-shrink: 0;
@@ -148,6 +168,17 @@
 
 .chevron-icon.rotated {
   transform: rotate(180deg);
+}
+
+.close-icon {
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.close-icon:hover {
+  opacity: 1;
 }
 
 .native-input {
@@ -168,8 +199,7 @@ input.native-input.date-input {
   flex: 1;
   width: 100%;
   min-width: 0;
-  font-size: 13px;
-  letter-spacing: -0.5px;
+  font-size: 15px;
   line-height: normal;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -187,10 +217,6 @@ input.native-input.date-input::-webkit-calendar-picker-indicator {
   height: 24px;
   cursor: pointer;
   right: 0;
-}
-
-input.native-input.date-input.is-empty {
-  color: transparent;
 }
 
 .action-pill {
@@ -286,35 +312,45 @@ input.native-input.date-input.is-empty {
 .cursor-pointer {
   cursor: pointer;
 }
-/* ... mantieni il CSS precedente fino a .dropdown-item:hover ... */
 
-.dropdown-item.action-item {
-  border-top: 1px solid #EAE6DF;
-  color: #16537A;
-  font-weight: 700;
+/* Banner di Errore personalizzato (Sostituisce l'alert brutto del browser) */
+.custom-error-banner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background-color: #FAFAFA;
+  gap: 10px;
+  background-color: #FDEDEC;
+  border: 1px solid #F5B7B1;
+  color: #C0392B;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeIn 0.2s ease-in-out;
 }
 
-.dropdown-item.action-item:hover {
-  background-color: #F0F4F8;
-}
-
-.custom-input.typing-mode {
-  background-color: #ffffff;
-  border-color: #16537A;
-  box-shadow: 0 0 0 2px rgba(22, 83, 122, 0.1);
-}
-
-.close-icon {
-  margin-left: auto;
+.custom-error-banner svg {
   flex-shrink: 0;
-  opacity: 0.6;
-  transition: opacity 0.2s;
 }
 
-.close-icon:hover {
-  opacity: 1;
+.custom-error-banner span {
+  flex: 1;
+}
+
+.close-banner {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #C0392B;
+  cursor: pointer;
+  padding: 0 4px;
+  font-weight: bold;
+}
+
+.close-banner:hover {
+  opacity: 0.7;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }

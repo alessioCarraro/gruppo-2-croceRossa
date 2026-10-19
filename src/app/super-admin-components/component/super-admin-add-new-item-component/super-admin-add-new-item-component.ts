@@ -1,7 +1,9 @@
-import { Component, signal, computed, WritableSignal, HostListener, ElementRef, inject } from '@angular/core';
+import { Component, signal, computed, WritableSignal, HostListener, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
 
-type DropdownType = 'macro' | 'category' | 'product' | null;
+type DropdownType = 'macro' | 'category' | null;
 
 @Component({
   selector: 'app-super-admin-add-new-item',
@@ -10,72 +12,115 @@ type DropdownType = 'macro' | 'category' | 'product' | null;
   templateUrl: './super-admin-add-new-item-component.html',
   styleUrls: ['./super-admin-add-new-item-component.css']
 })
-export class SuperAdminAddNewItemComponent {
-  public readonly macroCategories = ['Alimentari', 'Igiene', 'Abbigliamento'];
-  public readonly categories = ['Pasta', 'Riso', 'Carne', 'Verdure', 'Frutta', 'Legumi'];
-
-  private readonly productDictionary: Record<string, string[]> = {
-    'Pasta': ['Fusilli 500g', 'Fusilli 1kg', 'Rigatoni 500g', 'Rigatoni 1kg'],
-    'Riso': ['Basmati 500g', 'Basmati 1kg', 'Venere 500g', 'Venere 1kg'],
-    'Carne': ['Petto di pollo 500g', 'Macinato di manzo 400g', 'Fettine di vitello 300g'],
-    'Verdure': ['Spinaci surgelati 500g', 'Piselli finissimi 400g', 'Minestrone 600g'],
-    'Frutta': ['Mele Gala 1kg', 'Banane 1kg', 'Arance 1kg'],
-    'Legumi': ['Ceci in lattina 400g', 'Fagioli borlotti 400g', 'Lenticchie secche 500g'],
-    'default': ['-- Seleziona un prodotto --']
-  };
-
-  // State Signals per i valori inseriti
-  public macroCategory = signal<string>(this.macroCategories[0]);
-  public category = signal<string>(this.categories[0]);
+export class SuperAdminAddNewItemComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly backendService = inject(MockBackendService);
+  private readonly elementRef = inject(ElementRef);
   
-  public availableProducts = computed(() => {
-    const selectedCategory = this.category();
-    return this.productDictionary[selectedCategory] || this.productDictionary['default'];
-  });
-
-  public productType = signal<string>(this.availableProducts()[0]);
+  public macroCategory = signal<string>('Alimentari');
+  public category = signal<string>('');
+  public productType = signal<string>('');
   public expiryDate = signal<string>('');
   public quantity = signal<string>('');
   public tokenValue = signal<string>('');
+  public errorMessage = signal<string | null>(null);
 
-  // UI State: Gestisce quale dropdown è aperto
   public activeDropdown = signal<DropdownType>(null);
-
-  // UI State: Gestisce se un campo è in modalità inserimento manuale
   public isMacroCustom = signal<boolean>(false);
   public isCategoryCustom = signal<boolean>(false);
-  public isProductCustom = signal<boolean>(false);
+  public isProductDropdownOpen = signal<boolean>(false);
 
-  private readonly elementRef = inject(ElementRef);
+  // Macro-categorie disponibili
+  public availableMacroCategories = computed<string[]>(() => {
+    return ['Alimentari'];
+  });
+
+  // Categorie filtrate in base alla macro-categoria attiva
+  public availableCategories = computed<string[]>(() => {
+    const currentMacro = this.macroCategory();
+    
+    // Se l'utente ha scritto una macro-categoria personalizzata (es. "Vestiti") 
+    // che non è tra quelle standard, non ci sono categorie pre-esistenti: parte pulito.
+    if (this.isMacroCustom() || currentMacro !== 'Alimentari') {
+      return []; 
+    }
+
+    // Altrimenti estraiamo le categorie reali dal database per "Alimentari"
+    const products = this.backendService.products();
+    const uniqueCats = new Set(products.map(p => p.category));
+    return Array.from(uniqueCats);
+  });
+
+  // Suggerimenti prodotti filtrati in base alla categoria attiva
+  public productSuggestions = computed<string[]>(() => {
+    const query = this.productType().toLowerCase().trim();
+    const currentCat = this.category();
+    const prods = this.backendService.products();
+    
+    // Se la categoria è custom o nuova, non ci sono suggerimenti iniziali dal catalogo
+    if (this.isCategoryCustom() || !currentCat) {
+      if (!query) return [];
+      // Cerca in tutto il catalogo se l'utente sta scrivendo
+      const allNames = Array.from(new Set(prods.map(p => p.name)));
+      return allNames.filter(n => n.toLowerCase().includes(query));
+    }
+
+    // Altrimenti filtra i prodotti di quella specifica categoria
+    const catProds = prods.filter(p => p.category === currentCat);
+    const names = Array.from(new Set(catProds.map(p => p.name)));
+    
+    if (!query) return names.slice(0, 5); // Mostra i primi se il campo è vuoto ma attivo
+    return names.filter(n => n.toLowerCase().includes(query));
+  });
+
+  ngOnInit(): void {
+    const macros = this.availableMacroCategories();
+    if (macros.length > 0) {
+      this.macroCategory.set(macros[0]);
+    }
+    const cats = this.availableCategories();
+    if (cats.length > 0) {
+      this.category.set(cats[0]);
+    }
+  }
 
   @HostListener('document:click', ['$event'])
   public onClickOutside(event: Event): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.activeDropdown.set(null);
+      this.isProductDropdownOpen.set(false);
     }
   }
-
-  // --- UI Interactions ---
 
   public toggleDropdown(dropdown: DropdownType, event: Event): void {
     event.stopPropagation();
     this.activeDropdown.update(current => current === dropdown ? null : dropdown);
+    this.isProductDropdownOpen.set(false);
   }
 
   public selectMacroCategory(value: string): void {
     this.macroCategory.set(value);
+    this.isMacroCustom.set(false);
+    
+    // Quando cambi macro-categoria, resetta la categoria sottostante
+    const products = this.backendService.products();
+    if (value === 'Alimentari') {
+      const cats = Array.from(new Set(products.map(p => p.category)));
+      this.category.set(cats.length > 0 ? cats[0] : '');
+      this.isCategoryCustom.set(false);
+    } else {
+      // Per macro-categorie nuove/custom, azzeriamo e apriamo la scrittura manuale
+      this.category.set('');
+      this.isCategoryCustom.set(true);
+    }
+    
     this.activeDropdown.set(null);
   }
 
   public selectCategory(value: string): void {
     this.category.set(value);
-    const newProductsList = this.availableProducts();
-    this.productType.set(newProductsList[0]);
-    this.activeDropdown.set(null);
-  }
-
-  public selectProductType(value: string): void {
-    this.productType.set(value);
+    this.isCategoryCustom.set(false);
+    this.productType.set(''); // Reset del prodotto
     this.activeDropdown.set(null);
   }
 
@@ -84,58 +129,82 @@ export class SuperAdminAddNewItemComponent {
     signalRef.set(input.value);
   }
 
-  // --- Custom Mode Handlers ---
+  public onProductInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.productType.set(input.value);
+    this.isProductDropdownOpen.set(true);
+  }
+
+  public selectProductSuggestion(value: string): void {
+    this.productType.set(value);
+    this.isProductDropdownOpen.set(false);
+  }
+
+  public goBack(): void {
+    this.router.navigate(['/s-admin-load-item']);
+  }
 
   public enableCustomMode(field: DropdownType): void {
     if (field === 'macro') {
       this.isMacroCustom.set(true);
-      this.macroCategory.set(''); // Resetta il valore in attesa dell'input
+      this.macroCategory.set('');
+      // Se scrivi una macro a mano, la categoria diventa automaticamente scrivibile a mano e vuota
+      this.isCategoryCustom.set(true);
+      this.category.set('');
     } else if (field === 'category') {
       this.isCategoryCustom.set(true);
       this.category.set('');
-      // In modalità category custom, anche il prodotto dovrebbe logicamente diventare custom
-      this.productType.set('');
-      this.isProductCustom.set(true);
-    } else if (field === 'product') {
-      this.isProductCustom.set(true);
-      this.productType.set('');
     }
-    this.activeDropdown.set(null); // Chiude la tendina
+    this.activeDropdown.set(null);
   }
 
   public revertCustomMode(field: DropdownType): void {
     if (field === 'macro') {
       this.isMacroCustom.set(false);
-      this.macroCategory.set(this.macroCategories[0]); // Torna al default
+      const macros = this.availableMacroCategories();
+      this.macroCategory.set(macros.length > 0 ? macros[0] : '');
+      this.isCategoryCustom.set(false);
+      const cats = this.availableCategories();
+      this.category.set(cats.length > 0 ? cats[0] : '');
     } else if (field === 'category') {
       this.isCategoryCustom.set(false);
-      this.category.set(this.categories[0]);
-      // Ripristina anche il prodotto in base alla categoria ripristinata
-      this.isProductCustom.set(false);
-      this.productType.set(this.availableProducts()[0]);
-    } else if (field === 'product') {
-      this.isProductCustom.set(false);
-      this.productType.set(this.availableProducts()[0]);
+      const cats = this.availableCategories();
+      this.category.set(cats.length > 0 ? cats[0] : '');
     }
   }
 
   public submitForm(event?: Event): void {
-    if (event) {
-      event.preventDefault();
+    if (event) event.preventDefault();
+    
+    const missingFields: string[] = [];
+    if (!this.macroCategory().trim()) missingFields.push('Macro-categoria');
+    if (!this.category().trim()) missingFields.push('Categoria');
+    if (!this.productType().trim()) missingFields.push('Tipo prodotto');
+    if (!this.expiryDate()) missingFields.push('Scadenza');
+    
+    const qty = parseInt(this.quantity(), 10);
+    if (isNaN(qty) || qty <= 0) missingFields.push('Quantità');
+    
+    const token = parseInt(this.tokenValue(), 10);
+    if (isNaN(token) || token < 0) missingFields.push('Valuta token');
+
+    if (missingFields.length > 0) {
+      alert('ATTENZIONE! Compila o correggi i seguenti campi per procedere:\n\n- ' + missingFields.join('\n- '));
+      return;
     }
     
-    console.log('Invio dati al superadmin...', {
-      macro: this.macroCategory(),
-      category: this.category(),
-      product: this.productType(),
-      expiry: this.expiryDate(),
-      quantity: this.quantity(),
-      token: this.tokenValue(),
-      metadata: {
-        isMacroCustom: this.isMacroCustom(),
-        isCategoryCustom: this.isCategoryCustom(),
-        isProductCustom: this.isProductCustom()
-      }
-    });
+    const name = this.productType().trim();
+    const cat = this.category().trim();
+    const exp = this.expiryDate();
+
+    const existingProduct = this.backendService.products().find(p => p.name.toLowerCase() === name.toLowerCase());
+
+    if (existingProduct) {
+      this.backendService.addStockToInventory(existingProduct.id, qty, exp);
+    } else {
+      this.backendService.registerNewProductAndStock(name, cat, token, qty, exp);
+    }
+
+    this.router.navigate(['/s-admin-metro-stock']);
   }
 }
