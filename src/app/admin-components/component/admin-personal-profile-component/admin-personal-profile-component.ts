@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 export interface Transaction {
     date: string;
@@ -18,6 +19,7 @@ export interface Transaction {
     styleUrls: ['./admin-personal-profile-component.css']
 })
 export class AdminPersonProfileComponent {
+    private readonly router = inject(Router);
     // Gestione dello stato tramite Signals
     readonly personDetails = signal({
         initials: 'MR',
@@ -55,7 +57,7 @@ export class AdminPersonProfileComponent {
     ]);
 
     goBack(): void {
-        console.log('Naviga indietro');
+        this.router.navigate(['/admin-home']);
     }
 
     openOptions(): void {

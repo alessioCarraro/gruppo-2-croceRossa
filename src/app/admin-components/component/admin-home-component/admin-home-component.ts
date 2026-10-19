@@ -40,9 +40,6 @@ export class AdminHomeComponent {
 
     setTab(tab: string): void {
         this.activeTab.set(tab);
-        if (tab === 'profilo') {
-            this.router.navigate(['/admin-profile']);
-        }
         if (tab === 'home') {
             this.router.navigate(['/admin-home']);
         }
