@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface OfficeLocation {
   id: string;
@@ -10,8 +11,9 @@ interface OfficeLocation {
 interface NavItem {
   id: string;
   label: string;
-  iconPath: string;
+  iconName: 'home' | 'inventory' | 'upload' | 'restock';
   isActive: boolean;
+  route?: string;
 }
 
 @Component({
@@ -22,7 +24,9 @@ interface NavItem {
   styleUrls: ['./admin-metro-restock-component.css']
 })
 export class AdminMetroRestockComponent {
-  // Gestione dello stato tramite Signals
+  private readonly location = inject(Location);
+  private readonly router = inject(Router);
+
   public readonly locations = signal<OfficeLocation[]>([
     { id: '1', name: 'Sede 1', requests: 4 },
     { id: '2', name: 'Sede 2', requests: 3 },
@@ -31,23 +35,27 @@ export class AdminMetroRestockComponent {
   ]);
 
   public readonly navItems = signal<NavItem[]>([
-    { id: 'home', label: 'Home', iconPath: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z', isActive: false },
-    { id: 'inventario', label: 'Inventario', iconPath: 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z', isActive: false },
-    { id: 'carico', label: 'Carico', iconPath: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3', isActive: false },
-    { id: 'rifornitura', label: 'Rifornitura', iconPath: 'M8 17.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM16 17.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM4 6h3.5l2.5 6.5h6l2.5-3.5H20', isActive: true }
+    { id: 'home', label: 'Home', iconName: 'home', isActive: false, route: '/user-metro-dashboard' },
+    { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false, route: '/admin-metro-stock' },
+    { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false, route: '/admin-metro-load-item' },
+    { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: true, route: '/admin-metro-restock' }
   ]);
 
   public goBack(): void {
-    console.log('Navigating back...');
+    this.location.back();
   }
 
-  public selectLocation(location: OfficeLocation): void {
-    console.log(`Selected location: ${location.name}`);
+  public selectLocation(office: OfficeLocation): void {
+    console.info(`Selected location: ${office.name}`);
   }
 
-  public changeTab(tabId: string): void {
+  public changeTab(clickedItem: NavItem): void {
     this.navItems.update(items =>
-      items.map(item => ({ ...item, isActive: item.id === tabId }))
+      items.map(item => ({ ...item, isActive: item.id === clickedItem.id }))
     );
+
+    if (clickedItem.route) {
+      this.router.navigate([clickedItem.route]);
+    }
   }
 }
