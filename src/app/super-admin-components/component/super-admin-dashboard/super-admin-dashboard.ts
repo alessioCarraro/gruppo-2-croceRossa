@@ -13,7 +13,7 @@ interface MetricCard {
   id: string;
   value: string;
   label: string;
-  colorClass: 'blue' | 'green' | 'black' | 'red'| 'orange';
+  colorClass: 'blue' | 'green' | 'black' | 'red' | 'orange';
   actionLabel?: string;
 }
 
@@ -57,7 +57,7 @@ export class SuperAdminDashboardComponent {
     const siteNames = this.backendService.sites().map(site => site.name);
     return ['Tutte le sedi', ...siteNames]; // Aggiungiamo l'opzione per vedere tutto
   });
-  
+
   // Impostiamo "Tutte le sedi" come predefinita
   readonly selectedLocation = signal<string>('Tutte le sedi');
   readonly isDropdownOpen = signal<boolean>(false);
@@ -66,11 +66,10 @@ export class SuperAdminDashboardComponent {
   readonly metrics = computed<MetricCard[]>(() => {
     const products = this.backendService.products();
     let inventories = this.backendService.inventories();
-    
-    // Leggiamo la sede selezionata. Se non è "Tutte le sedi", filtriamo l'inventario
+
     const currentLocationName = this.selectedLocation();
     const sites = this.backendService.sites();
-    
+
     if (currentLocationName !== 'Tutte le sedi') {
       const selectedSite = sites.find(s => s.name === currentLocationName);
       if (selectedSite) {
@@ -84,19 +83,26 @@ export class SuperAdminDashboardComponent {
       if (prod) totalValue += inv.stock * prod.price;
     });
 
-    // Articoli presenti fisicamente nella sede selezionata
-    const catalogCount = new Set(inventories.filter(i => i.stock > 0).map(i => i.productId)).size;
+    // Conteggio dei prodotti unici presenti
+    const catalogCount = products.length;
 
-    let expiringCount = 0;
+    // Set di prodotti unici in scadenza (per evitare di contare più volte lo stesso prodotto se ha più lotti)
+    const expiringProductIds = new Set<string>();
     let expiredValue = 0;
 
     inventories.forEach(inv => {
       const prod = products.find(p => p.id === inv.productId);
       if (prod) {
-        if (inv.isExpiringSoon) expiringCount++;
-        if (inv.isExpired) expiredValue += inv.stock * prod.price;
+        if (inv.isExpiringSoon) {
+          expiringProductIds.add(inv.productId);
+        }
+        if (inv.isExpired) {
+          expiredValue += inv.stock * prod.price;
+        }
       }
     });
+
+    const expiringCount = expiringProductIds.size;
 
     return [
       { id: '1', value: `€${totalValue.toLocaleString('it-IT')}`, label: 'Valore giacenze', colorClass: 'black' },
@@ -110,7 +116,7 @@ export class SuperAdminDashboardComponent {
   readonly controls = computed<ControlItem[]>(() => {
     let ops = this.backendService.operators();
     const currentLocationName = this.selectedLocation();
-    
+
     // Filtriamo gli operatori in base alla sede scelta
     if (currentLocationName !== 'Tutte le sedi') {
       const sites = this.backendService.sites();

@@ -1,55 +1,76 @@
 <main class="app-container">
   <div class="scrollable-content">
     <header class="header">
-      <button class="back-button" aria-label="Torna indietro">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1C2B39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 18L9 12L15 6"/>
+      <button class="back-button" aria-label="Torna indietro" (click)="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1C2B39" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18L9 12L15 6" />
         </svg>
       </button>
       <h1 class="title">Carico nuovo</h1>
     </header>
 
     <form class="form-container" (submit)="submitForm($event)">
-      
-      <!-- Macro-categoria Dropdown -->
+
+      <!-- Banner di Errore Grafico personalizzato -->
+      @if (errorMessage()) {
+      <div class="custom-error-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ errorMessage() }}</span>
+        <button type="button" class="close-banner" (click)="errorMessage.set(null)">×</button>
+      </div>
+      }
+
+      <!-- Macro-categoria Dropdown (Collegato alle utils) -->
       <div class="form-group">
         <label class="form-label" id="macro-label">Macro-categoria</label>
         <div class="custom-dropdown-container">
-          
+
           @if (isMacroCustom()) {
-            <!-- Modalità Scrittura Libera -->
-            <div class="custom-input typing-mode">
-              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
-              <input type="text" class="native-input" [value]="macroCategory()" (input)="updateSignalValue(macroCategory, $event)" placeholder="Scrivi macro-categoria..." autofocus />
-              <svg class="close-icon cursor-pointer" (click)="revertCustomMode('macro')" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </div>
+          <div class="custom-input typing-mode">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+            <input type="text" class="native-input" [value]="macroCategory()"
+              (input)="updateSignalValue(macroCategory, $event)" placeholder="Scrivi macro-categoria..." autofocus />
+            <svg class="close-icon cursor-pointer" (click)="revertCustomMode('macro')" width="20" height="20"
+              viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </div>
           } @else {
-            <!-- Modalità Dropdown -->
-            <div class="custom-input cursor-pointer" (click)="toggleDropdown('macro', $event)" aria-labelledby="macro-label">
-              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="12" x2="20" y2="12"></line>
-                <line x1="4" y1="6" x2="20" y2="6"></line>
-                <line x1="4" y1="18" x2="20" y2="18"></line>
-              </svg>
-              <div class="input-value">{{ macroCategory() }}</div>
-              <svg class="chevron-icon" [class.rotated]="activeDropdown() === 'macro'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </div>
-            
-            @if (activeDropdown() === 'macro') {
-              <ul class="dropdown-list">
-                @for (option of macroCategories; track option) {
-                  <li class="dropdown-item" (click)="selectMacroCategory(option)">{{ option }}</li>
-                }
-                <li class="dropdown-item action-item" (click)="enableCustomMode('macro')">+ Altro (scrivi a mano)</li>
-              </ul>
+          <div class="custom-input cursor-pointer" (click)="toggleDropdown('macro', $event)"
+            aria-labelledby="macro-label">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="12" x2="20" y2="12"></line>
+              <line x1="4" y1="6" x2="20" y2="6"></line>
+              <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+            <div class="input-value">{{ macroCategory() }}</div>
+            <svg class="chevron-icon" [class.rotated]="activeDropdown() === 'macro'" width="20" height="20"
+              viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+
+          @if (activeDropdown() === 'macro') {
+          <ul class="dropdown-list">
+            @for (option of availableMacroCategories(); track option) {
+            <li class="dropdown-item" (click)="selectMacroCategory(option)">{{ option }}</li>
             }
+            <li class="dropdown-item action-item" (click)="enableCustomMode('macro')">+ Altro (scrivi a mano)</li>
+          </ul>
+          }
           }
         </div>
       </div>
@@ -58,109 +79,106 @@
       <div class="form-group">
         <label class="form-label" id="category-label">Categoria</label>
         <div class="custom-dropdown-container">
-          
+
           @if (isCategoryCustom()) {
-            <!-- Modalità Scrittura Libera -->
-            <div class="custom-input typing-mode">
-              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
-              <input type="text" class="native-input" [value]="category()" (input)="updateSignalValue(category, $event)" placeholder="Scrivi categoria..." autofocus />
-              <svg class="close-icon cursor-pointer" (click)="revertCustomMode('category')" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </div>
+          <div class="custom-input typing-mode">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+            <input type="text" class="native-input" [value]="category()" (input)="updateSignalValue(category, $event)"
+              placeholder="Scrivi categoria..." autofocus />
+            <svg class="close-icon cursor-pointer" (click)="revertCustomMode('category')" width="20" height="20"
+              viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </div>
           } @else {
-            <!-- Modalità Dropdown -->
-            <div class="custom-input cursor-pointer" (click)="toggleDropdown('category', $event)" aria-labelledby="category-label">
-              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="12" x2="20" y2="12"></line>
-                <line x1="4" y1="6" x2="20" y2="6"></line>
-                <line x1="4" y1="18" x2="20" y2="18"></line>
-              </svg>
-              <div class="input-value">{{ category() }}</div>
-              <svg class="chevron-icon" [class.rotated]="activeDropdown() === 'category'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </div>
-            
-            @if (activeDropdown() === 'category') {
-              <ul class="dropdown-list">
-                @for (option of categories; track option) {
-                  <li class="dropdown-item" (click)="selectCategory(option)">{{ option }}</li>
-                }
-                <li class="dropdown-item action-item" (click)="enableCustomMode('category')">+ Altro (scrivi a mano)</li>
-              </ul>
+          <div class="custom-input cursor-pointer" (click)="toggleDropdown('category', $event)"
+            aria-labelledby="category-label">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="12" x2="20" y2="12"></line>
+              <line x1="4" y1="6" x2="20" y2="6"></line>
+              <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+            <div class="input-value">{{ category() }}</div>
+            <svg class="chevron-icon" [class.rotated]="activeDropdown() === 'category'" width="20" height="20"
+              viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+
+          @if (activeDropdown() === 'category') {
+          <ul class="dropdown-list">
+            @for (option of availableCategories(); track option) {
+            <li class="dropdown-item" (click)="selectCategory(option)">{{ option }}</li>
             }
+            <li class="dropdown-item action-item" (click)="enableCustomMode('category')">+ Altro (scrivi a mano)</li>
+          </ul>
+          }
           }
         </div>
       </div>
 
-      <!-- Tipo prodotto Dropdown -->
+      <!-- Tipo prodotto (Scrittura Libera con Suggerimenti) -->
       <div class="form-group">
         <label class="form-label" id="product-label">Tipo prodotto</label>
         <div class="custom-dropdown-container">
-          
-          @if (isProductCustom()) {
-            <!-- Modalità Scrittura Libera -->
-            <div class="custom-input typing-mode">
-              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
-              <input type="text" class="native-input" [value]="productType()" (input)="updateSignalValue(productType, $event)" placeholder="Scrivi tipo prodotto..." autofocus />
-              <svg class="close-icon cursor-pointer" (click)="revertCustomMode('product')" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </div>
-          } @else {
-            <!-- Modalità Dropdown -->
-            <div class="custom-input cursor-pointer" (click)="toggleDropdown('product', $event)" aria-labelledby="product-label">
-              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="12" x2="20" y2="12"></line>
-                <line x1="4" y1="6" x2="20" y2="6"></line>
-                <line x1="4" y1="18" x2="20" y2="18"></line>
-              </svg>
-              <div class="input-value">{{ productType() }}</div>
-              <svg class="chevron-icon" [class.rotated]="activeDropdown() === 'product'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </div>
-            
-            @if (activeDropdown() === 'product') {
-              <ul class="dropdown-list">
-                @for (option of availableProducts(); track option) {
-                  <li class="dropdown-item" (click)="selectProductType(option)">{{ option }}</li>
-                }
-                <li class="dropdown-item action-item" (click)="enableCustomMode('product')">+ Altro (scrivi a mano)</li>
-              </ul>
+
+          <div class="custom-input typing-mode">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+            <input type="text" class="native-input" [value]="productType()" (input)="onProductInput($event)"
+              placeholder="Scrivi nome prodotto..." />
+          </div>
+
+          <!-- Suggerimenti a tendina -->
+          @if (isProductDropdownOpen() && productSuggestions().length > 0) {
+          <ul class="dropdown-list">
+            <li class="dropdown-item"
+              style="pointer-events: none; color: #8E8E93; font-size: 13px; padding-bottom: 4px;">
+              Prodotti esistenti in magazzino:
+            </li>
+            @for (option of productSuggestions(); track option) {
+            <li class="dropdown-item" (click)="selectProductSuggestion(option)">
+              <strong style="color: #16537A;">{{ option }}</strong>
+            </li>
             }
+          </ul>
           }
         </div>
       </div>
 
-      <!-- Scadenza e Quantità (Invariati) -->
+      <!-- Scadenza e Quantità -->
       <div class="form-row">
         <div class="form-group half-width">
           <label class="form-label" for="expiry-date">Scadenza</label>
-          <div class="custom-input">
+          <div class="custom-input cursor-pointer" (click)="datePicker.showPicker()">
             <label for="expiry-date" class="icon-label">
-              <svg class="input-icon cursor-pointer" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="input-icon cursor-pointer" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="16" y1="2" x2="16" y2="6"></line>
                 <line x1="8" y1="2" x2="8" y2="6"></line>
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
             </label>
-            <input id="expiry-date" type="date" class="native-input date-input" [class.is-empty]="!expiryDate()" [value]="expiryDate()" (input)="updateSignalValue(expiryDate, $event)" />
+            <input #datePicker id="expiry-date" type="date" class="native-input date-input" [value]="expiryDate()"
+              (input)="updateSignalValue(expiryDate, $event)" />
           </div>
         </div>
 
         <div class="form-group half-width">
           <label class="form-label" for="qty">Quantità</label>
           <div class="custom-input">
-            <input id="qty" type="number" min="0" class="native-input" [value]="quantity()" (input)="updateSignalValue(quantity, $event)" />
+            <input id="qty" type="number" min="0" class="native-input" [value]="quantity()"
+              (input)="updateSignalValue(quantity, $event)" />
           </div>
         </div>
       </div>
@@ -170,18 +188,21 @@
         <label class="form-label" for="token-val">Valuta token (prezzo in token)</label>
         <div class="custom-input">
           <div class="token-circle input-icon">T</div>
-          <input id="token-val" type="number" min="0" class="native-input" [value]="tokenValue()" (input)="updateSignalValue(tokenValue, $event)" />
+          <input id="token-val" type="number" min="0" class="native-input" [value]="tokenValue()"
+            (input)="updateSignalValue(tokenValue, $event)" />
         </div>
       </div>
 
       <!-- Banner Info -->
       <div class="info-banner">
-        <svg class="info-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2B6BBD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="info-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2B6BBD" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="16" x2="12" y2="12"></line>
           <line x1="12" y1="8" x2="12.01" y2="8"></line>
         </svg>
-        <p class="info-text">I valori inseriti in <strong>Altro</strong> entrano stabilmente nel catalogo.</p>
+        <p class="info-text">I valori inseriti in <strong>Altro</strong> o come nuovo <strong>Tipo prodotto</strong>
+          entrano stabilmente nel catalogo centrale.</p>
       </div>
 
     </form>
