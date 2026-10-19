@@ -1,25 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 
-// Interfacce per tipizzazione stretta
-interface UserData {
-  initials: string;
-  name: string;
-}
-
-interface InfoItem {
-  id: string;
-  label: string;
-  value: string;
-  isMonospace?: boolean;
-}
-
-interface NavItem {
-  id: string;
-  label: string;
-  iconName: 'home' | 'inventory' | 'upload' | 'profile';
-  isActive: boolean;
-}
+// ... (Interfacce invariate)
+interface UserData { initials: string; name: string; }
+interface InfoItem { id: string; label: string; value: string; isMonospace?: boolean; }
+interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 'upload' | 'profile'; isActive: boolean; }
 
 @Component({
   selector: 'app-admin-metro-profile',
@@ -29,13 +14,14 @@ interface NavItem {
   styleUrls: ['./admin-metro-profile.css']
 })
 export class AdminMetroProfileComponent {
-  // Gestione dello stato utente
+  // Uso del servizio Location per gestire il pulsante "Indietro" nativo
+  private readonly location = inject(Location);
+
   readonly user = signal<UserData>({
     initials: 'GF',
     name: 'Giulia Ferri',
   });
 
-  // Gestione dei dati della lista
   readonly infoItems = signal<InfoItem[]>([
     { id: 'role', label: 'Ruolo', value: 'Admin' },
     { id: 'location', label: 'Sede', value: 'Magazzino Centrale' },
@@ -43,7 +29,6 @@ export class AdminMetroProfileComponent {
     { id: 'phone', label: 'Telefono', value: '+39 340 9988776', isMonospace: true }
   ]);
 
-  // Bottom navigation state
   readonly navItems = signal<NavItem[]>([
     { id: 'home', label: 'Home', iconName: 'home', isActive: false },
     { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false },
@@ -52,7 +37,8 @@ export class AdminMetroProfileComponent {
   ]);
 
   goBack(): void {
-    console.log('Azione: Torna indietro');
+    // Riporta l'utente all'ultima pagina visitata mantenendo la cronologia
+    this.location.back();
   }
 
   onEditProfile(): void {

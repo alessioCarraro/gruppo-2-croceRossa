@@ -11,6 +11,7 @@ import { DeliverySuccessComponent } from './user-components/delivery-success-com
 import { AdminHomeComponent } from './admin-components/component/admin-home-component/admin-home-component';
 import { SuperAdminDashboardComponent } from './super-admin-components/component/super-admin-dashboard/super-admin-dashboard';
 import { UserMetroDashboardComponent } from './user-metro-components/component/admin-metro-dashboard-component/user-metro-dashboard-component';
+import { AdminMetroProfileComponent } from './user-metro-components/component/admin-metro-profile/admin-metro-profile';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,5 +27,6 @@ export const routes: Routes = [
   { path: 'product-catalog', component: ProductCatalogComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'delivery-success', component: DeliverySuccessComponent },
+  { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
   { path: '**', redirectTo: 'login' }
 ];

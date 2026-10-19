@@ -1,35 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-// Interfacce per il Single Responsibility Principle e Strict Typing
-interface UserProfile {
-  name: string;
-  role: string;
-}
-
-interface MetricCard {
-  id: string;
-  value: string;
-  label: string;
-  colorClass: 'blue' | 'green' | 'black' | 'red';
-  actionLabel?: string;
-}
-
-interface ControlItem {
-  id: string;
-  iconName: 'clock' | 'users';
-  title: string;
-  subtitle: string;
-  badgeValue: number;
-  badgeClass: 'orange' | 'gray';
-}
-
-interface NavItem {
-  id: string;
-  label: string;
-  iconName: 'home' | 'inventory' | 'upload' | 'restock';
-  isActive: boolean;
-}
+// ... (le interfacce rimangono invariate per il Single Responsibility Principle)
+interface UserProfile { name: string; role: string; }
+interface MetricCard { id: string; value: string; label: string; colorClass: 'blue' | 'green' | 'black' | 'red'; actionLabel?: string; }
+interface ControlItem { id: string; iconName: 'clock' | 'users'; title: string; subtitle: string; badgeValue: number; badgeClass: 'orange' | 'gray'; }
+interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 'upload' | 'restock'; isActive: boolean; }
 
 @Component({
   selector: 'app-user-metro-dashboard',
@@ -39,6 +17,7 @@ interface NavItem {
   styleUrls: ['./user-metro-dashboard-component.css']
 })
 export class UserMetroDashboardComponent {
+  private readonly router = inject(Router);
   // Dati utente
   readonly user = signal<UserProfile>({
     name: 'Giulia Russo',
@@ -53,13 +32,11 @@ export class UserMetroDashboardComponent {
     { id: '4', value: '6', label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'Gestisci' }
   ]);
 
-  // Voci "Controlli"
   readonly controls = signal<ControlItem[]>([
     { id: '1', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray' },
     { id: '2', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray' }
   ]);
 
-  // Voci "Bottom Navigation"
   readonly navItems = signal<NavItem[]>([
     { id: 'home', label: 'Home', iconName: 'home', isActive: true },
     { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false },
@@ -67,13 +44,13 @@ export class UserMetroDashboardComponent {
     { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: false }
   ]);
 
-  // Azioni
   onLogout(): void {
     console.log('Azione: Logout');
+    // Esempio futuro: this.authService.logout(); this.router.navigate(['/login']);
   }
 
   onProfile(): void {
-    console.log('Azione: Profilo utente');
+    this.router.navigate(['/admin-metro-profile']);
   }
 
   onNavClick(navId: string): void {
