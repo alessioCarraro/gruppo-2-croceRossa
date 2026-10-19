@@ -181,3 +181,10 @@
 .primary-button:active {
   background-color: #0E3B59;
 }
+/* Messaggio di errore sotto il campo quantità */
+.error-text {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #E53935;
+}

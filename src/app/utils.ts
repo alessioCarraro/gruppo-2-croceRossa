@@ -10,7 +10,7 @@ export type MeasurementUnit = 'Kg' | 'Litro' | 'Sacco' | 'Pacco' | 'Scatola';
 export type BeneficiaryStatus = 'Attivo' | 'Sospeso' | 'Scaduto';
 export type DeliveryStatus = 'Completata' | 'Sospesa' | 'Annullata';
 export type AlertDecision = 'In attesa' | 'Sospesa' | 'Annullata' | 'Confermata';
-export type ApprovalType = 'Nuovo beneficiario' | 'Token extra' | 'Riordino';
+export type ApprovalType = 'Nuovo beneficiario' | 'Token extra' | 'Riordino' | 'Nuovo prodotto' | 'Rifornimento sede';
 export type ApprovalStatus = 'In attesa' | 'Approvata' | 'Rifiutata';
 export type RequestStatus = 'In attesa' | 'Approvata' | 'Rifiutata';
 export type ShipmentStatus = 'Ordinato' | 'In transito' | 'Arrivato';
@@ -177,6 +177,8 @@ export interface ApprovalRequest {
     quantity?: number;
     decidedBy?: string; // Foreign key (UUID)
     decidedAt?: string;
+    siteId?: string; // Foreign key (UUID): sede che ha inviato la richiesta (per 'Rifornimento sede': sede destinataria)
+    items?: CartItem[]; // prodotti e quantità (usato da 'Rifornimento sede')
 }
 
 export interface Shipment {
@@ -352,6 +354,7 @@ export const SEED_APPROVALS: ApprovalRequest[] = [
     {
         id: '50890db5-6695-4b49-800c-ca17486ca1c8', type: 'Riordino', description: 'Riordino 100 Omogeneizzato carne',
         requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2', date: '2026-10-15T09:00:00.000Z', status: 'In attesa',
+        siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44',
         productId: '61321c12-9f01-4493-95f6-e7406296257b', quantity: 100
     },
 ];
@@ -445,6 +448,8 @@ export class MockBackendService {
         effect(() => this.save('shipments', this._shipments()));
         effect(() => this.save('duplicateWindow', this._duplicateWindowDays()));
         effect(() => this.save('operatorId', this._currentOperatorId()));
+        // Salva anche l'inventario delle sedi, così i carichi non si perdono al ricaricamento
+        effect(() => this.save('inventories', this._inventories()));
     }
 
     // --- HELPER DI UTILITÀ GENERALE ---
@@ -632,6 +637,60 @@ export class MockBackendService {
         });
     }
 
+    /**
+     * Aggiunge una quantità alla giacenza di un prodotto GIÀ presente nella metro.
+     * Aggiorna sia l'inventario della metro sia la giacenza nel catalogo.
+     * Lancia un errore se la quantità non è valida o il prodotto non è in metro.
+     */
+    async addStockToMetro(productId: string, quantity: number): Promise<void> {
+        return this.fakeApi(() => {
+            this.requireLogin();
+
+            // La quantità deve essere un numero intero maggiore di zero
+            if (!Number.isInteger(quantity) || quantity <= 0) {
+                throw new Error('Quantità non valida');
+            }
+
+            const metro = this._sites().find(s => s.type === 'Metro');
+            const index = this._inventories().findIndex(i => i.siteId === metro?.id && i.productId === productId);
+            if (index === -1) {
+                throw new Error('Prodotto non presente nella metro');
+            }
+
+            // 1. Somma la quantità alla giacenza esistente nella metro
+            this._inventories.update(invs => {
+                const updated = [...invs];
+                updated[index] = { ...updated[index], stock: updated[index].stock + quantity };
+                return updated;
+            });
+
+            // 2. Tiene allineata la giacenza del catalogo
+            this._products.update(prods => prods.map(p =>
+                p.id === productId ? { ...p, stock: p.stock + quantity } : p
+            ));
+        });
+    }
+
+    /**
+     * Mette in coda, "In attesa" di conferma del superadmin, un nuovo prodotto
+     * non ancora registrato. La richiesta compare nella lista `approvals`.
+     */
+    async requestNewProductApproval(description: string): Promise<ApprovalRequest> {
+        return this.fakeApi(() => {
+            const op = this.requireLogin();
+            const newRequest: ApprovalRequest = {
+                id: this.newId(),
+                type: 'Nuovo prodotto',
+                description,
+                requestedBy: op.id,
+                date: this.nowIso(),
+                status: 'In attesa'
+            };
+            this._approvals.update(list => [newRequest, ...list]);
+            return newRequest;
+        });
+    }
+
     // Aggiunge un prodotto completamente nuovo al catalogo e ne registra il primo carico
     registerNewProductAndStock(
         name: string,
@@ -721,6 +780,7 @@ export class MockBackendService {
                 requestedBy: op.id,
                 date: this.nowIso(),
                 status: 'In attesa',
+                siteId: op.siteId, // sede che invia la richiesta
                 ...details
             };
             this._approvals.update(list => [newRequest, ...list]);
@@ -770,13 +830,61 @@ export class MockBackendService {
         });
     }
 
+    /**
+     * Invia a conferma del superadmin un ordine di rifornimento verso una sede.
+     * La richiesta resta "In attesa" e contiene prodotti e quantità del carrello.
+     * Lancia un errore se la sede non esiste o il carrello è vuoto.
+     */
+    async requestRestockApproval(toSiteId: string, items: CartItem[]): Promise<ApprovalRequest> {
+        return this.fakeApi(() => {
+            const op = this.requireLogin();
+
+            if (!this._sites().some(s => s.id === toSiteId)) throw new Error('Sede non trovata');
+            if (items.length === 0) throw new Error('Il carrello è vuoto');
+
+            const newRequest: ApprovalRequest = {
+                id: this.newId(),
+                type: 'Rifornimento sede',
+                description: `Rifornimento a ${this.getSiteName(toSiteId)}: ${items.length} prodotti`,
+                requestedBy: op.id,
+                date: this.nowIso(),
+                status: 'In attesa',
+                siteId: toSiteId,
+                items
+            };
+            this._approvals.update(list => [newRequest, ...list]);
+            return newRequest;
+        });
+    }
+
+    // --- RICHIESTE DI RIFORNITURA DELLE SEDI ---
+    // Sedi da rifornire (tutte tranne la Metro)
+    readonly distributionSites = computed(() => this._sites().filter(s => s.type !== 'Metro'));
+
+    /**
+     * Richieste di rifornimento inviate da una sede e ancora in attesa.
+     * È l'UNICA fonte usata sia dal badge nella lista "Rifornitura sedi"
+     * sia dalla pagina della singola sede: i due numeri sono sempre uguali.
+     */
+    restockRequestsForSite(siteId: string): ApprovalRequest[] {
+        return this._approvals().filter(a => {
+            // Per le richieste vecchie senza siteId si usa la sede di chi l'ha inviata
+            const requestSiteId = a.siteId ?? this._operators().find(o => o.id === a.requestedBy)?.siteId;
+            return a.type === 'Riordino' && a.status === 'In attesa' && requestSiteId === siteId;
+        });
+    }
+
+    restockRequestCount(siteId: string): number {
+        return this.restockRequestsForSite(siteId).length;
+    }
+
     // --- STRUMENTI DI RESET E CONTROLLO DEMO ---
     setServiceDown(down: boolean): void {
         this._serviceDown.set(down);
     }
 
     resetDemoData(): void {
-        const keys = ['products', 'beneficiaries', 'deliveries', 'alerts', 'approvals', 'shipments', 'duplicateWindow', 'operatorId'];
+        const keys = ['products', 'beneficiaries', 'deliveries', 'alerts', 'approvals', 'shipments', 'duplicateWindow', 'operatorId', 'inventories'];
         keys.forEach(key => {
             try { localStorage.removeItem(STORAGE_PREFIX + key); } catch { }
         });
@@ -786,6 +894,7 @@ export class MockBackendService {
         this._alerts.set(SEED_ALERTS);
         this._approvals.set(SEED_APPROVALS);
         this._shipments.set(SEED_SHIPMENTS);
+        this._inventories.set(SEED_INVENTORIES);
         this._duplicateWindowDays.set(DEFAULT_DUPLICATE_WINDOW_DAYS);
         this._currentOperatorId.set(null);
         this._selectedBeneficiaryId.set(null);

@@ -180,6 +180,11 @@
   gap: 12px;
 }
 
+/* Card cliccabile: mostra il cursore a puntatore */
+.metric-card.clickable-card {
+  cursor: pointer;
+}
+
 .control-card {
   display: flex;
   align-items: center;

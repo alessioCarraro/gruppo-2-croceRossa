@@ -1,12 +1,16 @@
 import { Component, signal, computed, WritableSignal, HostListener, ElementRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
+import { NotificationService } from '../../../services/notification-service';
+import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
 type DropdownType = 'macro' | 'category' | 'product' | null;
 
 @Component({
   selector: 'app-admin-metro-add-new-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationCardComponent],
   templateUrl: './admin-metro-add-new-item-component.html',
   styleUrls: ['./admin-metro-add-new-item-component.css']
 })
@@ -47,6 +51,18 @@ export class AdminMetroAddNewItemComponent {
   public isProductCustom = signal<boolean>(false);
 
   private readonly elementRef = inject(ElementRef);
+  private readonly router = inject(Router);
+  private readonly location = inject(Location);
+  private readonly backend = inject(MockBackendService);
+  private readonly notifications = inject(NotificationService);
+
+  // Evita doppi invii mentre la richiesta è in corso
+  public isSubmitting = signal<boolean>(false);
+
+  // Pulsante indietro: torna alla pagina precedente senza inviare nulla
+  public goBack(): void {
+    this.location.back();
+  }
 
   @HostListener('document:click', ['$event'])
   public onClickOutside(event: Event): void {
@@ -119,23 +135,38 @@ export class AdminMetroAddNewItemComponent {
     }
   }
 
-  public submitForm(event?: Event): void {
+  /**
+   * Invia il nuovo articolo in coda "In attesa" di conferma del superadmin,
+   * poi torna ad "Aggiungi carico" dove compare la card informativa.
+   */
+  public async submitForm(event?: Event): Promise<void> {
     if (event) {
       event.preventDefault();
     }
-    
-    console.log('Invio dati al superadmin...', {
-      macro: this.macroCategory(),
-      category: this.category(),
-      product: this.productType(),
-      expiry: this.expiryDate(),
-      quantity: this.quantity(),
-      token: this.tokenValue(),
-      metadata: {
-        isMacroCustom: this.isMacroCustom(),
-        isCategoryCustom: this.isCategoryCustom(),
-        isProductCustom: this.isProductCustom()
+    if (this.isSubmitting()) return;
+
+    this.isSubmitting.set(true);
+    try {
+      // Controllo minimo: servono almeno categoria e nome del prodotto
+      if (!this.category().trim() || !this.productType().trim()) {
+        throw new Error('Dati mancanti');
       }
-    });
+
+      // Descrizione della richiesta mostrata al superadmin
+      const description = `Nuovo prodotto: ${this.productType()} (${this.macroCategory()} / ${this.category()}), ` +
+        `quantità ${this.quantity() || 0}, scadenza ${this.expiryDate() || 'non indicata'}, token ${this.tokenValue() || 0}`;
+
+      // Metto la richiesta in coda tra le approvazioni (stato "In attesa")
+      await this.backend.requestNewProductApproval(description);
+
+      // La card è nel servizio root: sarà visibile nella pagina di destinazione
+      this.notifications.info('Articolo inviato: in attesa di conferma del superadmin');
+      // replaceUrl: sostituisce questa pagina nella cronologia, così non resta tra le pagine "indietro"
+      await this.router.navigate(['/user-metro-load-item'], { replaceUrl: true });
+    } catch {
+      this.notifications.error("Errore durante l'invio dell'articolo al superadmin");
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 }

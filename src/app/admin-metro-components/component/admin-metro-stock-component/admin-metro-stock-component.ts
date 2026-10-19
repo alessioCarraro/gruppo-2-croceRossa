@@ -1,18 +1,20 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { MockBackendService } from '../../../utils';
 
 interface InventoryItem {
   id: string;
   icon: string;
   name: string;
-  stock: string;
+  category: string;
+  stock: number;
   expiryDate: string;
   quantity: number;
   isExpiringSoon: boolean;
 }
 
 @Component({
-  selector: 'app-admin-metro-stock', 
+  selector: 'app-admin-metro-stock',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './admin-metro-stock-component.html',
@@ -21,60 +23,77 @@ interface InventoryItem {
 export class AdminMetroStockComponent {
   // Iniezione del servizio Location per la navigazione nella history
   private readonly location = inject(Location);
+  // Servizio con i dati dell'inventario delle sedi
+  private readonly backend = inject(MockBackendService);
 
-  public filters = signal<string[]>(['Tutti', 'Pasta', 'Omogeneizzati', 'Carne']);
+  // Testo scritto nella barra di ricerca e filtro categoria attivo
+  public searchQuery = signal<string>('');
   public activeFilter = signal<string>('Tutti');
-  
-  public inventoryItems = signal<InventoryItem[]>([
-    {
-      id: '1',
-      icon: 'bag',
-      name: 'Pasta di semola 500g',
-      stock: '3.400',
-      expiryDate: '15/05/2026',
-      quantity: 20,
-      isExpiringSoon: false
-    },
-    {
-      id: '2',
-      icon: 'bag',
-      name: 'Pasta integrale 500g',
-      stock: '820',
-      expiryDate: '02/11/2025',
-      quantity: 22,
-      isExpiringSoon: true
-    },
-    {
-      id: '3',
-      icon: 'bottle',
-      name: 'Passata di pomodoro 700g',
-      stock: '2.150',
-      expiryDate: '20/08/2026',
-      quantity: 15,
-      isExpiringSoon: false
-    },
-    {
-      id: '4',
-      icon: 'meat',
-      name: 'Petto di pollo 1kg',
-      stock: '160',
-      expiryDate: '30/10/2025',
-      quantity: 40,
-      isExpiringSoon: true
-    },
-    {
-      id: '5',
-      icon: 'jar',
-      name: 'Omogeneizzato frutta',
-      stock: '540',
-      expiryDate: '05/12/2025',
-      quantity: 30,
-      isExpiringSoon: true
-    }
+
+  /**
+   * Articoli presenti nella metro (solo la sede di tipo 'Metro').
+   * Si aggiorna da solo quando cambia l'inventario nel servizio.
+   */
+  public inventoryItems = computed<InventoryItem[]>(() => {
+    const metro = this.backend.sites().find(s => s.type === 'Metro');
+    if (!metro) return [];
+
+    return this.backend.inventories()
+      .filter(inv => inv.siteId === metro.id)
+      .map(inv => {
+        // Il catalogo fornisce nome e categoria del prodotto
+        const product = this.backend.getProduct(inv.productId);
+        return {
+          id: inv.productId,
+          icon: product?.icon ?? 'bag',
+          name: product?.name ?? inv.productName,
+          category: product?.category ?? 'Altro',
+          stock: inv.stock,
+          expiryDate: this.formatDate(inv.expiry),
+          quantity: inv.stock,
+          isExpiringSoon: inv.isExpiringSoon
+        };
+      });
+  });
+
+  // Chip dei filtri: "Tutti" + le categorie davvero presenti nella metro
+  public filters = computed<string[]>(() => [
+    'Tutti',
+    ...new Set(this.inventoryItems().map(item => item.category))
   ]);
+
+  /**
+   * Elenco mostrato in tabella: applica ricerca per nome e filtro categoria.
+   * Si ricalcola in tempo reale a ogni cambio di testo o di filtro.
+   */
+  public filteredItems = computed<InventoryItem[]>(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const filter = this.activeFilter();
+
+    return this.inventoryItems().filter(item =>
+      (filter === 'Tutti' || item.category === filter) &&
+      item.name.toLowerCase().includes(query)
+    );
+  });
+
+  // Totale giacenza: somma delle quantità di tutti i prodotti della metro (0 se la lista è vuota).
+  // Non dipende da ricerca e filtri: conta sempre l'intero inventario della metro.
+  public totalItems = computed<number>(() =>
+    this.inventoryItems().reduce((totale, item) => totale + item.stock, 0)
+  );
+
+  public updateSearch(event: Event): void {
+    this.searchQuery.set((event.target as HTMLInputElement).value);
+  }
 
   public selectFilter(filter: string): void {
     this.activeFilter.set(filter);
+  }
+
+  // Converte 'YYYY-MM-DD' in 'GG/MM/AAAA'
+  private formatDate(isoDate: string): string {
+    const [year, month, day] = isoDate.split('-');
+    return `${day}/${month}/${year}`;
   }
 
   /**

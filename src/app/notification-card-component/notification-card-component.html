@@ -1,0 +1,6 @@
+@if (notifications.notification(); as notification) {
+  <div class="notification-card" [ngClass]="notification.type" role="status" aria-live="polite">
+    <span class="notification-message">{{ notification.message }}</span>
+    <button class="notification-close" aria-label="Chiudi notifica" (click)="notifications.dismiss()">&times;</button>
+  </div>
+}

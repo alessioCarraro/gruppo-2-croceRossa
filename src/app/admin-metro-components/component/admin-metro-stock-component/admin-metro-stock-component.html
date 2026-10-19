@@ -7,7 +7,7 @@
       </svg>
     </button>
     <h1 class="title">Inventario</h1>
-    <span class="total-badge">1.284 art.</span>
+    <span class="total-badge">{{ totalItems() }} art.</span>
   </header>
 
   <section class="search-section">
@@ -16,7 +16,8 @@
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" placeholder="Cerca nel magazzino..." class="search-input" />
+      <input type="text" placeholder="Cerca nel magazzino..." class="search-input"
+        [value]="searchQuery()" (input)="updateSearch($event)" />
     </div>
   </section>
 
@@ -43,7 +44,7 @@
   </div>
 
   <section class="inventory-list">
-    @for (item of inventoryItems(); track item.id) {
+    @for (item of filteredItems(); track item.id) {
       <article class="inventory-card">
         <div class="item-icon-wrapper">
           <svg class="item-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="1.5">
@@ -65,6 +66,9 @@
           <div class="quantity-badge">T</div>
         </div>
       </article>
+    } @empty {
+      <!-- Nessun articolo corrisponde a ricerca/filtro -->
+      <p class="info-text">Nessun articolo trovato</p>
     }
   </section>
 </main>

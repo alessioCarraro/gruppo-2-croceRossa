@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { RestockCartService } from '../../../services/restock-cart-service';
 
 @Component({
   selector: 'app-admin-metro-request-sent',
@@ -9,18 +11,20 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./admin-metro-request-sent-component.css']
 })
 export class AdminMetroRequestSentComponent {
-  // Gestione dello stato tramite Signals per i dati del riepilogo
-  public destinationStore = signal<string>('Nome sede');
-  public totalProductsSent = signal<number>(120);
+  private readonly router = inject(Router);
+  private readonly cart = inject(RestockCartService);
 
-  // Metodi per le azioni di navigazione
+  // Dati dell'ultima richiesta inviata (salvati dalla pagina di riepilogo)
+  public destinationStore = computed(() => this.cart.lastSent()?.siteName ?? '-');
+  public totalProductsSent = computed(() => this.cart.lastSent()?.productCount ?? 0);
+
+  // "Torna a Rifornitura sedi"
   public navigateToDashboard(): void {
-    console.log('Navigazione verso la dashboard principale...');
-    // Logica di routing (es. Router.navigate)
+    this.router.navigate(['/user-metro-restock'], { replaceUrl: true });
   }
 
+  // "Torna alla dashboard"
   public startNewOrder(): void {
-    console.log('Avvio di un nuovo ordine di rifornimento...');
-    // Logica per resettare lo stato e tornare alla lista sedi
+    this.router.navigate(['/user-metro-dashboard'], { replaceUrl: true });
   }
 }

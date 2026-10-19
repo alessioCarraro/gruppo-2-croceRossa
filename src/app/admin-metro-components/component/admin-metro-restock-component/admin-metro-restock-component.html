@@ -15,7 +15,7 @@
     <section class="locations-card">
       <ul class="locations-list">
         @for (location of locations(); track location.id) {
-          <li class="location-item" (click)="selectLocation(location)">
+          <li class="location-item" (click)="selectLocation(location)" (keydown.enter)="selectLocation(location)" tabindex="0" role="button">
             <div class="location-icon-wrapper">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
