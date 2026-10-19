@@ -2,7 +2,7 @@
   
   <!-- Header con Back, Titolo, e Azioni a destra -->
   <header class="header">
-    <button class="icon-button back-btn" aria-label="Indietro">
+    <button class="icon-button back-btn" (click)="goBack()" aria-label="Indietro">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
@@ -20,7 +20,7 @@
 
       <!-- 2. Pulsante scontrino con badge notifica -->
       <div class="receipt-icon-wrapper">
-        <button class="icon-button receipt-btn" aria-label="Visualizza ordine in corso">
+        <button class="icon-button receipt-btn" (click)="gotoOrders()" aria-label="Visualizza ordine in corso">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 2v20l3-2 3 2 3-2 3 2 3-2 3 2V2H4z"></path>
             <line x1="8" y1="7" x2="16" y2="7"></line>

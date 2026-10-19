@@ -1,5 +1,6 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Product {
   id: string;
@@ -20,6 +21,8 @@ interface Product {
   styleUrls: ['./admin-warehouse-component.css']
 })
 export class AdminWarehouseComponent {
+  private readonly router = inject(Router);
+
   searchQuery = signal<string>('');
   activeCategory = signal<string>('Tutti');
   categories = ['Tutti', 'Pasta', 'Omogeneizzati', 'Carne'];
@@ -100,5 +103,13 @@ export class AdminWarehouseComponent {
     this.products.update(products => 
       products.map(product => product.id === productId ? { ...product, addedToOrder: true } : product)
     );
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin-home']);
+  }
+
+  gotoOrders(): void {
+    this.router.navigate(['/admin-order']);
   }
 }
