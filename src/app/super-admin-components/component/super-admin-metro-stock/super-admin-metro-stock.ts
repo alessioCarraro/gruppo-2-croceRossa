@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils'; // <-- Verifica sempre il percorso corretto!
 
 interface InventoryItem {
   id: string;
@@ -19,68 +21,77 @@ interface InventoryItem {
   styleUrls: ['./super-admin-metro-stock.css']
 })
 export class SuperAdminMetroStockComponent {
-  readonly totalArticles = signal<string>('1.284 art.');
+  private readonly router = inject(Router);
+  private readonly backendService: MockBackendService = inject(MockBackendService);
+
+  // Signal per la barra di ricerca testuale
+  readonly searchQuery = signal<string>('');
   
-  readonly categories = signal<string[]>(['Tutti', 'Pasta', 'Omogeneizzati', 'Carne', 'Latticini']);
+  // Signal per la categoria attualmente selezionata
   readonly activeCategory = signal<string>('Tutti');
 
-  readonly items = signal<InventoryItem[]>([
-    {
-      id: '1',
-      name: 'Pasta di semola 500g',
-      stock: '3.400',
-      expiryDate: '15/05/2026',
-      isExpiringSoon: false,
-      tokenValue: 20,
-      iconType: 'bag'
-    },
-    {
-      id: '2',
-      name: 'Pasta integrale 500g',
-      stock: '820',
-      expiryDate: '02/11/2025',
-      isExpiringSoon: true,
-      tokenValue: 22,
-      iconType: 'bag'
-    },
-    {
-      id: '3',
-      name: 'Passata di pomodoro 700g',
-      stock: '2.150',
-      expiryDate: '20/08/2026',
-      isExpiringSoon: false,
-      tokenValue: 15,
-      iconType: 'bottle'
-    },
-    {
-      id: '4',
-      name: 'Petto di pollo 1kg',
-      stock: '160',
-      expiryDate: '30/10/2025',
-      isExpiringSoon: true,
-      tokenValue: 40,
-      iconType: 'meat'
-    },
-    {
-      id: '5',
-      name: 'Omogeneizzato frutta',
-      stock: '540',
-      expiryDate: '05/12/2025',
-      isExpiringSoon: false,
-      tokenValue: 30,
-      iconType: 'jar'
-    }
-  ]);
+  // Generazione dinamica delle categorie in base ai prodotti esistenti in magazzino
+  readonly categories = computed<string[]>(() => {
+    const products = this.backendService.products();
+    // Estraiamo tutte le categorie uniche dai prodotti (Pasta, Verdura, Carne, ecc.)
+    const uniqueCategories = new Set(products.map(p => p.category));
+    return ['Tutti', ...Array.from(uniqueCategories)];
+  });
 
+  // Lista prodotti filtrata in modo reattivo
+  readonly items = computed<InventoryItem[]>(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const category = this.activeCategory();
+    const products = this.backendService.products();
+
+    return products
+      // 1. Filtro per categoria
+      .filter(p => category === 'Tutti' || p.category === category)
+      // 2. Filtro per testo (nome prodotto)
+      .filter(p => !query || p.name.toLowerCase().includes(query))
+      // 3. Mappatura nel formato richiesto dall'interfaccia HTML
+      .map(p => {
+        // Formattiamo la data YYYY-MM-DD in DD/MM/YYYY
+        const dateParts = p.expiry.split('-');
+        const formattedDate = dateParts.length === 3 
+          ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` 
+          : p.expiry;
+
+        return {
+          id: p.id,
+          name: p.name,
+          stock: p.stock.toLocaleString('it-IT'), // Es. formatta 3400 in "3.400"
+          expiryDate: formattedDate,
+          isExpiringSoon: p.isExpiringSoon,
+          tokenValue: p.price, // Usiamo il prezzo come valore in token
+          iconType: p.iconType as 'bag' | 'bottle' | 'meat' | 'jar'
+        };
+      });
+  });
+
+  // Conteggio dinamico: mostra quanti articoli (tipologie) stiamo visualizzando dopo il filtro
+  readonly totalArticles = computed<string>(() => {
+    return `${this.items().length} art.`;
+  });
+
+  // Metodo richiamato ogni volta che l'utente digita nella barra di ricerca
+  onSearchInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+  }
+
+  // Cambio categoria dai bottoni "pill"
   selectCategory(category: string): void {
     this.activeCategory.set(category);
   }
 
+  // Torna alla dashboard
   goBack(): void {
-    console.log('Naviga indietro');
+    this.router.navigate(['/s-admin-home']);
   }
 
   editItem(item: InventoryItem): void {
     console.log('Modifica token per:', item.name);
+    // In futuro potrai implementare un popup o una pagina per modificare le info del prodotto
   }
 }

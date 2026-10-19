@@ -18,7 +18,12 @@
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" placeholder="Cerca nel magazzino..." />
+      <input 
+        type="text" 
+        placeholder="Cerca nel magazzino..." 
+        [value]="searchQuery()" 
+        (input)="onSearchInput($event)" 
+      />
     </div>
   </div>
 
@@ -28,7 +33,7 @@
       @for (cat of categories(); track cat) {
         <button 
           class="filter-pill" 
-          [class.active]="activeCategory() === cat"
+          [class.active]="activeCategory() === cat" 
           (click)="selectCategory(cat)">
           {{ cat }}
         </button>
