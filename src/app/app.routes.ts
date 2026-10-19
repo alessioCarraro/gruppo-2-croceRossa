@@ -35,5 +35,6 @@ export const routes: Routes = [
   { path: 'product-catalog', component: ProductCatalogComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'delivery-success', component: DeliverySuccessComponent },
+  { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
   { path: '**', redirectTo: 'login' }
 ];

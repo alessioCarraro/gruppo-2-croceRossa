@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Router } from '@angular/router';
+
 
 // ... (le interfacce rimangono invariate per il Single Responsibility Principle)
 interface UserProfile { name: string; role: string; }
