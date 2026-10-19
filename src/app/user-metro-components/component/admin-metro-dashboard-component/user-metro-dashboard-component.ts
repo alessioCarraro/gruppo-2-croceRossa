@@ -2,36 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-interface UserProfile { 
-  name: string; 
-  role: string; 
-}
-
-interface MetricCard { 
-  id: string; 
-  value: string; 
-  label: string; 
-  colorClass: 'blue' | 'green' | 'black' | 'red'; 
-  actionLabel?: string; 
-}
-
-interface ControlItem { 
-  id: string; 
-  iconName: 'clock' | 'users'; 
-  title: string; 
-  subtitle: string; 
-  badgeValue: number; 
-  badgeClass: 'orange' | 'gray'; 
-  route: string; 
-}
-
-interface NavItem { 
-  id: string; 
-  label: string; 
-  iconName: 'home' | 'inventory' | 'upload' | 'restock'; 
-  isActive: boolean; 
-  route?: string; 
-}
+interface UserProfile { name: string; role: string; }
+interface MetricCard { id: string; value: string; label: string; colorClass: 'blue' | 'green' | 'black' | 'red'; actionLabel?: string; }
+interface ControlItem { id: string; iconName: 'clock' | 'users'; title: string; subtitle: string; badgeValue: number; badgeClass: 'orange' | 'gray'; route: string; }
+interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 'upload' | 'restock'; isActive: boolean; route?: string; }
 
 @Component({
   selector: 'app-user-metro-dashboard',
@@ -56,30 +30,14 @@ export class UserMetroDashboardComponent {
   ]);
 
   readonly controls = signal<ControlItem[]>([
-    { 
-      id: 'admins', 
-      iconName: 'users', 
-      title: 'Admin delle sedi', 
-      subtitle: 'referenti per sede', 
-      badgeValue: 6, 
-      badgeClass: 'gray',
-      route: '/s-admin-admin-locations' 
-    },
-    { 
-      id: 'volunteers', 
-      iconName: 'users', 
-      title: 'Volontari delle sedi', 
-      subtitle: 'volontari in sede', 
-      badgeValue: 6, 
-      badgeClass: 'gray',
-      route: '/s-admin-user-locations' 
-    }
+    { id: 'admins', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray', route: '/s-admin-admin-locations' },
+    { id: 'volunteers', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray', route: '/s-admin-user-locations' }
   ]);
 
   readonly navItems = signal<NavItem[]>([
     { id: 'home', label: 'Home', iconName: 'home', isActive: true, route: '/user-metro-dashboard' },
     { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false, route: '/admin-metro-stock' },
-    { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false },
+    { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false, route: '/admin-metro-load-item' }, // <-- Modifica qui: aggiunta la rotta
     { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: false }
   ]);
 

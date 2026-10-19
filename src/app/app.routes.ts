@@ -21,6 +21,7 @@ import { SuperAdminRestoockComponent } from './super-admin-components/component/
 import { SuperAdminAdminLocationsComponent } from './super-admin-components/component/super-admin-admin-locations/super-admin-admin-locations';
 import { SuperAdminUserLocationsComponent } from './super-admin-components/component/super-admin-user-locations/super-admin-user-locations';
 import { AdminMetroStockComponent } from './user-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
+import { AdminMetroLoadItemComponent } from './user-metro-components/component/admin-metro-load-item-component/admin-metro-load-item-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -40,6 +41,7 @@ export const routes: Routes = [
   // Rotte admin
   { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
   { path: 'admin-metro-stock', component: AdminMetroStockComponent },
+  { path: 'admin-metro-load-item', component: AdminMetroLoadItemComponent },
   
   // Rotte Super Admin
   { path: 's-admin-profile', component: SuperAdminProfileComponent },

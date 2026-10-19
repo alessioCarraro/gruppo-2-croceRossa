@@ -49,6 +49,6 @@ export class AdminMetroLoadItemComponent {
   }
 
   public addToStock(): void {
-    console.log('Aggiunto al magazzino:', this.searchResult()?.name);
+    console.info('Aggiunto al magazzino:', this.searchResult()?.name);
   }
 }
