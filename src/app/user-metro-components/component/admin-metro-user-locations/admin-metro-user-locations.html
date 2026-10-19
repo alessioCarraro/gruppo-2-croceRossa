@@ -6,7 +6,7 @@
         <path d="M15 18L9 12L15 6" stroke="#1C2B39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-    <h1 class="title">Utenti delle sedi</h1>
+    <h1 class="title">Volontari delle sedi</h1>
     <span class="count-badge">{{ totalUsers() }}</span>
   </header>
 
@@ -22,10 +22,6 @@
         <div class="user-details">
           <h2 class="user-name">{{ user.name }}</h2>
           <p class="user-location">{{ user.location }}</p>
-        </div>
-
-        <div class="user-role-badge">
-          {{ user.role }}
         </div>
       </article>
     }
