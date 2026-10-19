@@ -16,6 +16,8 @@ interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 
 })
 export class UserMetroDashboardComponent {
   private readonly router = inject(Router);
+
+  private readonly activeTab = signal<string>('home');
   
   readonly user = signal<UserProfile>({
     name: 'Giulia Russo',
@@ -41,8 +43,24 @@ export class UserMetroDashboardComponent {
     { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: false, route: '/admin-metro-restock' } // <-- Modifica: aggiunta la rotta
   ]);
 
+  setTab(tab: string): void {
+        this.activeTab.set(tab);
+        if (tab === 'home') {
+            this.router.navigate(['/admin-home']);
+        }
+        if (tab === 'inventario') {
+            this.router.navigate(['/admin-warehouse']);
+        }
+        if (tab === 'carico') {
+            this.router.navigate(['/admin-store-locator']);
+        }
+        if (tab === 'rifornitura') {
+            this.router.navigate(['/admin-requests']);
+        }
+    }
+
   public onLogout(): void {
-    console.info('Azione: Logout completata');
+    this.router.navigate(['/login']);
   }
 
   public onProfile(): void {
