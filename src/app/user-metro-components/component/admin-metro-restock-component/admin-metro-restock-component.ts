@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 
 interface OfficeLocation {
   id: string;
@@ -22,6 +22,9 @@ interface NavItem {
   styleUrls: ['./admin-metro-restock-component.css']
 })
 export class AdminMetroRestockComponent {
+  // Iniezione del servizio Location per gestire il tasto indietro
+  private readonly location = inject(Location);
+
   // Gestione dello stato tramite Signals
   public readonly locations = signal<OfficeLocation[]>([
     { id: '1', name: 'Sede 1', requests: 4 },
@@ -38,11 +41,12 @@ export class AdminMetroRestockComponent {
   ]);
 
   public goBack(): void {
-    console.log('Navigating back...');
+    // Utilizza il servizio nativo di Angular per tornare alla history precedente
+    this.location.back();
   }
 
-  public selectLocation(location: OfficeLocation): void {
-    console.log(`Selected location: ${location.name}`);
+  public selectLocation(office: OfficeLocation): void {
+    console.info(`Selected location: ${office.name}`);
   }
 
   public changeTab(tabId: string): void {

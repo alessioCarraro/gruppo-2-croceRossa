@@ -22,6 +22,9 @@ import { SuperAdminAdminLocationsComponent } from './super-admin-components/comp
 import { SuperAdminUserLocationsComponent } from './super-admin-components/component/super-admin-user-locations/super-admin-user-locations';
 import { AdminMetroStockComponent } from './user-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
 import { AdminMetroLoadItemComponent } from './user-metro-components/component/admin-metro-load-item-component/admin-metro-load-item-component';
+import { SuperAdminAddExistingItemComponent } from './super-admin-components/component/super-admin-add-existing-item/super-admin-add-existing-item';
+import { SuperAdminAddNewItemComponent } from './super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component';
+import { AdminMetroRestockComponent } from './user-metro-components/component/admin-metro-restock-component/admin-metro-restock-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -42,6 +45,7 @@ export const routes: Routes = [
   { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
   { path: 'admin-metro-stock', component: AdminMetroStockComponent },
   { path: 'admin-metro-load-item', component: AdminMetroLoadItemComponent },
+  { path: 'admin-metro-restock', component: AdminMetroRestockComponent },
   
   // Rotte Super Admin
   { path: 's-admin-profile', component: SuperAdminProfileComponent },

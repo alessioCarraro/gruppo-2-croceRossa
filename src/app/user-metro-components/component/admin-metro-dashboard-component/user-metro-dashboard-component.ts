@@ -37,8 +37,8 @@ export class UserMetroDashboardComponent {
   readonly navItems = signal<NavItem[]>([
     { id: 'home', label: 'Home', iconName: 'home', isActive: true, route: '/user-metro-dashboard' },
     { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false, route: '/admin-metro-stock' },
-    { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false, route: '/admin-metro-load-item' }, // <-- Modifica qui: aggiunta la rotta
-    { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: false }
+    { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false, route: '/admin-metro-load-item' },
+    { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: false, route: '/admin-metro-restock' } // <-- Modifica: aggiunta la rotta
   ]);
 
   public onLogout(): void {
