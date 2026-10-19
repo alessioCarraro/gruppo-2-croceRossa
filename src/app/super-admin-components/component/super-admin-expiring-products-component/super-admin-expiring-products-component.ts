@@ -1,5 +1,7 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
 
 interface ScadenzaProdotto {
   id: string;
@@ -18,43 +20,44 @@ interface ScadenzaProdotto {
   styleUrls: ['./super-admin-expiring-products-component.css']
 })
 export class SuperAdminExpiringProductsComponent {
-  // Lista dei prodotti (Single Source of Truth)
-  readonly prodotti = signal<ScadenzaProdotto[]>([
-    {
-      id: '1',
-      nome: 'Petto di pollo 1kg',
-      lotto: 'C-8841',
-      quantita: 25,
-      dataScadenza: '30/10/2025',
-      urgente: true
-    },
-    {
-      id: '2',
-      nome: 'Pasta integrale 500g',
-      lotto: 'C-8830',
-      quantita: 58,
-      dataScadenza: '02/11/2025',
-      urgente: true
-    },
-    {
-      id: '3',
-      nome: 'Omogeneizzato frutta',
-      lotto: 'C-8795',
-      quantita: 40,
-      dataScadenza: '05/12/2025',
-      urgente: false
-    }
-  ]);
+  private readonly router = inject(Router);
+  private readonly backendService: MockBackendService = inject(MockBackendService);
 
-  /**
-   * Valore derivato dinamicamente: somma la 'quantita' di ogni prodotto.
-   * Si aggiorna in automatico e in modo efficiente solo quando cambia 'prodotti()'.
-   */
+  // Lista dinamica dei prodotti in scadenza presi direttamente da MockBackendService
+  readonly prodotti = computed<ScadenzaProdotto[]>(() => {
+    const products = this.backendService.products();
+
+    // Filtra solo i prodotti con il flag isExpiringSoon attivo
+    return products
+      .filter(p => p.isExpiringSoon)
+      .map(p => {
+        // Formatta la data da YYYY-MM-DD a DD/MM/YYYY
+        const dateParts = p.expiry.split('-');
+        const formattedDate = dateParts.length === 3 
+          ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` 
+          : p.expiry;
+
+        // Genera un codice lotto finto coerente (es: 'L-' + ultime 4 cifre dell'ID)
+        const lottoCode = 'L-' + p.id.slice(0, 4).toUpperCase();
+
+        return {
+          id: p.id,
+          nome: p.name,
+          lotto: lottoCode,
+          quantita: p.stock,
+          dataScadenza: formattedDate,
+          urgente: true // Tutti quelli che arrivano qui sono urgenti/in scadenza
+        };
+      });
+  });
+
+  // Somma totale delle quantità degli articoli in scadenza
   readonly totalItems = computed(() => 
     this.prodotti().reduce((accumulatore, prodotto) => accumulatore + prodotto.quantita, 0)
   );
 
+  // Navigazione a ritroso verso la dashboard del super admin
   goBack(): void {
-    console.log('Naviga indietro');
+    this.router.navigate(['/s-admin-home']);
   }
 }
