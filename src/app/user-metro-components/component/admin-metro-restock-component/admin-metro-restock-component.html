@@ -40,10 +40,30 @@
   <nav class="bottom-nav">
     <ul class="nav-list">
       @for (item of navItems(); track item.id) {
-        <li class="nav-item" [class.active]="item.isActive" (click)="changeTab(item.id)">
-          <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path [attr.d]="item.iconPath"></path>
-          </svg>
+        <li class="nav-item" [class.active]="item.isActive" (click)="changeTab(item)">
+          <div class="nav-icon">
+            @if (item.iconName === 'home') {
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              </svg>
+            } @else if (item.iconName === 'inventory') {
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              </svg>
+            } @else if (item.iconName === 'upload') {
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+              </svg>
+            } @else {
+              <!-- Questa è l'icona esatta della dashboard per la Rifornitura -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+            }
+          </div>
           <span class="nav-label">{{ item.label }}</span>
         </li>
       }
