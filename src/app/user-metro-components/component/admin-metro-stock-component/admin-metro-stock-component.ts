@@ -12,7 +12,7 @@ interface InventoryItem {
 }
 
 @Component({
-  selector: '<app-admin-metro-stock',
+  selector: 'app-admin-metro-stock', 
   standalone: true,
   imports: [CommonModule],
   templateUrl: './admin-metro-stock-component.html',

@@ -2,83 +2,108 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-// Interfacce per il Single Responsibility Principle e Strict Typing
-interface UserProfile {
-    name: string;
-    role: string;
+interface UserProfile { 
+  name: string; 
+  role: string; 
 }
 
-interface MetricCard {
-    id: string;
-    value: string;
-    label: string;
-    colorClass: 'blue' | 'green' | 'black' | 'red';
-    actionLabel?: string;
+interface MetricCard { 
+  id: string; 
+  value: string; 
+  label: string; 
+  colorClass: 'blue' | 'green' | 'black' | 'red'; 
+  actionLabel?: string; 
 }
 
-interface ControlItem {
-    id: string;
-    iconName: 'clock' | 'users';
-    title: string;
-    subtitle: string;
-    badgeValue: number;
-    badgeClass: 'orange' | 'gray';
+interface ControlItem { 
+  id: string; 
+  iconName: 'clock' | 'users'; 
+  title: string; 
+  subtitle: string; 
+  badgeValue: number; 
+  badgeClass: 'orange' | 'gray'; 
+  route: string; 
 }
 
-interface NavItem {
-    id: string;
-    label: string;
-    iconName: 'home' | 'inventory' | 'upload' | 'restock';
-    isActive: boolean;
+interface NavItem { 
+  id: string; 
+  label: string; 
+  iconName: 'home' | 'inventory' | 'upload' | 'restock'; 
+  isActive: boolean; 
+  route?: string; 
 }
 
 @Component({
-    selector: 'app-user-metro-dashboard',
-    standalone: true,
-    imports: [CommonModule],
-    templateUrl: './user-metro-dashboard-component.html',
-    styleUrls: ['./user-metro-dashboard-component.css']
+  selector: 'app-user-metro-dashboard',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './user-metro-dashboard-component.html',
+  styleUrls: ['./user-metro-dashboard-component.css']
 })
 export class UserMetroDashboardComponent {
   private readonly router = inject(Router);
-  // Dati utente
+  
   readonly user = signal<UserProfile>({
     name: 'Giulia Russo',
     role: 'Magazzino'
   });
 
-    // Metriche "Merci"
-    readonly metrics = signal<MetricCard[]>([
-        { id: '1', value: '38.4k', label: 'Articoli in magazzino', colorClass: 'black' },
-        { id: '2', value: '15', label: 'Articoli in uscita', colorClass: 'black' },
-        { id: '3', value: '8', label: 'Articoli in scadenza', colorClass: 'red', actionLabel: 'Visualizza' },
-        { id: '4', value: '6', label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'Gestisci' }
-    ]);
+  readonly metrics = signal<MetricCard[]>([
+    { id: '1', value: '38.4k', label: 'Articoli in magazzino', colorClass: 'black' },
+    { id: '2', value: '15', label: 'Articoli in uscita', colorClass: 'black' },
+    { id: '3', value: '8', label: 'Articoli in scadenza', colorClass: 'red', actionLabel: 'Visualizza'},
+    { id: '4', value: '6', label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'Gestisci' }
+  ]);
 
   readonly controls = signal<ControlItem[]>([
-    { id: '1', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray' },
-    { id: '2', iconName: 'users', title: 'Volontari delle sedi', subtitle: 'volontari in sede', badgeValue: 6, badgeClass: 'gray' }
+    { 
+      id: 'admins', 
+      iconName: 'users', 
+      title: 'Admin delle sedi', 
+      subtitle: 'referenti per sede', 
+      badgeValue: 6, 
+      badgeClass: 'gray',
+      route: '/s-admin-admin-locations' 
+    },
+    { 
+      id: 'volunteers', 
+      iconName: 'users', 
+      title: 'Volontari delle sedi', 
+      subtitle: 'volontari in sede', 
+      badgeValue: 6, 
+      badgeClass: 'gray',
+      route: '/s-admin-user-locations' 
+    }
   ]);
 
   readonly navItems = signal<NavItem[]>([
-    { id: 'home', label: 'Home', iconName: 'home', isActive: true },
-    { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false },
+    { id: 'home', label: 'Home', iconName: 'home', isActive: true, route: '/user-metro-dashboard' },
+    { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false, route: '/admin-metro-stock' },
     { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false },
     { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: false }
   ]);
 
-    // Azioni
-    onLogout(): void {
-        this.router.navigate(['/login']);
-    }
+  public onLogout(): void {
+    console.info('Azione: Logout completata');
+  }
 
-  onProfile(): void {
+  public onProfile(): void {
     this.router.navigate(['/admin-metro-profile']);
   }
 
-    onNavClick(navId: string): void {
-        this.navItems.update(items =>
-            items.map(item => ({ ...item, isActive: item.id === navId }))
-        );
+  public onControlClick(route: string): void {
+    if (route) {
+      this.router.navigate([route]);
     }
+  }
+
+  public onNavClick(clickedItem: NavItem): void {
+    this.navItems.update(items =>
+      items.map(item => ({ ...item, isActive: item.id === clickedItem.id }))
+    );
+
+    if (clickedItem.route) {
+      this.router.navigate([clickedItem.route]);
+    }
+  }
 }

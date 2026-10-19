@@ -20,6 +20,7 @@ import { SuperAdminExpiringProductsComponent } from './super-admin-components/co
 import { SuperAdminRestoockComponent } from './super-admin-components/component/super-admin-restoock-component/super-admin-restoock-component';
 import { SuperAdminAdminLocationsComponent } from './super-admin-components/component/super-admin-admin-locations/super-admin-admin-locations';
 import { SuperAdminUserLocationsComponent } from './super-admin-components/component/super-admin-user-locations/super-admin-user-locations';
+import { AdminMetroStockComponent } from './user-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -35,7 +36,10 @@ export const routes: Routes = [
   { path: 'product-catalog', component: ProductCatalogComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'delivery-success', component: DeliverySuccessComponent },
+
+  // Rotte admin
   { path: 'admin-metro-profile', component: AdminMetroProfileComponent },
+  { path: 'admin-metro-stock', component: AdminMetroStockComponent },
   
   // Rotte Super Admin
   { path: 's-admin-profile', component: SuperAdminProfileComponent },
