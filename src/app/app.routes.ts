@@ -21,6 +21,8 @@ import { SuperAdminRestoockComponent } from './super-admin-components/component/
 import { SuperAdminAdminLocationsComponent } from './super-admin-components/component/super-admin-admin-locations/super-admin-admin-locations';
 import { SuperAdminUserLocationsComponent } from './super-admin-components/component/super-admin-user-locations/super-admin-user-locations';
 import { AdminMetroStockComponent } from './user-metro-components/component/admin-metro-stock-component/admin-metro-stock-component';
+import { SuperAdminAddExistingItemComponent } from './super-admin-components/component/super-admin-add-existing-item/super-admin-add-existing-item';
+import { SuperAdminAddNewItemComponent } from './super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -50,6 +52,8 @@ export const routes: Routes = [
   { path: 's-admin-expiring-products', component: SuperAdminExpiringProductsComponent },
   { path: 's-admin-admin-locations', component: SuperAdminAdminLocationsComponent },
   { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
+  { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
+  { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
 
   { path: '**', redirectTo: 'login' }
 ];

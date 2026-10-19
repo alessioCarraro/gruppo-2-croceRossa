@@ -1,6 +1,7 @@
 <main class="stock-screen">
   <header class="header">
-    <button class="back-button" aria-label="Torna indietro">
+    <!-- 1. Aggiunto (click)="goBack()" -->
+    <button class="back-button" aria-label="Torna indietro" (click)="goBack()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M15 18L9 12L15 6" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -25,14 +26,16 @@
       />
     </div>
 
-    @if (searchResult(); as result) {
+    <!-- 2. Mostra la lista dei risultati trovati nel catalogo -->
+    @for (result of searchResults(); track result.id) {
       <div class="search-result-card">
         <div class="result-info">
           <span class="result-name">{{ result.name }}</span>
           <span class="result-weight">{{ result.weight }}</span>
         </div>
         <div class="result-actions">
-          <button class="add-button" (click)="addToStock()">+</button>
+          <!-- 3. Aggiunto evento click con ID prodotto -->
+          <button class="add-button" (click)="addExistingToStock(result.id)">+</button>
         </div>
       </div>
     }
@@ -40,7 +43,8 @@
 
   <section class="options-container">
     @for (option of stockOptions(); track option.id) {
-      <button class="option-card">
+      <!-- 4. Aggiunto evento click per il nuovo prodotto -->
+      <button class="option-card" (click)="addNewToStock()">
         <div class="option-icon-wrapper">
           @if (option.icon === 'box') {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2">
