@@ -1,7 +1,7 @@
 <main class="app-container">
   <div class="scrollable-content">
     <header class="header">
-      <button class="back-button" aria-label="Torna indietro">
+      <button class="back-button" aria-label="Torna indietro" (click)="goBack()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15 18L9 12L15 6" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -11,55 +11,105 @@
 
     <form class="form-container" (submit)="saveLoad(); $event.preventDefault()">
       
-      <!-- Macro-categoria (Omissis per brevità, resta invariato) -->
+      <!-- Macro-categoria (Fissa) -->
       <div class="form-group">
         <label class="form-label">Macro-categoria</label>
-        <div class="custom-input">
-          <span class="input-value">{{ macroCategory() }}</span>
+        <div class="custom-select-box">
+          <svg class="box-icon-left" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <span class="box-text">{{ macroCategory() }}</span>
           <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
       </div>
 
-      <!-- Categoria (Omissis per brevità, resta invariato) -->
+      <!-- Categoria Dropdown Personalizzato -->
       <div class="form-group">
         <label class="form-label">Categoria</label>
-        <div class="custom-input">
-          <span class="input-value">{{ category() }}</span>
-          <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          </svg>
+        <div class="custom-select-wrapper" [class.is-open]="isCategoryOpen()">
+          <div class="custom-select-box" (click)="toggleCategoryDropdown()">
+            <svg class="box-icon-left" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <span class="box-text" [class.placeholder]="!selectedCategory()">
+              {{ selectedCategory() || 'Seleziona una categoria' }}
+            </span>
+            <svg class="chevron-icon" [class.rotate]="isCategoryOpen()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+
+          @if (isCategoryOpen()) {
+            <div class="custom-options-list">
+              @for (cat of availableCategories(); track cat) {
+                <div class="custom-option-item" (click)="chooseCategory(cat)">
+                  {{ cat }}
+                </div>
+              }
+            </div>
+          }
         </div>
       </div>
 
-      <!-- Tipo prodotto (Omissis per brevità, resta invariato) -->
+      <!-- Tipo prodotto Dropdown Personalizzato -->
       <div class="form-group">
         <label class="form-label">Tipo prodotto</label>
-        <div class="custom-input">
-          <span class="input-value">{{ productType() }}</span>
-          <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          </svg>
+        <div class="custom-select-wrapper" [class.is-open]="isProductOpen()" [class.disabled]="!selectedCategory()">
+          <div class="custom-select-box" (click)="toggleProductDropdown()">
+            <span class="box-text no-left-icon" [class.placeholder]="!selectedProductId()">
+              {{ selectedProductName() || 'Seleziona un prodotto' }}
+            </span>
+            <svg class="chevron-icon" [class.rotate]="isProductOpen()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+
+          @if (isProductOpen()) {
+            <div class="custom-options-list">
+              @for (prod of filteredProducts(); track prod.id) {
+                <div class="custom-option-item" (click)="chooseProduct(prod.id)">
+                  {{ prod.name }} ({{ prod.unit }})
+                </div>
+              }
+            </div>
+          }
         </div>
       </div>
 
-      <!-- Scadenza e Quantità (Row) -->
-       <div class="form-row">
-        
+      <!-- ALERT GIACENZA -->
+      @if (selectedProductId()) {
+        <div class="stock-alert">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16537A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Giacenza attuale in inventario: <strong>{{ currentStock() }}</strong></span>
+        </div>
+      }
+
+      <!-- Scadenza e Quantità -->
+      <div class="form-row">
         <!-- Scadenza -->
         <div class="form-group half-width">
-          <label class="form-label" for="expiry-date">Scadenza</label>
-          <!-- Il wrapper torna ad essere un div per non espandere l'area cliccabile -->
-          <div class="custom-input">
-            <!-- La label avvolge solo l'icona per permettere il click anche su di essa -->
-            <label for="expiry-date" class="icon-label">
-              <svg class="input-icon cursor-pointer" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <label class="form-label">Scadenza</label>
+          <div class="custom-input cursor-pointer" (click)="datePicker.showPicker()">
+            <div class="icon-label">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="16" y1="2" x2="16" y2="6"></line>
                 <line x1="8" y1="2" x2="8" y2="6"></line>
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
-            </label>
+            </div>
             <input 
-              id="expiry-date"
+              #datePicker
               type="date" 
               class="native-input date-input" 
               [value]="expiryDate()" 
@@ -75,7 +125,7 @@
             <input 
               id="quantity-input"
               type="number" 
-              min="0"
+              min="1"
               class="native-input" 
               [value]="quantity()" 
               (input)="updateQuantity($event)" 
@@ -84,14 +134,11 @@
         </div>
       </div>
       
-
-
-
     </form>
   </div>
 
   <footer class="sticky-footer">
-    <button class="primary-button" (click)="saveLoad()">
+    <button class="primary-button" (click)="saveLoad()" [disabled]="!isFormValid()">
       Salva prodotto in ingresso
     </button>
   </footer>

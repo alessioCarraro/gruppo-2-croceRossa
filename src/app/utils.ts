@@ -591,6 +591,47 @@ export class MockBackendService {
         return [];
     }
 
+    // Aggiunge merce all'inventario esistente e aggiorna il catalogo globale
+    addStockToInventory(productId: string, quantity: number, expiryDate: string): void {
+        const currentUser = this.currentOperator();
+        if (!currentUser) return;
+
+        const product = this.getProduct(productId);
+        if (!product) return;
+
+        // 1. Aggiorna l'inventario specifico della sede
+        this._inventories.update(invs => {
+            const existingIndex = invs.findIndex(i =>
+                i.productId === productId &&
+                i.siteId === currentUser.siteId &&
+                i.expiry === expiryDate
+            );
+
+            if (existingIndex > -1) {
+                const updated = [...invs];
+                updated[existingIndex] = { ...updated[existingIndex], stock: updated[existingIndex].stock + quantity };
+                return updated;
+            } else {
+                return [...invs, {
+                    siteId: currentUser.siteId, productId: productId, productName: product.name,
+                    weight: product.unit, stock: quantity, expiry: expiryDate,
+                    isExpiringSoon: false, isExpired: false
+                }];
+            }
+        });
+
+        // 2. Aggiorna il totale globale nel catalogo (così la pagina Inventario si aggiorna!)
+        this._products.update(prods => {
+            const pIndex = prods.findIndex(p => p.id === productId);
+            if (pIndex > -1) {
+                const updatedP = [...prods];
+                updatedP[pIndex] = { ...updatedP[pIndex], stock: updatedP[pIndex].stock + quantity };
+                return updatedP;
+            }
+            return prods;
+        });
+    }
+
     // --- METODI DI GESTIONE SPECIFICI PER I 4 RUOLI ---
 
     /** 1. Ente Distribuente - User: Registrazione consegne ai beneficiari */
