@@ -33,6 +33,7 @@ import { AdminTrackingNumberComponent } from './admin-components/component/admin
 import { AdminMetroProfileComponent } from './admin-metro-components/component/admin-metro-profile/admin-metro-profile';
 import { AdminMetroAdminLocationsComponent } from './admin-metro-components/component/admin-metro-admin-locations/admin-metro-admin-locations';
 import { AdminMetroUserLocationsComponent } from './admin-metro-components/component/admin-metro-user-locations/admin-metro-user-locations';
+import { SuperAdminRequestDetailsComponent } from './super-admin-components/component/super-admin-request-details-component/super-admin-request-details-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -71,6 +72,7 @@ export const routes: Routes = [
   { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
   { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
   { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
+  { path: 's-admin-request-details', component: SuperAdminRequestDetailsComponent },
 
   // Rotte Operator
   { path: 'user-metro-profile', component: AdminMetroProfileComponent },
