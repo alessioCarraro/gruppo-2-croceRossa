@@ -14,13 +14,14 @@ export class HomeComponent {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
-    readonly currentUser = this.authService.currentOperator;
-    readonly currentSite = this.authService.currentSite;
-    readonly beneficiaries = signal<Beneficiary[]>(SEED_BENEFICIARIES);
+    private readonly currentUser = this.authService.currentOperator;
+    private readonly currentSite = this.authService.currentSite;
+    private readonly beneficiaries = signal<Beneficiary[]>(SEED_BENEFICIARIES);
+    private readonly scanId = signal<string>('ID-2024-0481');
+    private readonly activeTab = signal('home');
+    
     readonly userName = computed(() => this.currentUser()?.firstName ?? 'Ospite');
     readonly storeName = computed(() => this.currentSite()?.name ?? 'Sede non specificata');
-    readonly scanId = signal<string>('ID-2024-0481');
-    readonly activeTab = signal('home');
 
     userInitials = computed(() => {
         const user = this.currentUser();
@@ -63,5 +64,9 @@ export class HomeComponent {
         if (tab === 'sedie') {
             this.router.navigate(['/store-locator']);
         }
+    }
+
+    onLogout(): void {
+        this.router.navigate(['/login']);
     }
 }
