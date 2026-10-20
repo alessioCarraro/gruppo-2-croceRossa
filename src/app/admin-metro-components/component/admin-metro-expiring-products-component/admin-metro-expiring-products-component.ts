@@ -1,5 +1,5 @@
-import { Component, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, computed, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 
 interface ScadenzaProdotto {
   id: string;
@@ -18,6 +18,9 @@ interface ScadenzaProdotto {
   styleUrls: ['./admin-metro-expiring-products-component.css']
 })
 export class AdminMetroExpiringProductsComponent {
+  // Iniezione del servizio Location per tornare alla dashboard
+  private readonly location = inject(Location);
+
   // Lista dei prodotti (Single Source of Truth)
   readonly prodotti = signal<ScadenzaProdotto[]>([
     {
@@ -55,6 +58,6 @@ export class AdminMetroExpiringProductsComponent {
   );
 
   goBack(): void {
-    console.log('Naviga indietro');
+    this.location.back();
   }
 }

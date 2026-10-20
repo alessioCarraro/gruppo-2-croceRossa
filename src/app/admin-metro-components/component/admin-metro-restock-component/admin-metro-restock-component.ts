@@ -1,6 +1,7 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
 
 interface OfficeLocation {
   id: string;
@@ -26,13 +27,19 @@ interface NavItem {
 export class AdminMetroRestockComponent {
   private readonly location = inject(Location);
   private readonly router = inject(Router);
+  private readonly backend = inject(MockBackendService);
 
-  public readonly locations = signal<OfficeLocation[]>([
-    { id: '1', name: 'Sede 1', requests: 4 },
-    { id: '2', name: 'Sede 2', requests: 3 },
-    { id: '3', name: 'Sede 3', requests: 2 },
-    { id: '4', name: 'Sede 4', requests: 0 }
-  ]);
+  /**
+   * Sedi da rifornire. Il numero di richieste arriva dal servizio, con lo stesso
+   * calcolo usato dalla pagina della singola sede: si aggiorna da solo (0 se non ce ne sono).
+   */
+  public readonly locations = computed<OfficeLocation[]>(() =>
+    this.backend.distributionSites().map(site => ({
+      id: site.id,
+      name: site.name,
+      requests: this.backend.restockRequestCount(site.id)
+    }))
+  );
 
   public readonly navItems = signal<NavItem[]>([
     { id: 'home', label: 'Home', iconName: 'home', isActive: false, route: '/user-metro-dashboard' },
@@ -46,7 +53,8 @@ export class AdminMetroRestockComponent {
   }
 
   public selectLocation(office: OfficeLocation): void {
-    console.info(`Selected location: ${office.name}`);
+    // Passa la sede scelta alla pagina di destinazione (?siteId=...)
+    this.router.navigate(['/user-metro-restock-single-store'], { queryParams: { siteId: office.id } });
   }
 
   public changeTab(clickedItem: NavItem): void {

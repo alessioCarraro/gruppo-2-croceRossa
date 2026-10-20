@@ -1,0 +1,46 @@
+/* Card fissa in alto, sopra il contenuto della pagina */
+.notification-card {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.notification-card.success {
+  background: #E8F5EE;
+  border-color: #2D6A4F;
+  color: #1B4332;
+}
+
+.notification-card.error {
+  background: #FDECEA;
+  border-color: #E53935;
+  color: #B71C1C;
+}
+
+.notification-card.info {
+  background: #EAF2FB;
+  border-color: #2B6BBD;
+  color: #1B4A82;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: inherit;
+  cursor: pointer;
+}

@@ -91,6 +91,17 @@ button { background: none; border: none; cursor: pointer; padding: 0; }
   cursor: pointer;
 }
 
+/* Leggero effetto hover sulla riga cliccabile */
+.location-item {
+  transition: background-color 0.15s;
+}
+
+.location-item:hover,
+.location-item:focus-visible {
+  background-color: rgba(0, 0, 0, 0.04);
+  outline: none;
+}
+
 .location-item:last-child {
   border-bottom: none;
 }

@@ -37,6 +37,12 @@ import { AdminProductCatalogComponent } from './admin-components/component/admin
 import { AdminSummaryComponent } from './admin-components/component/admin-summary-component/admin-summary-component';
 import { AdminDeliverySuccessComponent } from './admin-components/component/admin-delivery-success-component/admin-delivery-success-component';
 import { AdminOrderComponent } from './admin-components/component/admin-order-component/admin-order-component';
+import { AdminMetroExpiringProductsComponent } from './admin-metro-components/component/admin-metro-expiring-products-component/admin-metro-expiring-products-component';
+import { AdminMetroAddExistingItemComponent } from './admin-metro-components/component/admin-metro-add-existing-item-component/admin-metro-add-existing-item-component';
+import { AdminMetroAddNewItemComponent } from './admin-metro-components/component/admin-metro-add-new-item-component/admin-metro-add-new-item-component';
+import { AdminMetroRestockSingleStoreComponent } from './admin-metro-components/component/admin-metro-restock-sigle-store-component/admin-metro-restock-sigle-store-component';
+import { AdminMetroRestockSummary } from './admin-metro-components/component/admin-metro-restock-summary/admin-metro-restock-summary';
+import { AdminMetroRequestSentComponent } from './admin-metro-components/component/admin-metro-request-sent-component/admin-metro-request-sent-component';
 import { ExpiringProductsComponent } from './admin-components/component/expiring-products-component/expiring-products-component';
 import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
 import { SuperAdminRequestDetailsComponent } from './super-admin-components/component/super-admin-request-details-component/super-admin-request-details-component';
@@ -89,16 +95,22 @@ export const routes: Routes = [
   { path: 's-admin-restock-single-store', component: SuperAdminRestockSingleStoreComponent },
   { path: 's-admin-restock-summary', component: SuperAdminRestockSummary },
 
-    // Rotte Operator
-    { path: 'user-metro-profile', component: AdminMetroProfileComponent },
-    { path: 'user-metro-stock', component: AdminMetroStockComponent },
-    { path: 'user-metro-load-item', component: AdminMetroLoadItemComponent },
-    { path: 'user-metro-restock', component: AdminMetroRestockComponent },
-    { path: 'user-metro-admin-location', component: AdminMetroAdminLocationsComponent },
-    { path: 'user-metro-user-location', component: AdminMetroUserLocationsComponent },
-    { path: 'user-metro-store-locator', component: AdminStoreLocatorComponent },
-    { path: 'user-metro-requests', component: RequestsComponent },
-    { path: 'user-metro-tracking-number', component: AdminTrackingNumberComponent },
+  // Rotte Operator
+  { path: 'user-metro-profile', component: AdminMetroProfileComponent },
+  { path: 'user-metro-stock', component: AdminMetroStockComponent },
+  { path: 'user-metro-load-item', component: AdminMetroLoadItemComponent },
+  { path: 'user-metro-restock', component: AdminMetroRestockComponent },
+  { path: 'user-metro-admin-location', component: AdminMetroAdminLocationsComponent },
+  { path: 'user-metro-user-location', component: AdminMetroUserLocationsComponent },
+  { path: 'user-metro-store-locator', component: AdminStoreLocatorComponent },
+  { path: 'user-metro-requests', component: RequestsComponent },
+  { path: 'user-metro-tracking-number', component: AdminTrackingNumberComponent },
+  { path: 'user-metro-expiring-products', component: AdminMetroExpiringProductsComponent },
+  { path: 'user-metro-add-existing-item', component: AdminMetroAddExistingItemComponent },
+  { path: 'user-metro-add-new-item', component: AdminMetroAddNewItemComponent },
+  { path: 'user-metro-restock-single-store', component: AdminMetroRestockSingleStoreComponent },
+  { path: 'user-metro-restock-summary', component: AdminMetroRestockSummary },
+  { path: 'user-metro-request-sent', component: AdminMetroRequestSentComponent },
 
-    { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'login' }
 ];

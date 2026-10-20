@@ -1,4 +1,6 @@
 <main class="stock-screen">
+  <!-- Card di conferma / errore / info (sparisce da sola) -->
+  <app-notification-card />
   <header class="header">
     <!-- Aggiunto binding (click)="goBack()" al bottone indietro -->
     <button class="back-button" aria-label="Torna indietro" (click)="goBack()">
@@ -26,14 +28,15 @@
       />
     </div>
 
-    @if (searchResult(); as result) {
+    <!-- Solo prodotti presenti nella metro -->
+    @for (result of searchResults(); track result.id) {
       <div class="search-result-card">
         <div class="result-info">
           <span class="result-name">{{ result.name }}</span>
           <span class="result-weight">{{ result.weight }}</span>
         </div>
         <div class="result-actions">
-          <button class="add-button" (click)="addToStock()">+</button>
+          <button class="add-button" (click)="addToStock(result)">+</button>
         </div>
       </div>
     }
@@ -41,7 +44,7 @@
 
   <section class="options-container">
     @for (option of stockOptions(); track option.id) {
-      <button class="option-card">
+      <button class="option-card" (click)="openNewItem()">
         <div class="option-icon-wrapper">
           @if (option.icon === 'box') {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2">

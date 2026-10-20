@@ -35,7 +35,10 @@
 
             <div class="metrics-grid">
                 @for (metric of metrics(); track metric.id) {
-                <article class="metric-card">
+                <!-- La card è cliccabile solo se ha una rotta associata (es. "Articoli in scadenza") -->
+                <article class="metric-card" [class.clickable-card]="!!metric.route"
+                    (click)="onMetricClick(metric.route)" (keydown.enter)="onMetricClick(metric.route)"
+                    [attr.tabindex]="metric.route ? 0 : null" [attr.role]="metric.route ? 'button' : null">
                     <div class="metric-value" [ngClass]="metric.colorClass">{{ metric.value }}</div>
                     <p class="metric-label">{{ metric.label }}</p>
 
