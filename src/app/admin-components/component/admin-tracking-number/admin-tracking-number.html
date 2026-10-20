@@ -18,7 +18,7 @@
   </section>
 
   <div class="list-container">
-    @for (collo of colliList(); track collo.id; let isLast = $last) {
+    @for (collo of trackingNumberList(); track collo.id; let isLast = $last) {
       <article class="list-item" [class.border-bottom]="!isLast">
         <div class="icon-wrapper">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -29,8 +29,8 @@
         </div>
         
         <div class="item-details">
-          <h2 class="item-title">{{ collo.id }}</h2>
-          <p class="item-subtitle">{{ collo.category }} · {{ collo.quantity }} colli</p>
+          <h2 class="item-title">{{ collo.code }}</h2>
+          <p class="item-subtitle">{{ collo.category }} · {{ collo.quantity }} colli da {{ getFromSiteIdName(collo.fromSiteId) }}</p>
         </div>
 
       </article>

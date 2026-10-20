@@ -195,6 +195,16 @@ export interface Shipment {
     arrivedAt?: string;
 }
 
+export interface TrackingNumber {
+    id: string;
+    code: string;
+    category: string;
+    quantity: number;
+    fromSiteId: string;
+    toSiteId: string;
+    status: 'Arrivato' | 'In transito';
+}
+
 // COSTANTI E DATI INIZIALI (il "finto database")
 
 const TOKENS_PER_ADULTI = 250;
@@ -346,24 +356,24 @@ export const SEED_ALERTS: DeliveryAlert[] = [];
 
 export const SEED_APPROVALS: ApprovalRequest[] = [
     {
-        id: '7fc5855a-0f28-460d-92df-9f19498bc74f', 
-        type: 'Token extra', 
+        id: '7fc5855a-0f28-460d-92df-9f19498bc74f',
+        type: 'Token extra',
         description: '+50% token extra per Mario Rossi',
-        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2', 
-        date: '2026-10-15T08:30:00.000Z', 
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-15T08:30:00.000Z',
         status: 'In attesa',
-        beneficiaryId: '4c3e3adf-b60e-4187-b1f5-4ad73b13dd06', 
+        beneficiaryId: '4c3e3adf-b60e-4187-b1f5-4ad73b13dd06',
         extraTokens: 225
     },
-    
+
     {
-        id: '50890db5-6695-4b49-800c-ca17486ca1c8', 
-        type: 'Riordino', 
+        id: '50890db5-6695-4b49-800c-ca17486ca1c8',
+        type: 'Riordino',
         description: 'Riordino 100 Omogeneizzato carne',
-        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2', 
-        date: '2026-10-15T09:00:00.000Z', 
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-15T09:00:00.000Z',
         status: 'In attesa',
-        productId: '61321c12-9f01-4493-95f6-e7406296257b', 
+        productId: '61321c12-9f01-4493-95f6-e7406296257b',
         quantity: 100
     }
 ];
@@ -387,6 +397,17 @@ export const SEED_SHIPMENTS: Shipment[] = [
     },
 ];
 
+export const SEED_TRACKING_NUMBER: TrackingNumber[] = [
+    {
+        id: '449cbebf-a778-4812-bc88-0fead3190ef7', category: 'Alimenti', quantity: 24, code: 'TRK-77812',
+        fromSiteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', toSiteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', status: 'Arrivato'
+    },
+    {
+        id: '016a38bf-1098-43b3-888e-315113863e0f', category: 'Igiene', quantity: 12, code: 'TRK-77805',
+        fromSiteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', toSiteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', status: 'In transito'
+    }
+];
+
 // ==========================================
 // 3. CLASSE DEL SERVICE (MockBackendService)
 // ==========================================
@@ -402,6 +423,7 @@ export class MockBackendService {
     private readonly _alerts = signal<DeliveryAlert[]>(this.load('alerts', SEED_ALERTS));
     private readonly _approvals = signal<ApprovalRequest[]>(this.withMockRequests(this.load('approvals', SEED_APPROVALS))); // DATI DI PROVA: togliere withMockRequests
     private readonly _shipments = signal<Shipment[]>(this.load('shipments', SEED_SHIPMENTS));
+    private readonly _trackingNumber = signal<TrackingNumber[]>(this.load('trackingNumber', SEED_TRACKING_NUMBER));
     private readonly _duplicateWindowDays = signal<number>(this.load('duplicateWindow', DEFAULT_DUPLICATE_WINDOW_DAYS));
 
     // Stato della sessione
@@ -420,6 +442,7 @@ export class MockBackendService {
     readonly alerts = this._alerts.asReadonly();
     readonly approvals = this._approvals.asReadonly();
     readonly shipments = this._shipments.asReadonly();
+    readonly trackingNumber = this._trackingNumber.asReadonly();
     readonly duplicateWindowDays = this._duplicateWindowDays.asReadonly();
     readonly cart = this._cart.asReadonly();
     readonly lastDelivery = this._lastDelivery.asReadonly();

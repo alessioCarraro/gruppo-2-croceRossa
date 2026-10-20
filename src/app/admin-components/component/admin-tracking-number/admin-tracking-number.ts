@@ -1,13 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-interface Collo {
-    id: string;
-    category: string;
-    quantity: number;
-    status: 'Arrivato' | 'In transito';
-}
+import { SEED_SITES, SEED_TRACKING_NUMBER, Site, TrackingNumber } from '../../../utils';
 
 @Component({
     selector: 'app-admin-tracking-number',
@@ -19,20 +13,13 @@ interface Collo {
 export class AdminTrackingNumberComponent {
     private readonly router = inject(Router);
     // Mock dei dati per replicare fedelmente l'immagine
-    readonly colliList = signal<Collo[]>([
-        {
-            id: 'COL-7781',
-            category: 'Alimentari',
-            quantity: 24,
-            status: 'Arrivato'
-        },
-        {
-            id: 'COL-7780',
-            category: 'Igiene',
-            quantity: 12,
-            status: 'In transito'
-        }
-    ]);
+    private readonly trackingNumberList = signal<TrackingNumber[]>(SEED_TRACKING_NUMBER);
+    private readonly siteList = signal<Site[]>(SEED_SITES);
+
+    getFromSiteIdName(siteId: string): string {
+        const site = this.siteList().find(s => s.id === siteId );
+        return site ? site.name : "Ente sconosciuto";
+    }
 
     // Badge count hardcoded per corrispondere alla grafica esatta
     readonly totalColli = signal<number>(5);
