@@ -1,4 +1,6 @@
 <main class="profile-layout">
+    <!-- Banner di errore (sparisce da solo) -->
+    <app-notification-card />
     <!-- Header App -->
     <header class="app-header">
         <button class="icon-btn" (click)="goBack()" aria-label="Indietro">
@@ -65,7 +67,7 @@
             <h3 class="section-title"><span class="dash"></span> STORICO MENSILE</h3>
             <div class="history-card">
                 <div class="timeline">
-                    @for (item of history(); track item.date; let last = $last) {
+                    @for (item of history(); track $index; let last = $last) {
                     <div class="timeline-item" [class.is-last]="last">
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
@@ -85,6 +87,19 @@
 
     <!-- Bottom Action -->
     <div class="bottom-action-bar">
-        <button class="btn-primary" (click)="startDelivery()">Richiedi extra token all'admin</button>
+        @if (pendingRequest()) {
+        <!-- Richiesta già inviata: barra informativa non cliccabile al posto del pulsante -->
+        <div class="request-sent-bar" role="status">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>{{ sentMessage() }}</span>
+        </div>
+        } @else {
+        <button class="btn-primary" [disabled]="isSending()" (click)="requestTokens()">
+            {{ isSending() ? 'Invio in corso...' : "Richiedi extra token all'admin" }}
+        </button>
+        }
     </div>
 </main>

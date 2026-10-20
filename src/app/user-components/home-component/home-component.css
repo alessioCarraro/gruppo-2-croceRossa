@@ -269,3 +269,14 @@
   color: #104f78;
   font-weight: 600;
 }
+/* Messaggio di errore della ricerca per codice */
+.scan-error {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  background-color: #fdecea;
+  border: 1px solid #e53935;
+  border-radius: 10px;
+  color: #b71c1c;
+  font-size: 13px;
+  font-weight: 600;
+}

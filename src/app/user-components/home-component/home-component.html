@@ -50,10 +50,16 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" [(ngModel)]="scanId" placeholder="Inserisci ID" />
+                    <input type="text" [ngModel]="scanId()" (ngModelChange)="updateScanId($event)" (keydown.enter)="searchById()"
+                        placeholder="Inserisci ID" />
                 </div>
                 <button class="search-btn" (click)="searchById()">Cerca</button>
             </div>
+
+            <!-- Errore della ricerca (campo vuoto o codice non trovato) -->
+            @if (scanError()) {
+            <p class="scan-error" role="alert">{{ scanError() }}</p>
+            }
         </div>
     </main>
 

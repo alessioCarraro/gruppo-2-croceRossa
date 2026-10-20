@@ -1055,6 +1055,46 @@ export class MockBackendService {
         });
     }
 
+    /** Richiesta di token extra in attesa per un beneficiario (null se non ce n'è) */
+    pendingTokenRequestForBeneficiary(beneficiaryId: string | null | undefined): ApprovalRequest | null {
+        if (!beneficiaryId) return null;
+        return this._approvals().find(a =>
+            a.type === 'Token extra' && a.status === 'In attesa' && a.beneficiaryId === beneficiaryId
+        ) ?? null;
+    }
+
+    /**
+     * Crea la richiesta di token extra per un beneficiario, nella stessa lista delle approvazioni
+     * che legge l'Admin della sede (Richieste). Quantità: +50% dei token massimi del nucleo,
+     * come nelle altre richieste di token. La sede è quella di chi la invia.
+     * Non crea duplicati: se per il beneficiario ce n'è già una in attesa, lancia un errore.
+     */
+    async requestTokenExtra(beneficiaryId: string): Promise<ApprovalRequest> {
+        return this.fakeApi(() => {
+            const op = this.requireRole(['User', 'Admin']);
+
+            const beneficiary = this._beneficiaries().find(b => b.id === beneficiaryId);
+            if (!beneficiary) throw new Error('Beneficiario non trovato');
+            if (this.pendingTokenRequestForBeneficiary(beneficiaryId)) {
+                throw new Error('Richiesta già inviata per questo beneficiario');
+            }
+
+            const newRequest: ApprovalRequest = {
+                id: this.newId(),
+                type: 'Token extra',
+                description: `+50% token extra per ${beneficiary.firstName} ${beneficiary.lastName}`,
+                requestedBy: op.id,
+                date: this.nowIso(),
+                status: 'In attesa',
+                siteId: op.siteId, // sede/Admin di riferimento
+                beneficiaryId,
+                extraTokens: Math.round(this.getMaxTokens(beneficiary) * 0.5)
+            };
+            this._approvals.update(list => [newRequest, ...list]);
+            return newRequest;
+        });
+    }
+
     /** 3. Metro - Operator: Gestione spedizioni verso i magazzini satellite */
     async createShipment(toSiteId: string, items: CartItem[]): Promise<Shipment> {
         return this.fakeApi(() => {

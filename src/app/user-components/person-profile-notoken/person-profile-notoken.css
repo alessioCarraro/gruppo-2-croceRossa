@@ -371,3 +371,30 @@
     font-weight: 600;
     cursor: pointer;
 }
+/* Barra informativa "Richiesta inviata" (non cliccabile) */
+.request-sent-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem;
+    background-color: #e8f0fe;
+    border: 1px solid #c5d8f6;
+    border-radius: 12px;
+    color: #114b79;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: default;
+    user-select: none;
+}
+
+.request-sent-bar svg {
+    flex-shrink: 0;
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

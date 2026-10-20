@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../auth.service';
 import { Router } from '@angular/router';
-import { Beneficiary, SEED_BENEFICIARIES } from '../../utils';
+import { PersonProfileService } from '../../services/person-profile-service';
 
 @Component({
     imports: [FormsModule],
@@ -16,8 +16,12 @@ export class HomeComponent {
 
     private readonly currentUser = this.authService.currentOperator;
     private readonly currentSite = this.authService.currentSite;
-    private readonly beneficiaries = signal<Beneficiary[]>(SEED_BENEFICIARIES);
-    private readonly scanId = signal<string>('ID-2024-0481');
+    private readonly profiles = inject(PersonProfileService);
+
+    // Codice scritto nel campo (o letto dalla scansione): parte vuoto, nessuna persona di esempio
+    readonly scanId = signal<string>('');
+    // Messaggio di errore della ricerca (vuoto = nessun errore)
+    readonly scanError = signal<string>('');
     private readonly activeTab = signal('home');
     
     readonly userName = computed(() => this.currentUser()?.firstName ?? 'Ospite');
@@ -29,31 +33,46 @@ export class HomeComponent {
         return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
     });
 
+    // Cerca col codice scritto a mano
     searchById(): void {
         this.processBeneficiary(this.scanId());
     }
 
+    // Scansione del QR: legge il codice e usa la STESSA ricerca dell'inserimento manuale.
+    // (Non c'è ancora una fotocamera collegata: la scansione simulata usa il codice presente nel campo.)
     scan(): void {
         this.processBeneficiary(this.scanId());
     }
 
-    private processBeneficiary(id: string): void {
-        const found = this.beneficiaries().find(
-            b => b.code === id || b.id === id
-        );
+    updateScanId(value: string): void {
+        this.scanId.set(value);
+        this.scanError.set(''); // chi sta correggendo non vede più l'errore
+    }
 
-        if (!found) {
-            console.warn('Nessun beneficiario trovato con il codice:', id);
+    /**
+     * Ricerca unica per codice (manuale e scansione):
+     * - campo vuoto: invita a inserire un codice;
+     * - codice sconosciuto: errore, nessun profilo aperto;
+     * - persona con hasTokens === false: pagina senza token;
+     * - tutti gli altri casi: profilo con token.
+     * La persona trovata viaggia con l'id nell'indirizzo (?id=...).
+     */
+    private processBeneficiary(code: string): void {
+        if (!code.trim()) {
+            this.scanError.set('Inserisci un codice per cercare la persona.');
             return;
         }
 
-        const hasTokens = found.tokens > 0;
-
-        if (!hasTokens) {
-            this.router.navigate(['/person-profile-notoken'], { queryParams: { id: found.id } });
-        } else {
-            this.router.navigate(['/person-profile'], { queryParams: { id: found.id } });
+        const found = this.profiles.findByCode(code);
+        if (!found) {
+            this.scanError.set('Nessuna persona trovata per il codice inserito.');
+            return;
         }
+
+        this.scanError.set('');
+        // Il percorso senza token è quello già registrato nel routing: 'person-profile-no-token'
+        const route = found.hasTokens === false ? '/person-profile-no-token' : '/person-profile';
+        this.router.navigate([route], { queryParams: { id: found.id } });
     }
 
     setTab(tab: string): void {
