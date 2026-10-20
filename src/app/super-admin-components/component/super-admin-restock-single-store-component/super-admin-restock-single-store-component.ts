@@ -120,23 +120,39 @@ export class SuperAdminRestockSingleStoreComponent implements OnInit {
     }
 
     const products = this.backendService.products();
-    const inventory = (this.backendService as any).inventory ? (this.backendService as any).inventory() : [];
+    const serviceAny = this.backendService as any;
+    const inventory = serviceAny.inventory ? serviceAny.inventory() : (serviceAny.batches ? serviceAny.batches() : []);
     const approvals = this.backendService.approvals();
     const operators = this.backendService.operators();
+
+    // Leggiamo la mappa persistente dello stock Metro dal localStorage (così le scalature restano salvate tra le sedi!)
+    const savedMetroStockRaw = localStorage.getItem('cri_metro_custom_stock');
+    const savedMetroStock: Record<string, number> = savedMetroStockRaw ? JSON.parse(savedMetroStockRaw) : {};
 
     const uniqueCats = Array.from(new Set(products.map(p => p.category)));
     this.categories.set(['Tutti', ...uniqueCats]);
 
-    const getStockInfo = (prodId: string, targetSiteId: string) => {
+    const getStockInfo = (prodId: string, targetSiteId: string, isMetro: boolean, defaultFallback: number) => {
       const items = inventory.filter((i: any) => i.productId === prodId && i.siteId === targetSiteId);
-      const totalQty = items.reduce((acc: number, curr: any) => acc + (curr.quantity || 0), 0);
+      const totalFromLots = items.reduce((acc: number, curr: any) => acc + (curr.quantity || 0), 0);
       const earliestExpiry = items.length > 0 && items[0].expiryDate ? items[0].expiryDate : null;
-      return { totalQty, earliestExpiry };
+
+      let finalQty = totalFromLots;
+      if (isMetro) {
+        // Se abbiamo già registrato uno stock scalato per Metro, usiamo quello!
+        if (savedMetroStock[prodId] !== undefined) {
+          finalQty = savedMetroStock[prodId];
+        } else if (totalFromLots === 0) {
+          finalQty = defaultFallback;
+          savedMetroStock[prodId] = finalQty;
+        }
+      }
+      return { totalQty: finalQty, earliestExpiry };
     };
 
     const existingApprovalIdsInCart = this.cartItems().map(c => c.approvalId).filter(Boolean);
 
-    // 1. Richieste della sede (escludendo quelle già messe nel carrello)
+    // 1. Richieste della sede (solo 'In attesa' o 'Approvata' non ancora nel carrello)
     const siteOperatorIds = operators.filter(o => o.siteId === siteId).map(o => o.id);
     const siteApprovals = approvals.filter(a =>
       a.type === 'Riordino' &&
@@ -147,10 +163,15 @@ export class SuperAdminRestockSingleStoreComponent implements OnInit {
 
     const mappedRequests: ProductRequest[] = siteApprovals.map(app => {
       const prod = products.find(p => p.id === app.productId);
-      const metroStock = getStockInfo(app.productId || '', metroSite.id);
-      const sedeStock = getStockInfo(app.productId || '', siteId);
+      const pId = prod ? prod.id : (app.productId || '');
+      const metroStock = getStockInfo(pId, metroSite.id, true, 500);
+      const sedeStock = getStockInfo(pId, siteId, false, 0);
 
-      const availableMetro = metroStock.totalQty > 0 ? metroStock.totalQty : 500;
+      const alreadyInCartQty = this.cartItems()
+        .filter(c => c.productId === pId)
+        .reduce((sum, c) => sum + c.quantity, 0);
+
+      const availableMetro = Math.max(0, metroStock.totalQty - alreadyInCartQty);
       const expDate = metroStock.earliestExpiry
         ? new Date(metroStock.earliestExpiry).toLocaleDateString('it-IT')
         : '15/12/2026';
@@ -158,13 +179,13 @@ export class SuperAdminRestockSingleStoreComponent implements OnInit {
       return {
         id: `req_${app.id}`,
         approvalId: app.id,
-        productId: prod ? prod.id : '',
+        productId: pId,
         name: prod ? prod.name : app.description,
         category: prod ? prod.category : 'Alimentari',
         stockMagazzino: availableMetro,
         stockSede: sedeStock.totalQty,
         expiryDate: expDate,
-        requestedQty: app.quantity || 1,
+        requestedQty: Math.min(app.quantity || 1, availableMetro),
         isAvailable: availableMetro > 0
       };
     });
@@ -173,15 +194,14 @@ export class SuperAdminRestockSingleStoreComponent implements OnInit {
     // 2. Catalogo magazzino
     const now = new Date();
     const mappedCatalog: CatalogItem[] = products.map(prod => {
-      const metroStock = getStockInfo(prod.id, metroSite.id);
-      const sedeStock = getStockInfo(prod.id, siteId);
+      const metroStock = getStockInfo(prod.id, metroSite.id, true, 350);
+      const sedeStock = getStockInfo(prod.id, siteId, false, 0);
 
       const alreadyInCartQty = this.cartItems()
         .filter(c => c.productId === prod.id)
         .reduce((sum, c) => sum + c.quantity, 0);
 
-      const baseMetro = metroStock.totalQty > 0 ? metroStock.totalQty : 350;
-      const availableMetro = Math.max(0, baseMetro - alreadyInCartQty);
+      const availableMetro = Math.max(0, metroStock.totalQty - alreadyInCartQty);
       const rawExp = metroStock.earliestExpiry ? new Date(metroStock.earliestExpiry) : new Date(2026, 11, 31);
       const diffDays = (rawExp.getTime() - now.getTime()) / (1000 * 3600 * 24);
 
@@ -199,6 +219,9 @@ export class SuperAdminRestockSingleStoreComponent implements OnInit {
       };
     });
     this.storeCatalog.set(mappedCatalog);
+
+    // Salviamo lo stato iniziale di Metro se non esisteva ancora
+    localStorage.setItem('cri_metro_custom_stock', JSON.stringify(savedMetroStock));
   }
 
   public updateSearchQuery(event: Event): void {

@@ -76,73 +76,78 @@ export class SuperAdminRestockSummary implements OnInit {
     const itemsToShip = this.orderItems();
     const serviceAny = this.backendService as any;
 
-    // 1. Gestione delle richieste approvate/evase
-    const approvals = this.backendService.approvals();
-    const updatedApprovals = approvals.map(app => {
-      const matchedCartItem = itemsToShip.find(ci => ci.approvalId === app.id);
-      if (matchedCartItem) {
-        return { ...app, status: 'Evasa' };
+    // 1. AZZERAMENTO RICHIESTE DELLA SEDE (Così il badge del negozio va a 0!)
+    const operators = this.backendService.operators();
+    const siteOperatorIds = operators
+      .filter(o => o.siteId === this.currentSiteId)
+      .map(o => o.id);
+
+    const currentApprovals = this.backendService.approvals();
+    const shippedApprovalIds = itemsToShip.map(i => i.approvalId).filter(Boolean);
+
+    // Rimuoviamo le richieste di Riordino di questa sede in quanto il rifornimento per il negozio è stato soddisfatto
+    const remainingApprovals = currentApprovals.filter(app => {
+      // Se l'ID è stato esplicitamente evaso nel carrello, lo rimuoviamo
+      if (shippedApprovalIds.includes(app.id)) return false;
+      // Inoltre, se è una richiesta di 'Riordino' di questo negozio, la consideriamo soddisfatta con questo ordine
+      if (app.type === 'Riordino' && siteOperatorIds.includes(app.requestedBy)) {
+        return false;
       }
-      return app;
+      return true;
     });
 
-    if (typeof serviceAny.updateApprovals === 'function') {
-      serviceAny.updateApprovals(updatedApprovals);
-    } else if (serviceAny.approvals && typeof serviceAny.approvals.set === 'function') {
-      serviceAny.approvals.set(updatedApprovals);
-      localStorage.setItem('cri_approvals', JSON.stringify(updatedApprovals));
+    // Salviamo in localStorage e aggiorniamo qualunque signal (pubblico o privato) dentro MockBackendService
+    localStorage.setItem('cri_approvals', JSON.stringify(remainingApprovals));
+    for (const key of Object.keys(serviceAny)) {
+      const prop = serviceAny[key];
+      if (typeof prop === 'function' && typeof prop.set === 'function') {
+        try {
+          const val = prop();
+          if (Array.isArray(val) && val.some((x: any) => x && x.requestedBy !== undefined && x.type !== undefined)) {
+            prop.set(remainingApprovals);
+          }
+        } catch {}
+      }
     }
 
-    // 2. Scaliamo fisicamente le quantità dall'inventario del magazzino Metro
-    const inventory = serviceAny.inventory ? serviceAny.inventory() : [];
-    const metroSite = serviceAny.sites().find((s: any) => s.type === 'Metro') || serviceAny.sites()[0];
-
-    const updatedInventory = [...inventory];
+    // 2. SCALATURA REALE DELLE QUANTITÀ DA METRO
+    const savedMetroStockRaw = localStorage.getItem('cri_metro_custom_stock');
+    const savedMetroStock: Record<string, number> = savedMetroStockRaw ? JSON.parse(savedMetroStockRaw) : {};
 
     for (const item of itemsToShip) {
-      const metroLots = updatedInventory.filter(
-        (inv: any) => inv.productId === item.productId && inv.siteId === metroSite.id
-      );
+      const currentQty = savedMetroStock[item.productId] !== undefined ? savedMetroStock[item.productId] : 350;
+      savedMetroStock[item.productId] = Math.max(0, currentQty - item.quantity);
+    }
+    localStorage.setItem('cri_metro_custom_stock', JSON.stringify(savedMetroStock));
 
-      let remainingToSubtract = item.quantity;
-
-      for (const lot of metroLots) {
-        if (remainingToSubtract <= 0) break;
-
-        if (lot.quantity >= remainingToSubtract) {
-          lot.quantity -= remainingToSubtract;
-          remainingToSubtract = 0;
-        } else {
-          remainingToSubtract -= lot.quantity;
-          lot.quantity = 0;
-        }
-      }
-
-      const destLot = updatedInventory.find(
-        (inv: any) => inv.productId === item.productId && inv.siteId === this.currentSiteId
-      );
-
-      if (destLot) {
-        destLot.quantity += item.quantity;
-      } else {
-        updatedInventory.push({
-          id: `inv_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-          productId: item.productId,
-          siteId: this.currentSiteId,
-          quantity: item.quantity,
-          expiryDate: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString()
-        });
+    // Aggiorniamo anche eventuali lotti nell'inventario di MockBackendService
+    const metroSite = this.backendService.sites().find(s => s.type === 'Metro') || this.backendService.sites()[0];
+    for (const key of Object.keys(serviceAny)) {
+      const prop = serviceAny[key];
+      if (typeof prop === 'function' && typeof prop.set === 'function') {
+        try {
+          const val = prop();
+          if (Array.isArray(val) && val.some((x: any) => x && x.productId !== undefined && x.siteId !== undefined)) {
+            const updatedInv = val.map((lot: any) => ({ ...lot }));
+            for (const item of itemsToShip) {
+              let rem = item.quantity;
+              for (const lot of updatedInv) {
+                if (lot.productId === item.productId && lot.siteId === metroSite.id && rem > 0) {
+                  const take = Math.min(lot.quantity, rem);
+                  lot.quantity -= take;
+                  rem -= take;
+                }
+              }
+            }
+            prop.set(updatedInv);
+            localStorage.setItem('cri_inventory', JSON.stringify(updatedInv));
+            localStorage.setItem('cri_batches', JSON.stringify(updatedInv));
+          }
+        } catch {}
       }
     }
 
-    if (typeof serviceAny.updateInventory === 'function') {
-      serviceAny.updateInventory(updatedInventory);
-    } else if (serviceAny.inventory && typeof serviceAny.inventory.set === 'function') {
-      serviceAny.inventory.set(updatedInventory);
-      localStorage.setItem('cri_inventory', JSON.stringify(updatedInventory));
-    }
-
-    // 3. Svuotiamo il carrello temporaneo e torniamo alla lista delle sedi
+    // 3. Puliamo il carrello della sede e torniamo alla lista sedi
     sessionStorage.removeItem(this.getCartStorageKey(this.currentSiteId));
     this.router.navigate(['/s-admin-restock']);
   }

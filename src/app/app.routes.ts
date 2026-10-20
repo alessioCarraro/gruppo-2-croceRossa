@@ -92,8 +92,9 @@ export const routes: Routes = [
     { path: 's-admin-user-locations', component: SuperAdminUserLocationsComponent },
     { path: 's-admin-add-existing-item', component: SuperAdminAddExistingItemComponent },
     { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
-  { path: 's-admin-restock-single-store', component: SuperAdminRestockSingleStoreComponent },
-  { path: 's-admin-restock-summary', component: SuperAdminRestockSummary },
+    { path: 's-admin-restock-single-store', component: SuperAdminRestockSingleStoreComponent },
+    { path: 's-admin-restock-summary', component: SuperAdminRestockSummary },
+    { path: 's-admin-request-details', component: SuperAdminRequestDetailsComponent },
 
   // Rotte Operator
   { path: 'user-metro-profile', component: AdminMetroProfileComponent },
