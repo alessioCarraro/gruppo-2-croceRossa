@@ -51,6 +51,7 @@ import { SuperAdminOrderSentConfirmationComponent } from './super-admin-componen
 import { SuperAdminRestockSummary } from './super-admin-components/component/super-admin-restock-summary-component/super-admin-restock-summary-component';
 import { AdminTrackingNumberDitailsComponent } from './admin-components/component/admin-tracking-number-ditails-component/admin-tracking-number-ditails-component';
 import { PersonalProfileComponent } from './user-components/personal-profile-component/personal-profile-component';
+import { ProfileComponent } from './admin-components/component/profile-component/profile-component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -84,6 +85,7 @@ export const routes: Routes = [
     { path: 'admin-order', component: AdminOrderComponent },
     { path: 'admin-expiring-product', component: ExpiringProductsComponent },
     { path: 'admin-low-stock', component: LowStockComponent },
+    { path: 'admin-profile', component: ProfileComponent },
 
     // Rotte Super Admin
     { path: 's-admin-home', component: SuperAdminDashboardComponent },
