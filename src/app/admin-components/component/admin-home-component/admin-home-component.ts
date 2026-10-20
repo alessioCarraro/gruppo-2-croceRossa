@@ -25,7 +25,7 @@ export class AdminHomeComponent {
 
     readonly userProfile = signal({
         name: 'Marta',
-        storeName: 'Negozio Legnano',
+        storeName: 'Sede Legnano',
         storeAddress: 'Via Gilardelli',
         role: 'Admin',
         initial: 'person'

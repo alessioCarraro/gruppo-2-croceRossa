@@ -23,33 +23,25 @@ export class SuperAdminExpiringProductsComponent {
   private readonly router = inject(Router);
   private readonly backendService: MockBackendService = inject(MockBackendService);
 
-  // Lista dinamica dei prodotti in scadenza presi direttamente da MockBackendService
-  readonly prodotti = computed<ScadenzaProdotto[]>(() => {
-    const products = this.backendService.products();
+  // Prodotti in scadenza dalle giacenze della metro (stessa fonte dell'Operator)
+  readonly prodotti = computed<ScadenzaProdotto[]>(() =>
+    this.backendService.expiringMetroStock().map(p => {
+      // Formatta la data da YYYY-MM-DD a DD/MM/YYYY
+      const dateParts = p.expiry.split('-');
+      const formattedDate = dateParts.length === 3
+        ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
+        : p.expiry;
 
-    // Filtra solo i prodotti con il flag isExpiringSoon attivo
-    return products
-      .filter(p => p.isExpiringSoon)
-      .map(p => {
-        // Formatta la data da YYYY-MM-DD a DD/MM/YYYY
-        const dateParts = p.expiry.split('-');
-        const formattedDate = dateParts.length === 3 
-          ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` 
-          : p.expiry;
-
-        // Genera un codice lotto finto coerente (es: 'L-' + ultime 4 cifre dell'ID)
-        const lottoCode = 'L-' + p.id.slice(0, 4).toUpperCase();
-
-        return {
-          id: p.id,
-          nome: p.name,
-          lotto: lottoCode,
-          quantita: p.stock,
-          dataScadenza: formattedDate,
-          urgente: true // Tutti quelli che arrivano qui sono urgenti/in scadenza
-        };
-      });
-  });
+      return {
+        id: p.productId,
+        nome: p.name,
+        lotto: 'L-' + p.productId.slice(0, 4).toUpperCase(), // codice lotto coerente con l'id
+        quantita: p.stock,
+        dataScadenza: formattedDate,
+        urgente: true // Tutti quelli che arrivano qui sono in scadenza
+      };
+    })
+  );
 
   // Somma totale delle quantità degli articoli in scadenza
   readonly totalItems = computed(() => 

@@ -21,7 +21,7 @@ export class AdminStoreLocatorComponent {
 
     public readonly searchQuery = signal<string>('Pannolini taglia 4');
     public readonly productName = signal<string>('Pannolini taglia 4');
-    public readonly productStatus = signal<string>('esaurito nel tuo negozio');
+    public readonly productStatus = signal<string>('esaurito nella tua sede');
 
     public readonly locations = signal<StoreLocation[]>([
         { id: 1, name: 'Parabiago', availability: 120, distance: '4,2 km' },

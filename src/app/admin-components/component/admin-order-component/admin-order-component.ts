@@ -37,7 +37,7 @@ export class AdminOrderComponent {
         {
             id: '1',
             name: 'Omogeneizzato carne',
-            description: 'Richiesta · Negozio Parabiago'
+            description: 'Richiesta · Sede Parabiago'
         },
         {
             id: '2',

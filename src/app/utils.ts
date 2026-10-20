@@ -77,6 +77,19 @@ export interface SiteInventory {
     isExpired: boolean;
 }
 
+/** Riga di giacenza della metro: unico formato usato da inventario, scadenze e dashboard (Super Admin e Operator) */
+export interface MetroStockItem {
+    productId: string;
+    name: string;
+    category: string;
+    icon: 'bag' | 'bottle' | 'meat';
+    iconType: 'bag' | 'meat' | 'jar';
+    price: number;
+    stock: number;
+    expiry: string; // 'YYYY-MM-DD'
+    isExpiringSoon: boolean;
+}
+
 export interface StoreAvailabilityResult {
     siteId: string;
     siteName: string;
@@ -218,7 +231,7 @@ const STORAGE_PREFIX = 'cri_';              // prefisso delle chiavi nel localSt
 export const SEED_SITES: Site[] = [
     { id: '96996a93-e59e-4fc6-91f3-99972fd6d977', name: 'Metro Milano', type: 'Metro', address: 'Via Fantoli 1', city: 'Milano', province: 'MI' },
     {
-        id: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', name: 'Negozio Legnano', type: 'EnteDistributore', address: 'Via Gilardelli', city: 'Legnano',
+        id: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', name: 'Sede Legnano', type: 'EnteDistributore', address: 'Via Gilardelli', city: 'Legnano',
         province: 'MI'
     },
     {
@@ -1038,6 +1051,41 @@ export class MockBackendService {
 
     private readonly _inventories = signal<SiteInventory[]>(this.load('inventories', SEED_INVENTORIES));
     readonly inventories = this._inventories.asReadonly();
+
+    // --- GIACENZE DELLA METRO (fonte unica per Super Admin e Operator) ---
+    // Si aggiorna da sola quando cambia l'inventario (carichi, spedizioni...)
+    readonly metroStock = computed<MetroStockItem[]>(() => {
+        const metro = this._sites().find(s => s.type === 'Metro');
+        return this._inventories()
+            .filter(inv => inv.siteId === metro?.id)
+            .map(inv => {
+                const product = this._products().find(p => p.id === inv.productId);
+                return {
+                    productId: inv.productId,
+                    name: product?.name ?? inv.productName,
+                    category: product?.category ?? 'Altro',
+                    icon: product?.icon ?? 'bag',
+                    iconType: product?.iconType ?? 'bag',
+                    price: product?.price ?? 0,
+                    stock: inv.stock,
+                    expiry: inv.expiry,
+                    isExpiringSoon: inv.isExpiringSoon
+                };
+            });
+    });
+
+    // Somma delle giacenze di tutti i prodotti della metro (0 se vuota)
+    readonly metroTotalStock = computed(() => this.metroStock().reduce((sum, i) => sum + i.stock, 0));
+
+    // Prodotti della metro in scadenza
+    readonly expiringMetroStock = computed(() => this.metroStock().filter(i => i.isExpiringSoon));
+
+    // Pezzi in uscita dalla metro: spedizioni non ancora arrivate
+    readonly outgoingShipmentQuantity = computed(() =>
+        this._shipments()
+            .filter(sh => sh.status !== 'Arrivato')
+            .reduce((sum, sh) => sum + sh.items.reduce((q, i) => q + i.quantity, 0), 0)
+    );
 
 
     searchInventoryProducts(query: string): { productId: string; productName: string }[] {

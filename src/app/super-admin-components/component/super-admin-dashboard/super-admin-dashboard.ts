@@ -192,9 +192,10 @@ export class SuperAdminDashboardComponent {
     const query = this.searchQuery().toLowerCase().trim();
     if (!query) return [];
 
-    return this.backendService.products()
+    // Stessa fonte dell'Operator: giacenze della metro
+    return this.backendService.metroStock()
       .filter(p => p.name.toLowerCase().includes(query))
-      .map(p => ({ id: p.id, name: p.name, category: p.category, stock: p.stock }));
+      .map(p => ({ id: p.productId, name: p.name, category: p.category, stock: p.stock }));
   });
 
   onSearchInput(event: Event): void {

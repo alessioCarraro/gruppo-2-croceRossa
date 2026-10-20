@@ -31,30 +31,21 @@ export class AdminMetroStockComponent {
   public activeFilter = signal<string>('Tutti');
 
   /**
-   * Articoli presenti nella metro (solo la sede di tipo 'Metro').
+   * Articoli presenti nella metro: stessa fonte del Super Admin (MockBackendService.metroStock).
    * Si aggiorna da solo quando cambia l'inventario nel servizio.
    */
-  public inventoryItems = computed<InventoryItem[]>(() => {
-    const metro = this.backend.sites().find(s => s.type === 'Metro');
-    if (!metro) return [];
-
-    return this.backend.inventories()
-      .filter(inv => inv.siteId === metro.id)
-      .map(inv => {
-        // Il catalogo fornisce nome e categoria del prodotto
-        const product = this.backend.getProduct(inv.productId);
-        return {
-          id: inv.productId,
-          icon: product?.icon ?? 'bag',
-          name: product?.name ?? inv.productName,
-          category: product?.category ?? 'Altro',
-          stock: inv.stock,
-          expiryDate: this.formatDate(inv.expiry),
-          quantity: inv.stock,
-          isExpiringSoon: inv.isExpiringSoon
-        };
-      });
-  });
+  public inventoryItems = computed<InventoryItem[]>(() =>
+    this.backend.metroStock().map(item => ({
+      id: item.productId,
+      icon: item.icon,
+      name: item.name,
+      category: item.category,
+      stock: item.stock,
+      expiryDate: this.formatDate(item.expiry),
+      quantity: item.stock,
+      isExpiringSoon: item.isExpiringSoon
+    }))
+  );
 
   // Chip dei filtri: "Tutti" + le categorie davvero presenti nella metro
   public filters = computed<string[]>(() => [

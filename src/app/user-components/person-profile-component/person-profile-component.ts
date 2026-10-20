@@ -40,7 +40,7 @@ export class PersonProfileComponent {
     readonly history = signal<Transaction[]>([
         {
             date: '03 ott',
-            location: 'Negozio Legnano',
+            location: 'Sede Legnano',
             operator: 'op. M. Turelli',
             type: 'Consegna',
             itemsCount: 3,
