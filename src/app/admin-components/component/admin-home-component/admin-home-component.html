@@ -31,7 +31,7 @@
         <!-- Sezione: Da Gestire -->
         <section class="dashboard-section">
             <h2 class="section-title"><span class="dash"></span> DA GESTIRE</h2>
-            <div class="card action-card">
+            <div class="card action-card clickable" role="button" tabindex="0" (click)="navigateTo('/admin-requests')" (keydown.enter)="navigateTo('/admin-requests')">
                 <div class="card-icon">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                         <path
@@ -92,6 +92,22 @@
                 <input type="text" class="search-input" placeholder="Cerca un prodotto..." [ngModel]="searchQuery()"
                     (ngModelChange)="searchQuery.set($event)">
             </div>
+
+            <!-- Risultati dai prodotti condivisi; la selezione apre la disponibilità del prodotto nelle altre sedi -->
+            @if (searchQuery().trim()) {
+            <ul class="search-results">
+                @for (product of searchResults(); track product.id) {
+                <li>
+                    <button type="button" class="search-result-item" (click)="selectProduct(product.id)">
+                        <span class="search-result-name">{{ product.name }}</span>
+                        <span class="search-result-stock">In sede: {{ product.siteStock }}</span>
+                    </button>
+                </li>
+                } @empty {
+                <li class="search-result-empty">Nessun prodotto trovato</li>
+                }
+            </ul>
+            }
         </section>
 
     </main>

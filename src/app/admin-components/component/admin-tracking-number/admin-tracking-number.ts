@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { SEED_SITES, SEED_TRACKING_NUMBER, Site, TrackingNumber } from '../../../utils';
+import { MockBackendService } from '../../../utils';
 
 @Component({
     selector: 'app-admin-tracking-number',
@@ -12,21 +12,23 @@ import { SEED_SITES, SEED_TRACKING_NUMBER, Site, TrackingNumber } from '../../..
 })
 export class AdminTrackingNumberComponent {
     private readonly router = inject(Router);
+    private readonly backend = inject(MockBackendService);
 
-    private readonly trackingNumberList = signal<TrackingNumber[]>(SEED_TRACKING_NUMBER);
-    private readonly siteList = signal<Site[]>(SEED_SITES);
+    // Colli dal servizio condiviso (stessa fonte del dettaglio)
+    readonly trackingNumberList = this.backend.trackingNumber;
 
     getFromSiteIdName(siteId: string): string {
-        const site = this.siteList().find(s => s.id === siteId);
-        return site ? site.name : "Ente sconosciuto";
+        return this.backend.getSiteName(siteId);
     }
 
-    readonly totalColli = signal<number>(5);
+    // Numero reale di colli in elenco
+    readonly totalColli = computed<number>(() => this.trackingNumberList().length);
 
     goBack(): void {
         this.router.navigate(['/admin-home']);
     }
 
+    // Apre il dettaglio del collo scelto (l'id viaggia nel percorso)
     navigateToDetail(trackingId: string): void {
         this.router.navigate(['/admin-tracking-number-detail', trackingId]);
     }

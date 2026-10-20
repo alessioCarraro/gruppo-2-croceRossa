@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product, SEED_PRODUCTS, SEED_TRACKING_NUMBER } from '../../../utils';
+import { MockBackendService } from '../../../utils';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -13,33 +13,46 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AdminTrackingNumberDitailsComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
+    private readonly backend = inject(MockBackendService);
 
-    // Estrazione sicura dell'ID del tracking dai parametri della rotta
+    // Id del collo scelto nella lista (parametro :id del percorso)
     private readonly trackingId = signal<string>(this.route.snapshot.paramMap.get('id') ?? '');
 
-    // Derivazione reattiva delle informazioni del collo tramite computed signal
+    // Il collo selezionato, dal servizio condiviso
+    private readonly tracking = computed(() =>
+        this.backend.trackingNumber().find(t => t.id === this.trackingId())
+    );
+
+    // Informazioni del collo (valori neutri se l'id non esiste)
     readonly colloInfo = computed(() => {
-        const tracking = SEED_TRACKING_NUMBER.find(t => t.id === this.trackingId());
+        const tracking = this.tracking();
 
         if (!tracking) {
-            return {
-                id: 'Sconosciuto',
-                source: 'N/D',
-                category: 'N/D',
-                totalPackages: 0
-            };
+            return { id: 'Sconosciuto', source: 'N/D', category: 'N/D', totalPackages: 0 };
         }
 
         return {
             id: tracking.code,
-            source: tracking.fromSiteId,
+            source: this.backend.getSiteName(tracking.fromSiteId),
             category: tracking.category,
             totalPackages: tracking.quantity
         };
     });
 
-    // Stato reattivo per l'elenco dei prodotti associati al collo
-    readonly products = signal<Product[]>(SEED_PRODUCTS);
+    // Prodotti contenuti nel collo selezionato
+    readonly products = computed(() =>
+        (this.tracking()?.items ?? []).map(item => {
+            // Data da YYYY-MM-DD a DD/MM/YYYY
+            const [year, month, day] = item.expiry.split('-');
+            return {
+                id: item.lot,
+                name: item.name,
+                lot: item.lot,
+                expiry: `${day}/${month}/${year}`,
+                stock: item.quantity
+            };
+        })
+    );
 
     goBack(): void {
         this.router.navigate(['/admin-tracking-number']);

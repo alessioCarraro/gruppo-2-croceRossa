@@ -226,6 +226,14 @@ export interface Shipment {
     arrivedAt?: string;
 }
 
+/** Prodotto contenuto in un collo */
+export interface TrackingItem {
+    name: string;
+    lot: string;
+    expiry: string; // 'YYYY-MM-DD'
+    quantity: number;
+}
+
 export interface TrackingNumber {
     id: string;
     code: string;
@@ -234,6 +242,7 @@ export interface TrackingNumber {
     fromSiteId: string;
     toSiteId: string;
     status: 'Arrivato' | 'In transito';
+    items: TrackingItem[]; // prodotti contenuti nel collo
 }
 
 // COSTANTI E DATI INIZIALI (il "finto database")
@@ -449,11 +458,20 @@ export const SEED_SHIPMENTS: Shipment[] = [
 export const SEED_TRACKING_NUMBER: TrackingNumber[] = [
     {
         id: '449cbebf-a778-4812-bc88-0fead3190ef7', category: 'Alimenti', quantity: 24, code: 'TRK-77812',
-        fromSiteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', toSiteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', status: 'Arrivato'
+        fromSiteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', toSiteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', status: 'Arrivato',
+        items: [
+            { name: 'Pasta di semola 500g', lot: 'C-9012', expiry: '2027-05-15', quantity: 10 },
+            { name: 'Pasta integrale 500g', lot: 'C-9013', expiry: '2026-10-25', quantity: 8 },
+            { name: 'Passata di pomodoro 700g', lot: 'C-9011', expiry: '2026-10-28', quantity: 6 }
+        ]
     },
     {
         id: '016a38bf-1098-43b3-888e-315113863e0f', category: 'Igiene', quantity: 12, code: 'TRK-77805',
-        fromSiteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', toSiteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', status: 'In transito'
+        fromSiteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', toSiteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', status: 'In transito',
+        items: [
+            { name: 'Sapone liquido 500ml', lot: 'C-8120', expiry: '2028-03-01', quantity: 6 },
+            { name: 'Dentifricio 75ml', lot: 'C-8121', expiry: '2028-06-30', quantity: 6 }
+        ]
     }
 ];
 

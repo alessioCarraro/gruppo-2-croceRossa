@@ -78,7 +78,7 @@ export const routes: Routes = [
     { path: 'admin-store-locator', component: AdminStoreLocatorComponent },
     { path: 'admin-requests', component: RequestsComponent },
     { path: 'admin-tracking-number', component: AdminTrackingNumberComponent },
-    { path: 'admin-tracking-number-detail', component: AdminTrackingNumberDitailsComponent },
+    { path: 'admin-tracking-number-detail/:id', component: AdminTrackingNumberDitailsComponent },
     { path: 'admin-product-catalog', component: AdminProductCatalogComponent },
     { path: 'admin-summary', component: AdminSummaryComponent },
     { path: 'admin-delivery-success', component: AdminDeliverySuccessComponent },
