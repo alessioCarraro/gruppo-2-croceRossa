@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 export interface TokenRequest {
   id: string;
@@ -27,6 +28,7 @@ export interface OutOfStockProduct {
   styleUrls: ['./admin-requests-component.css']
 })
 export class RequestsComponent {
+  private readonly router = inject(Router);
   
   pageTitle = signal('Richieste');
   pendingCount = signal(3);
@@ -80,7 +82,7 @@ export class RequestsComponent {
   ]);
 
   goBack(): void {
-    console.log('Navigazione indietro');
+    this.router.navigate(['/admin-home']);
   }
 
   acceptRequest(id: string, amount: number): void {
