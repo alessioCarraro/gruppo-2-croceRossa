@@ -27,6 +27,9 @@ export class SuperAdminRestoockComponent {
   private readonly router = inject(Router);
   private readonly backendService = inject(MockBackendService);
 
+  // Numero di approvazioni in attesa (badge sulla voce \"Approva\" della barra in basso)
+  readonly pendingApprovals = this.backendService.pendingApprovalCount;
+
   public searchQuery = signal<string>('');
 
   // Sedi con il numero di richieste: stessa fonte e stesso calcolo dell'Operator

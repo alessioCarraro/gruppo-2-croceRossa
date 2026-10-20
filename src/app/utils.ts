@@ -1,7 +1,5 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 
-import { MOCK_RESTOCK_REQUESTS } from './mock-data/mock-restock-requests'; // DATI DI PROVA
-
 // ==========================================
 // 1. INTERFACCE E TIPI (Gli "stampi" dei dati)
 // ==========================================
@@ -354,7 +352,9 @@ export const SEED_DELIVERIES: Delivery[] = [
 
 export const SEED_ALERTS: DeliveryAlert[] = [];
 
+// Esempi di approvazioni (solo 3): 1 richiesta di token + 2 richieste di prodotto
 export const SEED_APPROVALS: ApprovalRequest[] = [
+    // 1. Richiesta di token extra
     {
         id: '7fc5855a-0f28-460d-92df-9f19498bc74f',
         type: 'Token extra',
@@ -365,7 +365,7 @@ export const SEED_APPROVALS: ApprovalRequest[] = [
         beneficiaryId: '4c3e3adf-b60e-4187-b1f5-4ad73b13dd06',
         extraTokens: 225
     },
-
+    // 2. Richiesta di prodotto singola (un solo prodotto)
     {
         id: '50890db5-6695-4b49-800c-ca17486ca1c8',
         type: 'Riordino',
@@ -373,8 +373,24 @@ export const SEED_APPROVALS: ApprovalRequest[] = [
         requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
         date: '2026-10-15T09:00:00.000Z',
         status: 'In attesa',
+        siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44',
         productId: '61321c12-9f01-4493-95f6-e7406296257b',
         quantity: 100
+    },
+    // 3. Richiesta con 3 articoli (ordine di rifornimento verso Parabiago)
+    {
+        id: '3b1f6c1e-7a52-4e0b-9c63-5d2f8a4e1b77',
+        type: 'Rifornimento sede',
+        description: 'Rifornimento a Parabiago: 3 prodotti',
+        requestedBy: 'd34dfbfe-45a9-4b67-8d03-c99d7fa4a4b5',
+        date: '2026-10-16T09:00:00.000Z',
+        status: 'In attesa',
+        siteId: 'c9ea7b0d-2a83-47a7-bc69-f2f024392a7f',
+        items: [
+            { productId: '4b45aa99-76d8-4eb9-acbc-87e300c197f0', quantity: 120 },
+            { productId: 'edff434d-ceab-490a-9bba-b47366139ce2', quantity: 30 },
+            { productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', quantity: 10 }
+        ]
     }
 ];
 
@@ -421,7 +437,7 @@ export class MockBackendService {
     private readonly _beneficiaries = signal<Beneficiary[]>(this.load('beneficiaries', SEED_BENEFICIARIES));
     private readonly _deliveries = signal<Delivery[]>(this.load('deliveries', SEED_DELIVERIES));
     private readonly _alerts = signal<DeliveryAlert[]>(this.load('alerts', SEED_ALERTS));
-    private readonly _approvals = signal<ApprovalRequest[]>(this.withMockRequests(this.load('approvals', SEED_APPROVALS))); // DATI DI PROVA: togliere withMockRequests
+    private readonly _approvals = signal<ApprovalRequest[]>(this.load('approvals_v2', SEED_APPROVALS));
     private readonly _shipments = signal<Shipment[]>(this.load('shipments', SEED_SHIPMENTS));
     private readonly _trackingNumber = signal<TrackingNumber[]>(this.load('trackingNumber', SEED_TRACKING_NUMBER));
     private readonly _duplicateWindowDays = signal<number>(this.load('duplicateWindow', DEFAULT_DUPLICATE_WINDOW_DAYS));
@@ -441,6 +457,8 @@ export class MockBackendService {
     readonly deliveries = this._deliveries.asReadonly();
     readonly alerts = this._alerts.asReadonly();
     readonly approvals = this._approvals.asReadonly();
+    // Numero di approvazioni in attesa: stessa regola della lista "Approvazioni" (badge della barra in basso)
+    readonly pendingApprovalCount = computed(() => this._approvals().filter(a => a.status === 'In attesa').length);
     readonly shipments = this._shipments.asReadonly();
     readonly trackingNumber = this._trackingNumber.asReadonly();
     readonly duplicateWindowDays = this._duplicateWindowDays.asReadonly();
@@ -476,7 +494,7 @@ export class MockBackendService {
         effect(() => this.save('beneficiaries', this._beneficiaries()));
         effect(() => this.save('deliveries', this._deliveries()));
         effect(() => this.save('alerts', this._alerts()));
-        effect(() => this.save('approvals', this._approvals()));
+        effect(() => this.save('approvals_v2', this._approvals()));
         effect(() => this.save('shipments', this._shipments()));
         effect(() => this.save('duplicateWindow', this._duplicateWindowDays()));
         effect(() => this.save('operatorId', this._currentOperatorId()));
@@ -839,7 +857,7 @@ export class MockBackendService {
     }
 
     /** 4. Metro - S-Admin: Approvazione richieste globali e configurazione di sistema */
-    async decideApproval(approvalId: string, status: ApprovalStatus): Promise<ApprovalRequest> {
+    async decideApproval(approvalId: string, status: ApprovalStatus, items?: CartItem[]): Promise<ApprovalRequest> {
         return this.fakeApi(() => {
             const op = this.requireRole(['S-Admin']);
             let updatedReq: ApprovalRequest | null = null;
@@ -849,6 +867,7 @@ export class MockBackendService {
                     updatedReq = {
                         ...req,
                         status,
+                        ...(items ? { items } : {}), // articoli rimasti dopo eventuali rimozioni
                         decidedBy: op.id,
                         decidedAt: this.nowIso()
                     };
@@ -962,12 +981,6 @@ export class MockBackendService {
         );
     }
 
-    // DATI DI PROVA: aggiunge le richieste di prova non ancora presenti (anche se il localStorage è già pieno)
-    private withMockRequests(list: ApprovalRequest[]): ApprovalRequest[] {
-        const existingIds = new Set(list.map(a => a.id));
-        return [...list, ...MOCK_RESTOCK_REQUESTS.filter(m => !existingIds.has(m.id))];
-    }
-
     // --- RICHIESTE DI RIFORNITURA DELLE SEDI ---
     // Sedi da rifornire (tutte tranne la Metro)
     readonly distributionSites = computed(() => this._sites().filter(s => s.type !== 'Metro'));
@@ -1004,7 +1017,7 @@ export class MockBackendService {
     }
 
     resetDemoData(): void {
-        const keys = ['products', 'beneficiaries', 'deliveries', 'alerts', 'approvals', 'shipments', 'duplicateWindow', 'operatorId', 'inventories'];
+        const keys = ['products', 'beneficiaries', 'deliveries', 'alerts', 'approvals_v2', 'shipments', 'duplicateWindow', 'operatorId', 'inventories'];
         keys.forEach(key => {
             try { localStorage.removeItem(STORAGE_PREFIX + key); } catch { }
         });
@@ -1012,7 +1025,7 @@ export class MockBackendService {
         this._beneficiaries.set(SEED_BENEFICIARIES);
         this._deliveries.set(SEED_DELIVERIES);
         this._alerts.set(SEED_ALERTS);
-        this._approvals.set(this.withMockRequests(SEED_APPROVALS)); // DATI DI PROVA: togliere withMockRequests
+        this._approvals.set(SEED_APPROVALS);
         this._shipments.set(SEED_SHIPMENTS);
         this._inventories.set(SEED_INVENTORIES);
         this._duplicateWindowDays.set(DEFAULT_DUPLICATE_WINDOW_DAYS);

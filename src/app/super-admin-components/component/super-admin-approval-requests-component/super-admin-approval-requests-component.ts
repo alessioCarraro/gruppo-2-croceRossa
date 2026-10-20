@@ -2,6 +2,7 @@ import { Component, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MockBackendService } from '../../../utils';
+import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
 interface ApprovalRequestUI {
   id: string;
@@ -27,7 +28,7 @@ interface NavItem {
 @Component({
   selector: 'app-super-admin-approval-requests',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationCardComponent],
   templateUrl: './super-admin-approval-requests-component.html',
   styleUrls: ['./super-admin-approval-requests-component.css']
 })
@@ -36,6 +37,9 @@ export class SuperAdminApprovalRequestsComponent {
   private readonly backendService = inject(MockBackendService);
 
   public searchQuery = signal<string>('');
+
+  // Numero di approvazioni in attesa (badge sulla voce "Approva" della barra in basso)
+  readonly pendingApprovals = this.backendService.pendingApprovalCount;
 
   readonly requests = computed<ApprovalRequestUI[]>(() => {
     const query = this.searchQuery().toLowerCase().trim();
@@ -47,7 +51,8 @@ export class SuperAdminApprovalRequestsComponent {
 
     const mappedRequests: ApprovalRequestUI[] = pendingApprovals.map((req, index) => {
       const op = operators.find(o => o.id === req.requestedBy);
-      const site = op ? sites.find(s => s.id === op.siteId) : sites[0];
+      // Sede della richiesta: quella indicata nella richiesta, altrimenti quella di chi l'ha inviata
+      const site = sites.find(s => s.id === req.siteId) ?? (op ? sites.find(s => s.id === op.siteId) : sites[0]);
       const userName = op ? `${op.firstName} ${op.lastName}` : 'Ente Distributore';
       const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
 

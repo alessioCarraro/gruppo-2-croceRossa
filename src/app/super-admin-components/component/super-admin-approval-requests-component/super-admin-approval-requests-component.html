@@ -1,4 +1,5 @@
 <div class="app-layout">
+  <app-notification-card />
 
   <main class="main-content">
     <!-- Header -->
@@ -99,6 +100,9 @@
         </svg>
         }
       </div>
+      @if (nav.id === 'approve' && pendingApprovals() > 0) {
+      <span class="nav-badge" [attr.aria-label]="pendingApprovals() + ' approvazioni in attesa'">{{ pendingApprovals() }}</span>
+      }
       <span class="nav-label">{{ nav.label }}</span>
     </button>
     }

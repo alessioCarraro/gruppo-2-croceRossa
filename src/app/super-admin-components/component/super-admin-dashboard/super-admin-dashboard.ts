@@ -51,6 +51,9 @@ export class SuperAdminDashboardComponent {
   private readonly router = inject(Router);
   private readonly backendService: MockBackendService = inject(MockBackendService);
 
+  // Numero di approvazioni in attesa (badge sulla voce \"Approva\" della barra in basso)
+  readonly pendingApprovals = this.backendService.pendingApprovalCount;
+
   readonly user = computed<UserProfile>(() => {
     const currentUser = this.backendService.currentOperator();
     return {
