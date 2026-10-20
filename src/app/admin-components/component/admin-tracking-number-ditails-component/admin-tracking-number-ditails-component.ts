@@ -1,71 +1,51 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface ProductDetail {
-  id: string;
-  name: string;
-  lot: string;
-  expiry: string;
-  quantity: number;
-}
-
-interface ColloDetails {
-  id: string;
-  status: string;
-  source: string;
-  category: string;
-  totalPackages: number;
-  arrivalDate: string;
-}
+import { Product, SEED_PRODUCTS, SEED_TRACKING_NUMBER } from '../../../utils';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-trackingNumber-ditails',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './admin-tracking-number-ditails-component.html',
-  styleUrls: ['./admin-tracking-number-ditails-component.css']
+    selector: 'app-trackingNumber-ditails',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './admin-tracking-number-ditails-component.html',
+    styleUrls: ['./admin-tracking-number-ditails-component.css']
 })
 export class AdminTrackingNumberDitailsComponent {
-  // Dati di dettaglio del collo gestiti tramite Signals
-  readonly colloInfo = signal<ColloDetails>({
-    id: 'COL-7781',
-    status: 'Arrivato',
-    source: 'Magazzino Centrale',
-    category: 'Alimentari',
-    totalPackages: 24,
-    arrivalDate: 'oggi · 09:20'
-  });
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
 
-  // Lista dei prodotti nel collo
-  readonly products = signal<ProductDetail[]>([
-    {
-      id: '1',
-      name: 'Pasta di semola 500g',
-      lot: 'C-9012',
-      expiry: '15/05/2027',
-      quantity: 200
-    },
-    {
-      id: '2',
-      name: 'Passata di pomodoro 700g',
-      lot: 'C-9008',
-      expiry: '20/08/2027',
-      quantity: 150
-    },
-    {
-      id: '3',
-      name: 'Olio di semi 1L',
-      lot: 'C-9001',
-      expiry: '10/01/2027',
-      quantity: 90
+    // Estrazione sicura dell'ID del tracking dai parametri della rotta
+    private readonly trackingId = signal<string>(this.route.snapshot.paramMap.get('id') ?? '');
+
+    // Derivazione reattiva delle informazioni del collo tramite computed signal
+    readonly colloInfo = computed(() => {
+        const tracking = SEED_TRACKING_NUMBER.find(t => t.id === this.trackingId());
+
+        if (!tracking) {
+            return {
+                id: 'Sconosciuto',
+                source: 'N/D',
+                category: 'N/D',
+                totalPackages: 0
+            };
+        }
+
+        return {
+            id: tracking.code,
+            source: tracking.fromSiteId,
+            category: tracking.category,
+            totalPackages: tracking.quantity
+        };
+    });
+
+    // Stato reattivo per l'elenco dei prodotti associati al collo
+    readonly products = signal<Product[]>(SEED_PRODUCTS);
+
+    goBack(): void {
+        this.router.navigate(['/admin-tracking-number']);
     }
-  ]);
 
-  goBack(): void {
-    console.log('Navigazione indietro');
-  }
-
-  confirmReceipt(): void {
-    console.log('Ricezione confermata per il collo:', this.colloInfo().id);
-  }
+    confirmReceipt(): void {
+        this.router.navigate(['/admin-tracking-number']);
+    }
 }

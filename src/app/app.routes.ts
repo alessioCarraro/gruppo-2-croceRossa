@@ -49,6 +49,7 @@ import { SuperAdminRequestDetailsComponent } from './super-admin-components/comp
 import { SuperAdminRestockSingleStoreComponent } from './super-admin-components/component/super-admin-restock-single-store-component/super-admin-restock-single-store-component';
 import { SuperAdminOrderSentConfirmationComponent } from './super-admin-components/component/super-admin-order-sent-confirmation-component/super-admin-order-sent-confirmation-component';
 import { SuperAdminRestockSummary } from './super-admin-components/component/super-admin-restock-summary-component/super-admin-restock-summary-component';
+import { AdminTrackingNumberDitailsComponent } from './admin-components/component/admin-tracking-number-ditails-component/admin-tracking-number-ditails-component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -74,6 +75,7 @@ export const routes: Routes = [
     { path: 'admin-store-locator', component: AdminStoreLocatorComponent },
     { path: 'admin-requests', component: RequestsComponent },
     { path: 'admin-tracking-number', component: AdminTrackingNumberComponent },
+    { path: 'admin-tracking-number-detail', component: AdminTrackingNumberDitailsComponent },
     { path: 'admin-product-catalog', component: AdminProductCatalogComponent },
     { path: 'admin-summary', component: AdminSummaryComponent },
     { path: 'admin-delivery-success', component: AdminDeliverySuccessComponent },
