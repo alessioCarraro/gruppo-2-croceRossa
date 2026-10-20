@@ -267,3 +267,11 @@
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+/* Nuovo logo (immagine con testo incluso) */
+.brand-logo-img {
+    display: block;
+    width: 180px;
+    max-width: 70%;
+    height: auto;
+}
