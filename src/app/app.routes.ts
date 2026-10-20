@@ -50,6 +50,7 @@ import { SuperAdminRestockSingleStoreComponent } from './super-admin-components/
 import { SuperAdminOrderSentConfirmationComponent } from './super-admin-components/component/super-admin-order-sent-confirmation-component/super-admin-order-sent-confirmation-component';
 import { SuperAdminRestockSummary } from './super-admin-components/component/super-admin-restock-summary-component/super-admin-restock-summary-component';
 import { AdminTrackingNumberDitailsComponent } from './admin-components/component/admin-tracking-number-ditails-component/admin-tracking-number-ditails-component';
+import { PersonalProfileComponent } from './user-components/personal-profile-component/personal-profile-component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -63,6 +64,7 @@ export const routes: Routes = [
     { path: 'product-catalog', component: ProductCatalogComponent },
     { path: 'summary', component: SummaryComponent },
     { path: 'delivery-success', component: DeliverySuccessComponent },
+    { path: 'profile', component: PersonalProfileComponent },
 
     // Rotte admin
     { path: 'admin-home', component: AdminHomeComponent },

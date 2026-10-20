@@ -1,0 +1,231 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100dvh;
+  background-color: #fbfaf8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1a1a1a;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Application Layout Container */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 16px 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f8f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Variante del bottone per contesti più piccoli (come le intestazioni di sezione) */
+.icon-btn.small-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: transparent; /* Più pulito vicino all'intestazione */
+  border-color: transparent;
+}
+
+.icon-btn.small-btn:active {
+  background-color: #f0f0f0;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Profile Card */
+.profile-card {
+  background-color: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  background-color: #ede9df;
+  color: #1d648b;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.user-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.user-location {
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.badge {
+  background-color: #e6f2f9;
+  color: #1d648b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+/* Data List Section */
+.data-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Layout dell'intestazione aggiornato per dividere gli spazi */
+.section-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash {
+  width: 12px;
+  height: 2px;
+  background-color: #1d648b;
+  border-radius: 2px;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.data-card {
+  background-color: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.data-row:last-child {
+  border-bottom: none;
+}
+
+.data-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.data-value {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-align: right;
+}
+
+.data-value.monospace {
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #fbfaf8;
+  padding: 12px 16px 24px 16px;
+  border-top: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  width: 70px;
+}
+
+.nav-item.active {
+  color: #1d648b;
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+}

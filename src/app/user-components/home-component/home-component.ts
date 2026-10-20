@@ -66,6 +66,10 @@ export class HomeComponent {
         }
     }
 
+    onProfile(): void {
+        this.router.navigate(['/profile']);
+    }
+
     onLogout(): void {
         this.router.navigate(['/login']);
     }
