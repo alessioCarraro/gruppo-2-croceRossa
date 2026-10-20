@@ -32,15 +32,21 @@ export class UserMetroDashboardComponent {
     };
   });
 
-  // "computed": la card delle richieste si aggiorna da sola quando cambiano le richieste
-  readonly metrics = computed<MetricCard[]>(() => [
-    // Numeri reali dalle giacenze della metro (stessa fonte del Super Admin)
-    { id: '1', value: this.backend.metroTotalStock().toLocaleString('it-IT'), label: 'Articoli in magazzino', colorClass: 'black' },
-    { id: '2', value: this.backend.outgoingShipmentQuantity().toLocaleString('it-IT'), label: 'Articoli in uscita', colorClass: 'black' },
-    { id: '3', value: String(this.backend.expiringMetroStock().length), label: 'Articoli in scadenza', colorClass: 'red', actionLabel: 'Visualizza', route: '/user-metro-expiring-products' },
-    // Totale reale delle richieste di tutte le sedi (stessa fonte della pagina "Rifornitura sedi")
-    { id: '4', value: String(this.backend.totalRestockRequestCount()), label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'Gestisci', route: '/user-metro-restock' }
-  ]);
+  // "computed": le card si aggiornano da sole quando cambiano i dati condivisi.
+  // Usano MockBackendService.siteStats(): la stessa funzione e gli stessi criteri del Super Admin.
+  readonly metrics = computed<MetricCard[]>(() => {
+    const metroId = this.backend.sites().find(s => s.type === 'Metro')?.id ?? null;
+    const metroStats = this.backend.siteStats(metroId);  // dati della metro
+    const allStats = this.backend.siteStats(null);       // richieste di tutte le sedi
+
+    return [
+      { id: '1', value: metroStats.totalItems.toLocaleString('it-IT'), label: 'Articoli in magazzino', colorClass: 'black' },
+      { id: '2', value: metroStats.outgoingItems.toLocaleString('it-IT'), label: 'Articoli in uscita', colorClass: 'black' },
+      { id: '3', value: String(metroStats.expiringItems), label: 'Articoli in scadenza', colorClass: 'red', actionLabel: 'Visualizza', route: '/user-metro-expiring-products' },
+      // Totale reale delle richieste di tutte le sedi (stessa fonte della pagina "Rifornitura sedi")
+      { id: '4', value: String(allStats.requestCount), label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'Gestisci', route: '/user-metro-restock' }
+    ];
+  });
 
   // Testo scritto nella barra di ricerca
   readonly searchQuery = signal<string>('');

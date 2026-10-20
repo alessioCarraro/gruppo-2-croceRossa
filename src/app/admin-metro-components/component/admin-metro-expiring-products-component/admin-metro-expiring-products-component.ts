@@ -17,6 +17,11 @@ import { SuperAdminExpiringProductsComponent } from '../../../super-admin-compon
 export class AdminMetroExpiringProductsComponent extends SuperAdminExpiringProductsComponent {
   private readonly location = inject(Location);
 
+  // L'Operator vede le scadenze della metro
+  protected override getSiteId(): string | null {
+    return this.backendService.sites().find(s => s.type === 'Metro')?.id ?? null;
+  }
+
   // Torna alla pagina precedente (dashboard dell'Operator)
   public override goBack(): void {
     this.location.back();

@@ -73,7 +73,7 @@
 
           @if (metric.actionLabel) {
           <div class="metric-action" [ngClass]="metric.colorClass">
-            <a href="javascript:void(0)" class="action-link" (click)="onMetricAction(metric.id)">{{ metric.actionLabel
+            <a href="javascript:void(0)" class="action-link" (click)="onMetricAction(metric.route, metric.queryParams)">{{ metric.actionLabel
               }}</a> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <polyline points="9 18 15 12 9 6"></polyline>
