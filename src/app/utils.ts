@@ -296,43 +296,23 @@ export const SEED_PRODUCTS: Product[] = [
     },
     {
         id: 'edff434d-ceab-490a-9bba-b47366139ce2', name: 'Pasta integrale 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 58,
-<<<<<<< HEAD
         minStock: 60, isOutOfStock: false, price: 22, expiry: '2026-10-25', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 3,
-        iconType: 'bag'
-    },
-    {
-        id: '4396be27-f626-4032-8db2-18cbbb56d26a', name: 'Passata di pomodoro 700g', category: 'Verdura', unit: 'Scatola', icon: 'bottle', stock: 300,
-        minStock: 40, isOutOfStock: false, price: 15, expiry: '2026-10-28', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 4,
-        iconType: 'bag'
-    },
-    {
-        id: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', name: 'Petto di pollo 1kg', category: 'Carne', unit: 'Kg', icon: 'meat', stock: 25,
-        minStock: 30, isOutOfStock: false, price: 40, expiry: '2026-11-02', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 2,
-        iconType: 'meat'
-    },
-    {
-        id: '61321c12-9f01-4493-95f6-e7406296257b', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0,
-        minStock: 20, isOutOfStock: true, price: 12, expiry: '2026-10-12', isExpiringSoon: false, isExpired: true, maxPerBeneficiary: 6,
-        iconType: 'jar'
-=======
-        minStock: 60, isOutOfStock: false, price: 22, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 3,
         lot: 'C-9013', iconType: 'bag'
     },
     {
         id: '4396be27-f626-4032-8db2-18cbbb56d26a', name: 'Passata di pomodoro 700g', category: 'Verdura', unit: 'Scatola', icon: 'bottle', stock: 300,
-        minStock: 40, isOutOfStock: false, price: 15, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 4,
+        minStock: 40, isOutOfStock: false, price: 15, expiry: '2026-10-28', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 4,
         lot: 'C-9011', iconType: 'bag'
     },
     {
         id: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', name: 'Petto di pollo 1kg', category: 'Carne', unit: 'Kg', icon: 'meat', stock: 25,
-        minStock: 30, isOutOfStock: false, price: 40, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 2,
+        minStock: 30, isOutOfStock: false, price: 40, expiry: '2026-11-02', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 2,
         lot: 'C-9016', iconType: 'meat'
     },
     {
         id: '61321c12-9f01-4493-95f6-e7406296257b', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0,
-        minStock: 20, isOutOfStock: true, price: 12, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true, maxPerBeneficiary: 6,
+        minStock: 20, isOutOfStock: true, price: 12, expiry: '2026-10-12', isExpiringSoon: false, isExpired: true, maxPerBeneficiary: 6,
         lot: 'C-9014', iconType: 'jar'
->>>>>>> 084ef8cb19854f3244d1658ba86675913c899a0a
     },
 ];
 
