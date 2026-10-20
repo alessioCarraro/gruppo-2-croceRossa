@@ -49,7 +49,7 @@
         <div class="form-group half-width">
           <label class="form-label" for="expiry-date">Scadenza</label>
           <!-- Il wrapper torna ad essere un div per non espandere l'area cliccabile -->
-          <div class="custom-input">
+          <div class="custom-input" [class.has-error]="expiryError()">
             <!-- La label avvolge solo l'icona per permettere il click anche su di essa -->
             <label for="expiry-date" class="icon-label">
               <svg class="input-icon cursor-pointer" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -67,12 +67,15 @@
               (input)="updateExpiryDate($event)"
             />
           </div>
+          @if (expiryError()) {
+            <p class="error-text">{{ expiryError() }}</p>
+          }
         </div>
 
         <!-- Quantità -->
         <div class="form-group half-width">
           <label class="form-label" for="quantity-input">Quantità</label>
-          <div class="custom-input">
+          <div class="custom-input" [class.has-error]="quantityError()">
             <input 
               id="quantity-input"
               type="number" 

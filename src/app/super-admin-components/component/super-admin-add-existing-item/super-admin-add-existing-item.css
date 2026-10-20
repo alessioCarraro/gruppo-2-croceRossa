@@ -270,3 +270,19 @@
 .primary-button:not(:disabled):active {
   background-color: #0E3B59;
 }
+/* Avviso di campo mancante, vicino al campo (non blocca la pagina) */
+.error-text {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #E53935;
+}
+
+.custom-input.has-error {
+  border-color: #E53935;
+}
+
+/* Campo "Tipo prodotto": solo informazione, nessuna interazione */
+.readonly-box {
+  cursor: default;
+}

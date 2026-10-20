@@ -4,6 +4,13 @@ import { Router } from '@angular/router';
 import { MockBackendService } from '../../../utils';
 
 // Interfacce
+interface ProductSearchResult {
+  id: string;
+  name: string;
+  category: string;
+  stock: number;
+}
+
 interface UserProfile {
   name: string;
   role: string;
@@ -171,11 +178,24 @@ export class SuperAdminDashboardComponent {
     }
   }
 
-  goToInventorySearch(): void {
-    this.navItems.update(items =>
-      items.map(item => ({ ...item, isActive: item.id === 'inventory' }))
-    );
-    this.router.navigate(['/s-admin-metro-stock']);
+  // Testo scritto nella barra di ricerca (nessun reindirizzamento: la ricerca è nella dashboard)
+  readonly searchQuery = signal<string>('');
+
+  /**
+   * Risultati della ricerca: prodotti del catalogo/magazzino il cui nome contiene il testo scritto.
+   * Si aggiornano mentre si scrive; senza testo la lista è vuota.
+   */
+  readonly searchResults = computed<ProductSearchResult[]>(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return [];
+
+    return this.backendService.products()
+      .filter(p => p.name.toLowerCase().includes(query))
+      .map(p => ({ id: p.id, name: p.name, category: p.category, stock: p.stock }));
+  });
+
+  onSearchInput(event: Event): void {
+    this.searchQuery.set((event.target as HTMLInputElement).value);
   }
 
   onControlClick(controlId: string): void {

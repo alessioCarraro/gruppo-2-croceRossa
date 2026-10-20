@@ -188,3 +188,8 @@
   font-weight: 600;
   color: #E53935;
 }
+
+/* Evidenzia il campo con avviso */
+.custom-input.has-error {
+  border-color: #E53935;
+}

@@ -69,9 +69,11 @@ export class SuperAdminMetroStockComponent {
       });
   });
 
-  // Conteggio dinamico: mostra quanti articoli (tipologie) stiamo visualizzando dopo il filtro
+  // Totale articoli: somma delle giacenze di TUTTI i prodotti (non il numero di prodotti diversi).
+  // Si aggiorna da solo quando cambiano i dati; con lista vuota vale 0.
   readonly totalArticles = computed<string>(() => {
-    return `${this.items().length} art.`;
+    const total = this.backendService.products().reduce((sum, p) => sum + p.stock, 0);
+    return `${total.toLocaleString('it-IT')} art.`;
   });
 
   // Metodo richiamato ogni volta che l'utente digita nella barra di ricerca

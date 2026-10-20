@@ -21,7 +21,25 @@ export class SuperAdminAddExistingItemComponent implements OnInit {
   public selectedCategory = signal<string>('');
   public selectedProductId = signal<string>('');
   public expiryDate = signal<string>('');
-  public quantity = signal<string>('0');
+  public quantity = signal<string>('');
+
+  // Diventa true dopo il primo tentativo di salvataggio: da quel momento compaiono gli avvisi
+  public submitted = signal<boolean>(false);
+
+  // Avvisi vicino ai campi mancanti (si tolgono da soli appena il campo è corretto)
+  public quantityError = computed<string>(() => {
+    if (!this.submitted()) return '';
+    const raw = this.quantity().trim();
+    if (raw === '' || Number(raw) === 0) return 'Inserisci la quantità';
+    if (!Number.isInteger(Number(raw)) || Number(raw) < 0) return 'Inserisci una quantità valida (intero maggiore di 0)';
+    return '';
+  });
+  public expiryError = computed<string>(() =>
+    this.submitted() && this.expiryDate() === '' ? 'Inserisci la data di scadenza' : ''
+  );
+  public productError = computed<string>(() =>
+    this.submitted() && this.selectedProductId() === '' ? 'Nessun prodotto selezionato' : ''
+  );
 
   // Stati di apertura tendine personalizzate
   public isCategoryOpen = signal<boolean>(false);
@@ -58,9 +76,10 @@ export class SuperAdminAddExistingItemComponent implements OnInit {
   });
 
   public isFormValid = computed<boolean>(() => {
-    return this.selectedProductId() !== '' && 
-           this.expiryDate() !== '' && 
-           parseInt(this.quantity(), 10) > 0;
+    const qty = Number(this.quantity());
+    return this.selectedProductId() !== '' &&
+           this.expiryDate() !== '' &&
+           this.quantity().trim() !== '' && Number.isInteger(qty) && qty > 0;
   });
 
   ngOnInit(): void {
@@ -113,9 +132,11 @@ export class SuperAdminAddExistingItemComponent implements OnInit {
   }
 
   public saveLoad(): void {
+    // Il pulsante è sempre premibile: se mancano dati mostra gli avvisi e non salva
+    this.submitted.set(true);
     if (!this.isFormValid()) return;
 
-    const qty = parseInt(this.quantity(), 10);
+    const qty = Number(this.quantity());
     this.backendService.addStockToInventory(
       this.selectedProductId(), 
       qty, 

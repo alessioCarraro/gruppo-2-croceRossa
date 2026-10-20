@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockBackendService } from '../../../utils';
@@ -26,10 +26,22 @@ export class AdminMetroAddExistingItemComponent {
   public category = signal<string>('Legumi');
   public productType = signal<string>('Ceci in lattina 400g');
   public expiryDate = signal<string>('');
-  public quantity = signal<string>('0');
+  public quantity = signal<string>('');
 
-  // Messaggio di errore di validazione (vuoto = nessun errore)
-  public quantityError = signal<string>('');
+  // Diventa true dopo il primo tentativo di salvataggio: da quel momento compaiono gli avvisi
+  public submitted = signal<boolean>(false);
+
+  // Avvisi vicino ai campi mancanti (stessa logica della pagina super-admin)
+  public quantityError = computed<string>(() => {
+    if (!this.submitted()) return '';
+    const raw = this.quantity().trim();
+    if (raw === '' || Number(raw) === 0) return 'Inserisci la quantità';
+    if (!Number.isInteger(Number(raw)) || Number(raw) < 0) return 'Inserisci una quantità valida (intero maggiore di 0)';
+    return '';
+  });
+  public expiryError = computed<string>(() =>
+    this.submitted() && this.expiryDate() === '' ? 'Inserisci la data di scadenza' : ''
+  );
   // Evita doppi click mentre il salvataggio è in corso
   public isSaving = signal<boolean>(false);
 
@@ -53,7 +65,6 @@ export class AdminMetroAddExistingItemComponent {
   public updateQuantity(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.quantity.set(input.value);
-    this.quantityError.set(''); // l'utente sta correggendo: toglie l'errore
   }
 
   /**
@@ -71,13 +82,11 @@ export class AdminMetroAddExistingItemComponent {
   public async saveLoad(): Promise<void> {
     if (this.isSaving()) return;
 
-    // Validazione: la quantità deve essere un numero intero maggiore di zero
-    const raw = this.quantity().trim();
-    const quantity = Number(raw);
-    if (raw === '' || !Number.isInteger(quantity) || quantity <= 0) {
-      this.quantityError.set('Inserisci una quantità valida (numero intero maggiore di 0)');
-      return; // nessun salvataggio e nessun reindirizzamento
-    }
+    // Il pulsante è sempre premibile: se mancano quantità o scadenza mostra gli avvisi
+    // e non salva né reindirizza
+    this.submitted.set(true);
+    if (this.quantityError() || this.expiryError()) return;
+    const quantity = Number(this.quantity());
 
     this.isSaving.set(true);
     try {
