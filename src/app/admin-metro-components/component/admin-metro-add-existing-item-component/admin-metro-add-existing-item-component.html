@@ -42,6 +42,16 @@
         </div>
       </div>
 
+      <!-- Banner giacenza totale del prodotto (stesso stile del super admin) -->
+      <div class="stock-alert">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16537A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Giacenza totale: <strong>{{ currentStock() }}</strong></span>
+      </div>
+
       <!-- Scadenza e Quantità (Row) -->
        <div class="form-row">
         

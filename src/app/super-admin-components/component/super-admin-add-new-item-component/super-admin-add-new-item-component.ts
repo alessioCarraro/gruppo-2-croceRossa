@@ -2,20 +2,21 @@ import { Component, signal, computed, WritableSignal, HostListener, ElementRef, 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MockBackendService } from '../../../utils';
+import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
 type DropdownType = 'macro' | 'category' | null;
 
 @Component({
   selector: 'app-super-admin-add-new-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationCardComponent],
   templateUrl: './super-admin-add-new-item-component.html',
   styleUrls: ['./super-admin-add-new-item-component.css']
 })
 export class SuperAdminAddNewItemComponent implements OnInit {
-  private readonly router = inject(Router);
-  private readonly backendService = inject(MockBackendService);
-  private readonly elementRef = inject(ElementRef);
+  protected readonly router = inject(Router);
+  protected readonly backendService = inject(MockBackendService);
+  protected readonly elementRef = inject(ElementRef);
   
   public macroCategory = signal<string>('Alimentari');
   public category = signal<string>('');
@@ -24,6 +25,11 @@ export class SuperAdminAddNewItemComponent implements OnInit {
   public quantity = signal<string>('');
   public tokenValue = signal<string>('');
   public errorMessage = signal<string | null>(null);
+
+  // Testo del pulsante in basso: l'operator lo cambia in "Invia a conferma del superadmin"
+  public submitLabel = 'Salva nuovo prodotto';
+  // Evita doppi invii (usato dall'operator)
+  public isSubmitting = signal<boolean>(false);
 
   public activeDropdown = signal<DropdownType>(null);
   public isMacroCustom = signal<boolean>(false);
@@ -173,26 +179,37 @@ export class SuperAdminAddNewItemComponent implements OnInit {
     }
   }
 
-  public submitForm(event?: Event): void {
-    if (event) event.preventDefault();
-    
+  /**
+   * Elenco dei campi mancanti o non validi.
+   * È condiviso: lo usano sia il super admin sia la pagina operator (che estende questo componente).
+   */
+  protected getMissingFields(): string[] {
     const missingFields: string[] = [];
     if (!this.macroCategory().trim()) missingFields.push('Macro-categoria');
     if (!this.category().trim()) missingFields.push('Categoria');
     if (!this.productType().trim()) missingFields.push('Tipo prodotto');
     if (!this.expiryDate()) missingFields.push('Scadenza');
-    
+
     const qty = parseInt(this.quantity(), 10);
     if (isNaN(qty) || qty <= 0) missingFields.push('Quantità');
-    
+
     const token = parseInt(this.tokenValue(), 10);
     if (isNaN(token) || token < 0) missingFields.push('Valuta token');
 
+    return missingFields;
+  }
+
+  public submitForm(event?: Event): void | Promise<void> {
+    if (event) event.preventDefault();
+
+    const missingFields = this.getMissingFields();
     if (missingFields.length > 0) {
       alert('ATTENZIONE! Compila o correggi i seguenti campi per procedere:\n\n- ' + missingFields.join('\n- '));
       return;
     }
-    
+
+    const qty = parseInt(this.quantity(), 10);
+    const token = parseInt(this.tokenValue(), 10);
     const name = this.productType().trim();
     const cat = this.category().trim();
     const exp = this.expiryDate();

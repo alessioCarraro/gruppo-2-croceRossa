@@ -41,24 +41,6 @@ export class SuperAdminAddExistingItemComponent implements OnInit {
     this.submitted() && this.selectedProductId() === '' ? 'Nessun prodotto selezionato' : ''
   );
 
-  // Stati di apertura tendine personalizzate
-  public isCategoryOpen = signal<boolean>(false);
-  public isProductOpen = signal<boolean>(false);
-
-  // Categorie dal service
-  public availableCategories = computed<string[]>(() => {
-    const products = this.backendService.products();
-    const uniqueCats = new Set(products.map(p => p.category));
-    return Array.from(uniqueCats);
-  });
-
-  // Prodotti filtrati in base alla categoria scelta
-  public filteredProducts = computed(() => {
-    const category = this.selectedCategory();
-    if (!category) return [];
-    return this.backendService.products().filter(p => p.category === category);
-  });
-
   // Nome del prodotto attualmente selezionato (per mostrarlo nel box)
   public selectedProductName = computed<string>(() => {
     const prodId = this.selectedProductId();
@@ -91,30 +73,6 @@ export class SuperAdminAddExistingItemComponent implements OnInit {
         this.selectedProductId.set(product.id);
       }
     }
-  }
-
-  // Toggle apertura tendine
-  public toggleCategoryDropdown(): void {
-    this.isCategoryOpen.update(v => !v);
-    this.isProductOpen.set(false);
-  }
-
-  public toggleProductDropdown(): void {
-    if (!this.selectedCategory()) return;
-    this.isProductOpen.update(v => !v);
-    this.isCategoryOpen.set(false);
-  }
-
-  // Selezione voce
-  public chooseCategory(cat: string): void {
-    this.selectedCategory.set(cat);
-    this.selectedProductId.set('');
-    this.isCategoryOpen.set(false);
-  }
-
-  public chooseProduct(productId: string): void {
-    this.selectedProductId.set(productId);
-    this.isProductOpen.set(false);
   }
 
   public updateExpiryDate(event: Event): void {

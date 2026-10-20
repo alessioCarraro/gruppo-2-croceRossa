@@ -11,39 +11,21 @@
 
     <form class="form-container" (submit)="saveLoad(); $event.preventDefault()">
       
-      <!-- Macro-categoria (Fissa) -->
+      <!-- Macro-categoria: solo informazione, non modificabile -->
       <div class="form-group">
         <label class="form-label">Macro-categoria</label>
-        <div class="custom-select-box">
-          <span class="box-text">{{ macroCategory() }}</span>
-          <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+        <div class="custom-select-box readonly-box">
+          <span class="box-text no-left-icon">{{ macroCategory() }}</span>
         </div>
       </div>
 
-      <!-- Categoria Dropdown Personalizzato -->
+      <!-- Categoria: solo informazione, non modificabile -->
       <div class="form-group">
         <label class="form-label">Categoria</label>
-        <div class="custom-select-wrapper" [class.is-open]="isCategoryOpen()">
-          <div class="custom-select-box" (click)="toggleCategoryDropdown()">
-            <span class="box-text" [class.placeholder]="!selectedCategory()">
-              {{ selectedCategory() || 'Seleziona una categoria' }}
-            </span>
-            <svg class="chevron-icon" [class.rotate]="isCategoryOpen()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6862" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </div>
-
-          @if (isCategoryOpen()) {
-            <div class="custom-options-list">
-              @for (cat of availableCategories(); track cat) {
-                <div class="custom-option-item" (click)="chooseCategory(cat)">
-                  {{ cat }}
-                </div>
-              }
-            </div>
-          }
+        <div class="custom-select-box readonly-box">
+          <span class="box-text no-left-icon" [class.placeholder]="!selectedCategory()">
+            {{ selectedCategory() || 'Nessuna categoria' }}
+          </span>
         </div>
       </div>
 

@@ -1,167 +1,61 @@
-import { Component, signal, computed, WritableSignal, HostListener, ElementRef, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { Router } from '@angular/router';
-import { MockBackendService } from '../../../utils';
+import { SuperAdminAddNewItemComponent } from '../../../super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component';
 import { NotificationService } from '../../../services/notification-service';
 import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
-type DropdownType = 'macro' | 'category' | 'product' | null;
-
+/**
+ * Pagina "Carico nuovo" dell'operator.
+ * Estende quella del super admin e ne usa lo stesso template e gli stessi stili:
+ * layout, campi e comportamento sono identici. Cambia solo il pulsante in basso,
+ * che invia la richiesta a conferma del superadmin invece di salvare direttamente.
+ */
 @Component({
   selector: 'app-admin-metro-add-new-item',
   standalone: true,
   imports: [CommonModule, NotificationCardComponent],
-  templateUrl: './admin-metro-add-new-item-component.html',
-  styleUrls: ['./admin-metro-add-new-item-component.css']
+  templateUrl: '../../../super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component.html',
+  styleUrls: ['../../../super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component.css']
 })
-export class AdminMetroAddNewItemComponent {
-  public readonly macroCategories = ['Alimentari', 'Igiene', 'Abbigliamento'];
-  public readonly categories = ['Pasta', 'Riso', 'Carne', 'Verdure', 'Frutta', 'Legumi'];
-
-  private readonly productDictionary: Record<string, string[]> = {
-    'Pasta': ['Fusilli 500g', 'Fusilli 1kg', 'Rigatoni 500g', 'Rigatoni 1kg'],
-    'Riso': ['Basmati 500g', 'Basmati 1kg', 'Venere 500g', 'Venere 1kg'],
-    'Carne': ['Petto di pollo 500g', 'Macinato di manzo 400g', 'Fettine di vitello 300g'],
-    'Verdure': ['Spinaci surgelati 500g', 'Piselli finissimi 400g', 'Minestrone 600g'],
-    'Frutta': ['Mele Gala 1kg', 'Banane 1kg', 'Arance 1kg'],
-    'Legumi': ['Ceci in lattina 400g', 'Fagioli borlotti 400g', 'Lenticchie secche 500g'],
-    'default': ['-- Seleziona un prodotto --']
-  };
-
-  // State Signals per i valori inseriti
-  public macroCategory = signal<string>(this.macroCategories[0]);
-  public category = signal<string>(this.categories[0]);
-  
-  public availableProducts = computed(() => {
-    const selectedCategory = this.category();
-    return this.productDictionary[selectedCategory] || this.productDictionary['default'];
-  });
-
-  public productType = signal<string>(this.availableProducts()[0]);
-  public expiryDate = signal<string>('');
-  public quantity = signal<string>('');
-  public tokenValue = signal<string>('');
-
-  // UI State: Gestisce quale dropdown è aperto
-  public activeDropdown = signal<DropdownType>(null);
-
-  // UI State: Gestisce se un campo è in modalità inserimento manuale
-  public isMacroCustom = signal<boolean>(false);
-  public isCategoryCustom = signal<boolean>(false);
-  public isProductCustom = signal<boolean>(false);
-
-  private readonly elementRef = inject(ElementRef);
-  private readonly router = inject(Router);
+export class AdminMetroAddNewItemComponent extends SuperAdminAddNewItemComponent {
   private readonly location = inject(Location);
-  private readonly backend = inject(MockBackendService);
   private readonly notifications = inject(NotificationService);
 
-  // Evita doppi invii mentre la richiesta è in corso
-  public isSubmitting = signal<boolean>(false);
+  // Testo del pulsante in basso
+  public override submitLabel = 'Invia a conferma del superadmin';
 
   // Pulsante indietro: torna alla pagina precedente senza inviare nulla
-  public goBack(): void {
+  public override goBack(): void {
     this.location.back();
-  }
-
-  @HostListener('document:click', ['$event'])
-  public onClickOutside(event: Event): void {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.activeDropdown.set(null);
-    }
-  }
-
-  // --- UI Interactions ---
-
-  public toggleDropdown(dropdown: DropdownType, event: Event): void {
-    event.stopPropagation();
-    this.activeDropdown.update(current => current === dropdown ? null : dropdown);
-  }
-
-  public selectMacroCategory(value: string): void {
-    this.macroCategory.set(value);
-    this.activeDropdown.set(null);
-  }
-
-  public selectCategory(value: string): void {
-    this.category.set(value);
-    const newProductsList = this.availableProducts();
-    this.productType.set(newProductsList[0]);
-    this.activeDropdown.set(null);
-  }
-
-  public selectProductType(value: string): void {
-    this.productType.set(value);
-    this.activeDropdown.set(null);
-  }
-
-  public updateSignalValue(signalRef: WritableSignal<string>, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    signalRef.set(input.value);
-  }
-
-  // --- Custom Mode Handlers ---
-
-  public enableCustomMode(field: DropdownType): void {
-    if (field === 'macro') {
-      this.isMacroCustom.set(true);
-      this.macroCategory.set(''); // Resetta il valore in attesa dell'input
-    } else if (field === 'category') {
-      this.isCategoryCustom.set(true);
-      this.category.set('');
-      // In modalità category custom, anche il prodotto dovrebbe logicamente diventare custom
-      this.productType.set('');
-      this.isProductCustom.set(true);
-    } else if (field === 'product') {
-      this.isProductCustom.set(true);
-      this.productType.set('');
-    }
-    this.activeDropdown.set(null); // Chiude la tendina
-  }
-
-  public revertCustomMode(field: DropdownType): void {
-    if (field === 'macro') {
-      this.isMacroCustom.set(false);
-      this.macroCategory.set(this.macroCategories[0]); // Torna al default
-    } else if (field === 'category') {
-      this.isCategoryCustom.set(false);
-      this.category.set(this.categories[0]);
-      // Ripristina anche il prodotto in base alla categoria ripristinata
-      this.isProductCustom.set(false);
-      this.productType.set(this.availableProducts()[0]);
-    } else if (field === 'product') {
-      this.isProductCustom.set(false);
-      this.productType.set(this.availableProducts()[0]);
-    }
   }
 
   /**
    * Invia il nuovo articolo in coda "In attesa" di conferma del superadmin,
    * poi torna ad "Aggiungi carico" dove compare la card informativa.
    */
-  public async submitForm(event?: Event): Promise<void> {
-    if (event) {
-      event.preventDefault();
-    }
+  public override async submitForm(event?: Event): Promise<void> {
+    if (event) event.preventDefault();
     if (this.isSubmitting()) return;
+
+    // Stessi controlli della pagina super admin (campi mancanti o non validi)
+    const missingFields = this.getMissingFields();
+    if (missingFields.length > 0) {
+      this.notifications.error('Compila o correggi i campi: ' + missingFields.join(', '));
+      return;
+    }
 
     this.isSubmitting.set(true);
     try {
-      // Controllo minimo: servono almeno categoria e nome del prodotto
-      if (!this.category().trim() || !this.productType().trim()) {
-        throw new Error('Dati mancanti');
-      }
-
       // Descrizione della richiesta mostrata al superadmin
-      const description = `Nuovo prodotto: ${this.productType()} (${this.macroCategory()} / ${this.category()}), ` +
-        `quantità ${this.quantity() || 0}, scadenza ${this.expiryDate() || 'non indicata'}, token ${this.tokenValue() || 0}`;
+      const description = `Nuovo prodotto: ${this.productType().trim()} (${this.macroCategory()} / ${this.category()}), ` +
+        `quantità ${this.quantity()}, scadenza ${this.expiryDate()}, token ${this.tokenValue()}`;
 
       // Metto la richiesta in coda tra le approvazioni (stato "In attesa")
-      await this.backend.requestNewProductApproval(description);
+      await this.backendService.requestNewProductApproval(description);
 
       // La card è nel servizio root: sarà visibile nella pagina di destinazione
       this.notifications.info('Articolo inviato: in attesa di conferma del superadmin');
-      // replaceUrl: sostituisce questa pagina nella cronologia, così non resta tra le pagine "indietro"
+      // replaceUrl: sostituisce questa pagina nella cronologia
       await this.router.navigate(['/user-metro-load-item'], { replaceUrl: true });
     } catch {
       this.notifications.error("Errore durante l'invio dell'articolo al superadmin");

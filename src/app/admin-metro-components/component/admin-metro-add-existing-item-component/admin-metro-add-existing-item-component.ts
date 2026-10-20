@@ -20,13 +20,20 @@ export class AdminMetroAddExistingItemComponent {
   private readonly notifications = inject(NotificationService);
 
   // Id del prodotto scelto nella pagina "Aggiungi carico"
-  private productId: string | null = null;
+  public productId = signal<string | null>(null);
 
   public macroCategory = signal<string>('Alimentari');
   public category = signal<string>('Legumi');
   public productType = signal<string>('Ceci in lattina 400g');
   public expiryDate = signal<string>('');
   public quantity = signal<string>('');
+
+  // Giacenza totale del prodotto selezionato (0 se non c'è giacenza o il prodotto non è noto).
+  // Si aggiorna da sola quando cambia il prodotto o la giacenza.
+  public currentStock = computed<number>(() => {
+    const id = this.productId();
+    return id ? (this.backend.getProduct(id)?.stock ?? 0) : 0;
+  });
 
   // Diventa true dopo il primo tentativo di salvataggio: da quel momento compaiono gli avvisi
   public submitted = signal<boolean>(false);
@@ -47,8 +54,8 @@ export class AdminMetroAddExistingItemComponent {
 
   constructor() {
     // Prodotto scelto nella pagina "Aggiungi carico" (?productId=...)
-    this.productId = this.route.snapshot.queryParamMap.get('productId');
-    const product = this.productId ? this.backend.getProduct(this.productId) : undefined;
+    this.productId.set(this.route.snapshot.queryParamMap.get('productId'));
+    const product = this.productId() ? this.backend.getProduct(this.productId()!) : undefined;
 
     // Precompila i campi con i dati del prodotto selezionato
     if (product) {
@@ -90,11 +97,12 @@ export class AdminMetroAddExistingItemComponent {
 
     this.isSaving.set(true);
     try {
-      if (!this.productId) {
+      const productId = this.productId();
+      if (!productId) {
         throw new Error('Nessun prodotto selezionato');
       }
       // Salvataggio reale nel servizio usato dall'inventario
-      await this.backend.addStockToMetro(this.productId, quantity);
+      await this.backend.addStockToMetro(productId, quantity);
 
       // La card è nel servizio root: resta visibile anche dopo il cambio pagina
       this.notifications.success('Carico salvato correttamente');
