@@ -56,18 +56,7 @@ import { SuperAdminRequestDetailsComponent } from './super-admin-components/comp
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    RouterOutlet, LoginComponent, ScannerComponent, QrScannerComponent, PersonProfileComponent, ProductCatalogComponent, ExitComponent, SummaryComponent, 
-    DeliverySuccessComponent, HomeComponent, PersonProfileNotokenComponent, StoreLocatorComponent, LocalWarehouseComponent, AdminHomeComponent, 
-    RequestsComponent, AdminPersonProfileComponent, AdminQrScannerComponent, AdminTrackingNumberComponent, AdminTrackingNumberComponent, LowStockComponent,
-    AdminStoreLocatorComponent, ExpiringProductsComponent, UserMetroDashboardComponent, AdminMetroProfileComponent, AdminMetroStockComponent,
-    AdminMetroExpiringProductsComponent, AdminMetroAdminLocationsComponent, AdminMetroUserLocationsComponent, AdminMetroLoadItemComponent,
-    AdminMetroAddNewItemComponent, AdminMetroRestockComponent, AdminMetroRestockComponent, AdminMetroRestockSingleStoreComponent,
-     AdminMetroRestockSummary, AdminMetroRequestSentComponent, SuperAdminDashboardComponent, SuperAdminProfileComponent, SuperAdminMetroStockComponent,
-     SuperAdminExpiringProductsComponent, SuperAdminAdminLocationsComponent, SuperAdminUserLocationsComponent, SuperAdminLoadItemComponent,
-     SuperAdminAddExistingItemComponent, SuperAdminAddNewItemComponent, SuperAdminRestoockComponent, SuperAdminRestockSingleStoreComponent,
-     SuperAdminRestockSummary, SuperAdminOrderSentConfirmationComponent, SuperAdminApprovalRequestsComponent, SuperAdminRequestDetailsComponent
-  ],
+  imports: [ RouterOutlet ],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
