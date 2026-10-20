@@ -171,3 +171,99 @@
     margin-top: auto;
     padding-bottom: 8px;
 }
+/* Messaggio di errore del login */
+.error-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background-color: #fdecea;
+    border: 1px solid #e53935;
+    border-radius: 12px;
+    color: #b71c1c;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.error-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+}
+
+/* Campi evidenziati in caso di errore */
+.form-input.has-error {
+    border-color: #e53935;
+}
+
+/* Menu personalizzato per la scelta della sede */
+.select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.select-trigger .placeholder {
+    color: #888888;
+}
+
+.select-trigger:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.select-chevron {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: #666666;
+    transition: transform 0.2s;
+}
+
+.select-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* Elenco delle sedi: si apre sotto il campo e sposta il resto in basso (non copre il pulsante) */
+.site-list {
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    background-color: #ffffff;
+    border: 1px solid #e2ddd5;
+    border-radius: 12px;
+}
+
+.site-option {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    text-align: left;
+    color: #121212;
+    cursor: pointer;
+}
+
+.site-option:hover,
+.site-option.selected {
+    background-color: #f7f4ef;
+}
+
+.site-option.selected {
+    font-weight: 600;
+    color: #0e4c75;
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
