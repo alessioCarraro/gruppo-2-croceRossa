@@ -55,6 +55,10 @@ export class AdminHomeComponent {
         if (tab === 'approvazioni') {
             this.router.navigate(['/admin-requests']);
         }
+        // Profilo dell'utente loggato (stessa pagina dell'utente semplice)
+        if (tab === 'profilo') {
+            this.router.navigate(['/profile']);
+        }
         if (tab === 'colli') {
             this.router.navigate(['/admin-tracking-number']);
         }

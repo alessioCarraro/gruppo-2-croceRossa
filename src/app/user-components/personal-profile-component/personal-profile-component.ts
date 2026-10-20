@@ -13,8 +13,6 @@ interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 
   templateUrl: './personal-profile-component.html',
 })
 export class PersonalProfileComponent {
-  // Uso del servizio Location per gestire il pulsante "Indietro" nativo
-  private readonly location = inject(Location);
   // Sessione di login: contiene l'utente che ha effettuato l'accesso
   private readonly backend = inject(MockBackendService);
   private readonly router = inject(Router);
@@ -46,8 +44,10 @@ export class PersonalProfileComponent {
     { id: 'profile', label: 'Profilo', iconName: 'profile', isActive: true }
   ]);
 
+  // Torna alla home del ruolo dell'utente loggato (Admin o User)
   goBack(): void {
-    this.router.navigate(['/user-home']);
+    const role = this.backend.currentOperator()?.role;
+    this.router.navigate([role === 'Admin' ? '/admin-home' : '/user-home']);
   }
 
   onEditProfile(): void {
