@@ -101,6 +101,12 @@ export const routes: Routes = [
   { path: 'user-metro-store-locator', component: AdminStoreLocatorComponent },
   { path: 'user-metro-requests', component: RequestsComponent },
   { path: 'user-metro-tracking-number', component: AdminTrackingNumberComponent },
-  
+  { path: 'user-metro-expiring-products', component: AdminMetroExpiringProductsComponent },
+  { path: 'user-metro-add-existing-item', component: AdminMetroAddExistingItemComponent },
+  { path: 'user-metro-add-new-item', component: AdminMetroAddNewItemComponent },
+  { path: 'user-metro-restock-single-store', component: AdminMetroRestockSingleStoreComponent },
+  { path: 'user-metro-restock-summary', component: AdminMetroRestockSummary },
+  { path: 'user-metro-request-sent', component: AdminMetroRequestSentComponent },
+
   { path: '**', redirectTo: 'login' }
 ];
