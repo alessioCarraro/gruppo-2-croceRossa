@@ -303,3 +303,19 @@ h1, h2, h3, h4, p {
 .primary-btn:active {
     opacity: 0.8;
 }
+.empty-text {
+  padding: 20px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.qty-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

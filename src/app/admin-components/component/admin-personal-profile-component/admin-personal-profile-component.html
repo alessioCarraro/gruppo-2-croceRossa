@@ -53,7 +53,7 @@
             <h3 class="section-title"><span class="dash"></span> STORICO MENSILE</h3>
             <div class="history-card">
                 <div class="timeline">
-                    @for (item of history(); track item.date; let last = $last) {
+                    @for (item of history(); track $index; let last = $last) {
                     <div class="timeline-item" [class.is-last]="last">
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">

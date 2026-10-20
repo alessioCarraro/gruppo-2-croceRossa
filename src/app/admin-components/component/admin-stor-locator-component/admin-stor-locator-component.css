@@ -264,3 +264,9 @@ h1, h2, h3, p { margin: 0; }
   color: var(--banner-text);
   line-height: 1.4;
 }
+.empty-text {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}

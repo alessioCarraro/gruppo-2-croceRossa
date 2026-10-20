@@ -12,7 +12,7 @@
     <div class="header-user-info">
       <span class="user-name">{{ beneficiaryName() }}</span>
       <div class="token-badge">
-        <span class="token-icon">T</span> {{ availableTokens() }}
+        <span class="token-icon">T</span> {{ availableTokens() }} <span class="token-label">residui</span>
       </div>
     </div>
   </header>
@@ -76,7 +76,7 @@
             <div class="stepper">
               <button class="stepper-btn" (click)="decrementQuantity(product)" aria-label="Diminuisci quantità">−</button>
               <span class="stepper-value">{{ product.quantity }}</span>
-              <button class="stepper-btn" (click)="incrementQuantity(product)" aria-label="Aumenta quantità">+</button>
+              <button class="stepper-btn" [disabled]="!canIncrement(product)" (click)="incrementQuantity(product)" aria-label="Aumenta quantità">+</button>
             </div>
           } @else {
             <!-- Blocco aggiornato per logica "Ordina" dell'Admin -->
@@ -95,6 +95,8 @@
           }
         </div>
       </div>
+    } @empty {
+      <p class="empty-text">Nessun prodotto trovato</p>
     }
   </section>
 

@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 
 export type NotificationType = 'success' | 'error' | 'info';
 
@@ -19,6 +20,22 @@ const NOTIFICATION_DURATION_MS = 4000;
 export class NotificationService {
   private readonly _notification = signal<AppNotification | null>(null);
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
+  // Vero dopo la prima navigazione successiva alla notifica (quella che porta alla pagina di destinazione)
+  private survivedNavigation = false;
+
+  constructor() {
+    // La notifica sopravvive al cambio pagina che segue l'invio, ma alla navigazione dopo sparisce:
+    // così tornando in una pagina non ricompare una notifica vecchia
+    inject(Router).events.subscribe(event => {
+      if (event instanceof NavigationEnd && this._notification()) {
+        if (this.survivedNavigation) {
+          this.dismiss();
+        } else {
+          this.survivedNavigation = true;
+        }
+      }
+    });
+  }
 
   // Notifica corrente (null = nessuna card visibile)
   readonly notification = this._notification.asReadonly();
@@ -28,6 +45,7 @@ export class NotificationService {
     if (this.timeoutId) clearTimeout(this.timeoutId);
 
     this._notification.set({ type, message });
+    this.survivedNavigation = false;
 
     // La card sparisce da sola dopo pochi secondi
     this.timeoutId = setTimeout(() => this.dismiss(), NOTIFICATION_DURATION_MS);

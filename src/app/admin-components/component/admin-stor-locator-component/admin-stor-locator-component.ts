@@ -10,6 +10,14 @@ interface StoreLocation {
     distance: string;
 }
 
+// Risultato della ricerca: un prodotto con le altre sedi in cui è disponibile
+interface ProductAvailability {
+    productId: string;
+    productName: string;
+    status: string;
+    locations: StoreLocation[];
+}
+
 @Component({
     selector: 'app-admin-store-locator',
     standalone: true,
@@ -22,37 +30,46 @@ export class AdminStoreLocatorComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly backend = inject(MockBackendService);
 
-    // Prodotto scelto nella home (?productId=...). Senza prodotto resta l'esempio statico di prima.
-    private readonly product = this.backend.getProduct(this.route.snapshot.queryParamMap.get('productId') ?? '');
+    // Testo cercato; se si arriva dalla home con un prodotto (?productId=...) parte già compilato
+    public readonly searchQuery = signal<string>(
+        this.backend.getProduct(this.route.snapshot.queryParamMap.get('productId') ?? '')?.name ?? ''
+    );
 
-    public readonly searchQuery = signal<string>(this.product?.name ?? 'Pannolini taglia 4');
-    public readonly productName = signal<string>(this.product?.name ?? 'Pannolini taglia 4');
+    public onSearchInput(event: Event): void {
+        this.searchQuery.set((event.target as HTMLInputElement).value);
+    }
 
-    // Con un prodotto scelto: giacenza nella sede dell'Admin (dati condivisi)
-    public readonly productStatus = computed<string>(() => {
-        if (!this.product) return 'esaurito nella tua sede';
+    /**
+     * Prodotti che corrispondono alla ricerca, con le ALTRE sedi (diverse da quella dell'Admin)
+     * che li hanno davvero in giacenza. Dati condivisi: catalogo e inventari delle sedi.
+     * Il prodotto compare solo se almeno una sede ha giacenza maggiore di 0.
+     */
+    public readonly results = computed<ProductAvailability[]>(() => {
+        const query = this.searchQuery().toLowerCase().trim();
+        if (!query) return [];
+
         const mySiteId = this.backend.currentSite()?.id;
-        const own = this.backend.getInventoriesForProduct(this.product.id).find(l => l.siteId === mySiteId)?.stock ?? 0;
-        return own > 0 ? `${own} disponibili nella tua sede` : 'esaurito nella tua sede';
-    });
+        const km = (distance: string) => parseFloat(distance.replace(',', '.'));
 
-    private readonly exampleLocations: StoreLocation[] = [
-        { id: 1, name: 'Parabiago', availability: 120, distance: '4,2 km' },
-        { id: 2, name: 'S. Vittore Olona', availability: 80, distance: '5,1 km' },
-        { id: 3, name: 'Canegrate', availability: 25, distance: '6,0 km' },
-        { id: 4, name: 'Busto Garolfo', availability: 0, distance: '7,8 km' }
-    ];
+        return this.backend.products()
+            .filter(product => product.name.toLowerCase().includes(query))
+            .map(product => {
+                const all = this.backend.getInventoriesForProduct(product.id);
+                const own = all.find(l => l.siteId === mySiteId)?.stock ?? 0;
 
-    // Con un prodotto scelto: disponibilità nelle altre sedi, dalla più vicina (dati condivisi)
-    public readonly locations = computed<StoreLocation[]>(() => {
-        if (!this.product) return this.exampleLocations;
-        const mySiteId = this.backend.currentSite()?.id;
-        const km = (d: string) => parseFloat(d.replace(',', '.'));
+                const locations = all
+                    .filter(l => l.siteId !== mySiteId && l.stock > 0)
+                    .sort((a, b) => km(a.distance) - km(b.distance)) // dalla più vicina
+                    .map((l, index) => ({ id: index + 1, name: l.siteName, availability: l.stock, distance: l.distance }));
 
-        return this.backend.getInventoriesForProduct(this.product.id)
-            .filter(l => l.siteId !== mySiteId)
-            .sort((x, y) => km(x.distance) - km(y.distance))
-            .map((l, i) => ({ id: i + 1, name: l.siteName, availability: l.stock, distance: l.distance }));
+                return {
+                    productId: product.id,
+                    productName: product.name,
+                    status: own > 0 ? `${own} disponibili nella tua sede` : 'esaurito nella tua sede',
+                    locations
+                };
+            })
+            .filter(result => result.locations.length > 0);
     });
 
     public goBack(): void {

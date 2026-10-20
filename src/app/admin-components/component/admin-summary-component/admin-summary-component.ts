@@ -1,80 +1,75 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-interface UserInfo {
-    name: string;
-    orderId: string;
-    remainingTokens: number;
-    initialTokens: number;
-}
-
-interface Product {
-    id: number;
-    name: string;
-    unitTokenCost: number;
-    quantity: number;
-    weight: string;
-}
+import { AdminDeliveryService } from '../../../services/admin-delivery-service';
+import { NotificationService } from '../../../services/notification-service';
+import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
 @Component({
     selector: 'app-admin-summary',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, NotificationCardComponent],
     templateUrl: './admin-summary-component.html',
     styleUrls: ['./admin-summary-component.css']
 })
 export class AdminSummaryComponent {
     private readonly router = inject(Router);
-    // Stato Utente
-    public readonly userInfo = signal<UserInfo>({
-        name: 'Mario Rossi',
-        orderId: 'ID...0481',
-        remainingTokens: 370,
-        initialTokens: 575
+    private readonly delivery = inject(AdminDeliveryService);
+    private readonly notifications = inject(NotificationService);
+
+    // Evita invii duplicati se si preme più volte "Conferma"
+    public readonly isSubmitting = signal<boolean>(false);
+
+    // Beneficiario: dati condivisi
+    public readonly userInfo = computed(() => {
+        const b = this.delivery.beneficiary();
+        return {
+            name: b ? `${b.firstName} ${b.lastName}` : 'Nessun beneficiario',
+            orderId: b ? 'ID...' + b.code.slice(-4) : '-'
+        };
     });
 
-    // Stato Prodotti
-    public readonly products = signal<Product[]>([
-        {
-            id: 1,
-            name: 'Pasta di semola',
-            weight: '500g',
-            unitTokenCost: 20,
-            quantity: 1
-        },
-        {
-            id: 2,
-            name: 'Passata di pomodoro',
-            weight: '700g',
-            unitTokenCost: 15,
-            quantity: 2
-        }
-    ]);
+    // Solo i prodotti selezionati nella lista beni (quantità > 0), nessun dato fittizio
+    public readonly products = this.delivery.selectedItems;
 
-    // Stato Derivato (Computed) per il totale dei token usati
-    public readonly totalTokensUsed = computed(() => {
-        return this.products().reduce((total, product) => total + (product.unitTokenCost * product.quantity), 0);
-    });
+    // Totali: gli stessi calcolati nella lista beni (nessuna sottrazione doppia)
+    public readonly totalTokensUsed = this.delivery.totalTokens;
+    public readonly remainingTokens = this.delivery.remainingTokens;
 
-    // Azioni
-    public incrementQuantity(productId: number): void {
-        this.products.update(prods =>
-            prods.map(p => p.id === productId ? { ...p, quantity: p.quantity + 1 } : p)
-        );
+    // Azioni (stessi limiti della lista beni: giacenza e saldo token)
+    public incrementQuantity(productId: string): void {
+        this.delivery.increment(productId);
     }
 
-    public decrementQuantity(productId: number): void {
-        this.products.update(prods =>
-            prods.map(p => (p.id === productId && p.quantity > 0) ? { ...p, quantity: p.quantity - 1 } : p)
-        );
+    public canIncrement(productId: string): boolean {
+        return this.delivery.canIncrement(productId);
+    }
+
+    public decrementQuantity(productId: string): void {
+        this.delivery.decrement(productId);
     }
 
     goBack(): void {
         this.router.navigate(['/admin-product-catalog']);
     }
 
-    public confirmDelivery(): void {
-        this.router.navigate(['/admin-delivery-success']);
+    /**
+     * Conferma la consegna: salva l'operazione, scala token e giacenze.
+     * Solo se riesce apre la pagina di successo; altrimenti resta qui con un banner di errore
+     * e la selezione intatta, così si può riprovare.
+     */
+    public async confirmDelivery(): Promise<void> {
+        if (this.isSubmitting() || this.products().length === 0) return;
+
+        this.isSubmitting.set(true);
+        try {
+            await this.delivery.confirm();
+            await this.router.navigate(['/admin-delivery-success'], { replaceUrl: true });
+        } catch (error) {
+            const reason = error instanceof Error && error.message ? ` (${error.message})` : '';
+            this.notifications.error('Errore durante la conferma della consegna' + reason);
+        } finally {
+            this.isSubmitting.set(false);
+        }
     }
 }

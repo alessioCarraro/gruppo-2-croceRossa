@@ -2,18 +2,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AdminDeliveryService, DeliveryProduct } from '../../../services/admin-delivery-service';
+import { AdminOrderService } from '../../../services/admin-order-service';
+import { MockBackendService } from '../../../utils';
 
-export interface AdminProduct {
-    id: string;
-    name: string;
-    icon: 'bag' | 'bottle' | 'meat';
-    stock: number;
-    expiry: string;
-    price: number;
+// Prodotto mostrato in lista: dati della sede + quantità scelta
+export interface AdminProduct extends DeliveryProduct {
     quantity: number;
-    expiryWarning?: boolean;
-    outOfStock?: boolean;
-    isOrdered?: boolean; // Rinominato da isRequested per il dominio Admin
+    isOrdered: boolean;
 }
 
 @Component({
@@ -25,62 +21,74 @@ export interface AdminProduct {
 })
 export class AdminProductCatalogComponent {
     private readonly router = inject(Router);
+    private readonly delivery = inject(AdminDeliveryService);
+    private readonly order = inject(AdminOrderService);
+    private readonly backend = inject(MockBackendService);
 
-    readonly beneficiaryName = signal('Mario Rossi');
-    readonly availableTokens = signal(370);
+    // Beneficiario della consegna (scelto nella scheda persona)
+    readonly beneficiaryName = computed(() => {
+        const b = this.delivery.beneficiary();
+        return b ? `${b.firstName} ${b.lastName}` : 'Nessun beneficiario';
+    });
+
+    // Token residui PREVISTI = saldo - token della selezione. Non vengono scalati finché non si conferma.
+    readonly availableTokens = this.delivery.remainingTokens;
+
     readonly searchQuery = signal('');
     readonly selectedCategory = signal('Tutti');
     readonly categories = signal(['Tutti', 'Pasta', 'Omogeneizzati', 'Carne', 'Verdura']);
 
-    readonly products = signal<AdminProduct[]>([
-        { id: '1', name: 'Pasta di semola 500g', icon: 'bag', stock: 420, expiry: '15/05/2026', price: 20, quantity: 1 },
-        { id: '2', name: 'Pasta integrale 500g', icon: 'bag', stock: 58, expiry: '02/11/2025', price: 22, quantity: 0, expiryWarning: true },
-        { id: '3', name: 'Passata di pomodoro 700g', icon: 'bottle', stock: 300, expiry: '20/08/2026', price: 15, quantity: 2 },
-        { id: '4', name: 'Petto di pollo 1kg', icon: 'meat', stock: 25, expiry: '30/10/2025', price: 40, quantity: 0, expiryWarning: true },
-        { id: '5', name: 'Omogeneizzato carne', icon: 'bottle', stock: 0, expiry: '', price: 0, quantity: 0, outOfStock: true, isOrdered: false }
-    ]);
+    /**
+     * Prodotti della sede con ricerca e filtro usati insieme.
+     * La selezione vive nel servizio: cambiare ricerca o filtro non la cancella.
+     */
+    readonly products = computed<AdminProduct[]>(() => {
+        const query = this.searchQuery().toLowerCase().trim();
+        const category = this.selectedCategory();
 
-    readonly totalItems = computed(() =>
-        this.products().reduce((acc, product) => acc + product.quantity, 0)
-    );
+        return this.delivery.catalog()
+            .filter(p => category === 'Tutti' || p.category === category)
+            .filter(p => !query || p.name.toLowerCase().includes(query))
+            .map(p => ({ ...p, quantity: this.delivery.quantityOf(p.id), isOrdered: this.order.has(p.id) }));
+    });
+
+    // Numero totale di pezzi selezionati (su tutti i prodotti, anche quelli non visibili)
+    readonly totalItems = this.delivery.totalUnits;
 
     goBack(): void {
-        this.router.navigate(['/admin-profile']);
+        // Torna alla scheda dello stesso beneficiario
+        this.router.navigate(['/admin-profile'], { queryParams: { id: this.delivery.beneficiary()?.id } });
     }
 
     setCategory(category: string): void {
         this.selectedCategory.set(category);
     }
 
+    // Si può aumentare solo entro giacenza e saldo token
+    canIncrement(product: AdminProduct): boolean {
+        return this.delivery.canIncrement(product.id);
+    }
+
     incrementQuantity(targetProduct: AdminProduct): void {
-        if (targetProduct.outOfStock) return;
-        this.updateProductQuantity(targetProduct.id, targetProduct.quantity + 1);
+        this.delivery.increment(targetProduct.id);
     }
 
     decrementQuantity(targetProduct: AdminProduct): void {
-        if (targetProduct.quantity <= 0) return;
-        this.updateProductQuantity(targetProduct.id, targetProduct.quantity - 1);
+        this.delivery.decrement(targetProduct.id);
     }
 
-    // Metodo aggiornato per il dominio Admin
+    // Prodotto esaurito: lo aggiunge all'ordine al magazzino centrale (stessa bozza della pagina Magazzino)
     orderProduct(targetProduct: AdminProduct): void {
         if (!targetProduct.outOfStock || targetProduct.isOrdered) return;
-        this.products.update(currentProducts =>
-            currentProducts.map(product =>
-                product.id === targetProduct.id ? { ...product, isOrdered: true } : product
-            )
-        );
+        this.order.add({
+            productId: targetProduct.id,
+            name: targetProduct.name,
+            description: 'Esaurito',
+            quantity: Math.max(1, this.backend.getProduct(targetProduct.id)?.minStock ?? 10)
+        });
     }
 
     goToSummary(): void {
         this.router.navigate(['/admin-summary']);
-    }
-
-    private updateProductQuantity(productId: string, newQuantity: number): void {
-        this.products.update(currentProducts =>
-            currentProducts.map(product =>
-                product.id === productId ? { ...product, quantity: newQuantity } : product
-            )
-        );
     }
 }

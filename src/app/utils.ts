@@ -248,8 +248,8 @@ export interface TrackingNumber {
 
 // COSTANTI E DATI INIZIALI (il "finto database")
 
-const TOKENS_PER_ADULTI = 250;
-const TOKENS_PER_MINORI = 75;
+export const TOKENS_PER_ADULTI = 250;
+export const TOKENS_PER_MINORI = 75;
 const EXPIRY_WARNING_DAYS = 14;
 const DEFAULT_DUPLICATE_WINDOW_DAYS = 30;   // finestra duplicati configurabile
 const FAKE_API_DELAY_MS = 600;              // finto tempo di risposta dell'API
@@ -867,6 +867,44 @@ export class MockBackendService {
                     price: prod.price
                 };
             });
+
+            if (deliveryItems.length === 0) throw new Error('Nessun prodotto selezionato');
+
+            // Controlli prima di modificare qualsiasi dato: se falliscono non cambia nulla
+            if (beneficiary.tokens < tokensNeeded) throw new Error('Token insufficienti');
+            for (const item of draft.items) {
+                if (!Number.isInteger(item.quantity) || item.quantity <= 0) throw new Error('Quantità non valida');
+                const available = this._inventories()
+                    .filter(inv => inv.siteId === draft.siteId && inv.productId === item.productId)
+                    .reduce((sum, inv) => sum + inv.stock, 0);
+                if (available < item.quantity) throw new Error('Giacenza insufficiente');
+            }
+
+            // 1. Scala la giacenza della sede (prima i lotti con scadenza più vicina)
+            const updatedInventories = this._inventories().map(inv => ({ ...inv }));
+            for (const item of draft.items) {
+                let remaining = item.quantity;
+                updatedInventories
+                    .filter(inv => inv.siteId === draft.siteId && inv.productId === item.productId)
+                    .sort((a, b) => a.expiry.localeCompare(b.expiry))
+                    .forEach(lot => {
+                        const take = Math.min(lot.stock, remaining);
+                        lot.stock -= take;
+                        remaining -= take;
+                    });
+            }
+            this._inventories.set(updatedInventories);
+            this._products.update(prods => prods.map(p => {
+                const item = draft.items.find(i => i.productId === p.id);
+                return item ? { ...p, stock: Math.max(0, p.stock - item.quantity) } : p;
+            }));
+
+            // 2. Addebita i token al beneficiario
+            this._beneficiaries.update(list => list.map(b =>
+                b.id === beneficiary.id
+                    ? { ...b, tokens: b.tokens - tokensNeeded, hasTokens: b.tokens - tokensNeeded > 0 }
+                    : b
+            ));
 
             const newDelivery: Delivery = {
                 id: this.newId(),

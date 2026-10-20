@@ -11,55 +11,62 @@
     <!-- Search Bar -->
     <div class="search-container">
       <span class="icon-search" aria-hidden="true"></span>
-      <input 
-        type="text" 
-        class="search-input" 
-        [value]="searchQuery()" 
-        readonly
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Cerca un prodotto..."
+        [value]="searchQuery()"
+        (input)="onSearchInput($event)"
         aria-label="Cerca prodotto" />
     </div>
 
-    <!-- Product Info -->
-    <section class="product-card">
-      <div class="product-icon-wrapper">
-        <span class="icon-product" aria-hidden="true"></span>
-      </div>
-      <div class="product-info">
-        <h2 class="product-name">{{ productName() }}</h2>
-        <p class="product-status">{{ productStatus() }}</p>
-      </div>
-    </section>
-
-    <!-- Section Title -->
-    <div class="section-header">
-      <span class="dash"></span>
-      <h3 class="section-title">DISPONIBILE, PER VICINANZA</h3>
-    </div>
-
-    <!-- Data Table -->
-    <div class="table-card">
-      <div class="table-header">
-        <span class="col-sede">SEDE</span>
-        <span class="col-disp">DISP.</span>
-        <span class="col-dist">DISTANZA</span>
-      </div>
-      
-      <div class="table-body">
-        @for (loc of locations(); track loc.id; let isLast = $last) {
-          <div class="table-row">
-            <span class="col-sede row-name">{{ loc.name }}</span>
-            <span class="col-disp row-value" [ngClass]="getAvailabilityColor(loc.availability)">
-              {{ loc.availability }}
-            </span>
-            <span class="col-dist row-distance">{{ loc.distance }}</span>
+    @if (!searchQuery().trim()) {
+      <p class="empty-text">Cerca un prodotto per vedere in quali altre sedi è disponibile.</p>
+    } @else {
+      @for (result of results(); track result.productId) {
+        <!-- Prodotto trovato -->
+        <section class="product-card">
+          <div class="product-icon-wrapper">
+            <span class="icon-product" aria-hidden="true"></span>
           </div>
-          @if (!isLast) {
-            <hr class="divider" />
-          }
-        }
-      </div>
-    </div>
+          <div class="product-info">
+            <h2 class="product-name">{{ result.productName }}</h2>
+            <p class="product-status">{{ result.status }}</p>
+          </div>
+        </section>
+
+        <div class="section-header">
+          <span class="dash"></span>
+          <h3 class="section-title">DISPONIBILE, PER VICINANZA</h3>
+        </div>
+
+        <!-- Sedi con giacenza -->
+        <div class="table-card">
+          <div class="table-header">
+            <span class="col-sede">SEDE</span>
+            <span class="col-disp">DISP.</span>
+            <span class="col-dist">DISTANZA</span>
+          </div>
+
+          <div class="table-body">
+            @for (loc of result.locations; track loc.id; let isLast = $last) {
+              <div class="table-row">
+                <span class="col-sede row-name">{{ loc.name }}</span>
+                <span class="col-disp row-value" [ngClass]="getAvailabilityColor(loc.availability)">
+                  {{ loc.availability }}
+                </span>
+                <span class="col-dist row-distance">{{ loc.distance }}</span>
+              </div>
+              @if (!isLast) {
+                <hr class="divider" />
+              }
+            }
+          </div>
+        </div>
+      } @empty {
+        <p class="empty-text">Prodotto non disponibile nelle altre sedi</p>
+      }
+    }
 
   </main>
 </div>
-

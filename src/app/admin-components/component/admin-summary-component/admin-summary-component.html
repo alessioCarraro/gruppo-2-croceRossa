@@ -1,5 +1,8 @@
 <div class="app-container">
 
+    <!-- Banner di errore (sparisce da solo) -->
+    <app-notification-card />
+
     <!-- Header (Fisso in alto) -->
     <header class="header">
         <button class="back-btn" (click)="goBack()" aria-label="Indietro">
@@ -22,7 +25,7 @@
             @for (product of products(); track product.id; let isLast = $last) {
             <article class="product-item">
                 <div class="product-details">
-                    <h4 class="product-name">{{ product.name }} <span>{{ product.weight }}</span></h4>
+                    <h4 class="product-name">{{ product.name }}</h4>
                     <p class="product-cost">{{ product.unitTokenCost }} token cad.</p>
                 </div>
                 <div class="product-actions">
@@ -34,7 +37,7 @@
                         <button class="qty-btn" (click)="decrementQuantity(product.id)"
                             aria-label="Riduci quantità">−</button>
                         <span class="qty-value">{{ product.quantity }}</span>
-                        <button class="qty-btn" (click)="incrementQuantity(product.id)"
+                        <button class="qty-btn" [disabled]="!canIncrement(product.id)" (click)="incrementQuantity(product.id)"
                             aria-label="Aumenta quantità">+</button>
                     </div>
                 </div>
@@ -42,6 +45,8 @@
             @if (!isLast) {
             <hr class="divider" />
             }
+            } @empty {
+            <p class="empty-text">Nessun prodotto selezionato</p>
             }
         </section>
 
@@ -58,7 +63,7 @@
                 <p class="summary-text">Token residui dopo l'ordine</p>
                 <div class="token-badge large-badge">
                     <span class="token-icon">T</span>
-                    <span class="token-value">{{ userInfo().remainingTokens }}</span>
+                    <span class="token-value">{{ remainingTokens() }}</span>
                 </div>
             </div>
         </section>
@@ -66,7 +71,7 @@
 
     <!-- Bottom Action Bar (Fissa in basso) -->
     <footer class="bottom-bar">
-        <button class="primary-btn" (click)="confirmDelivery()">
+        <button class="primary-btn" [disabled]="isSubmitting() || products().length === 0" (click)="confirmDelivery()">
             Conferma consegna
         </button>
     </footer>
