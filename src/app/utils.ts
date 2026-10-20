@@ -366,6 +366,11 @@ export const SEED_BENEFICIARIES: Beneficiary[] = [
         minors: 2, tokens: 0, hasTokens: false
     },
     {
+        id: '04a7f562-6630-49c0-8ee0-486bac01e4ce', code: 'ID-2024-0853', firstName: 'Luigi', lastName: 'Verdi', taxCode: 'VRDLGU79L12H501G',
+        birthDate: '1979-07-12', address: 'Via Verdi 8, Parabiago (MI)', hasAllergies: false, hasIntolerances: true, status: 'Sospeso', adults: 2,
+        minors: 2, tokens: 0, hasTokens: false
+    },
+    {
         id: '67e15eef-ffdf-4b15-bf45-eba71d9cf2d6', code: 'ID-2024-0533', firstName: 'Simone', lastName: 'Ruggeri', taxCode: 'RGGSMN95C03F205W',
         birthDate: '1995-03-03', address: 'Via Dante 12, Legnano (MI)', hasAllergies: false, hasIntolerances: false, status: 'Scaduto', adults: 1,
         minors: 1, tokens: 0, hasTokens: false
