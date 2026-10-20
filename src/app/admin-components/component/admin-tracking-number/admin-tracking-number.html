@@ -1,40 +1,46 @@
 <main class="app-container">
-  
-  <header class="header">
-    <button class="icon-button back-btn" aria-label="Indietro" (click)="goBack()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 18l-6-6 6-6"/>
-      </svg>
-    </button>
-    <h1 class="title">Colli in arrivo</h1>
-    <div class="badge-count">{{ totalColli() }}</div>
-  </header>
 
-  <section class="description">
-    <p>
-      Colli dal magazzino centrale. Quelli <strong class="text-green">arrivati</strong> si possono
-      confermare in ricezione; gli altri sono ancora in transito.
-    </p>
-  </section>
+    <header class="header">
+        <button class="icon-button back-btn" aria-label="Indietro" (click)="goBack()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+        </button>
+        <h1 class="title">Colli in arrivo</h1>
+        <div class="badge-count">{{ totalColli() }}</div>
+    </header>
 
-  <div class="list-container">
-    @for (collo of trackingNumberList(); track collo.id; let isLast = $last) {
-      <article class="list-item" [class.border-bottom]="!isLast">
-        <div class="icon-wrapper">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-        </div>
-        
-        <div class="item-details">
-          <h2 class="item-title">{{ collo.code }}</h2>
-          <p class="item-subtitle">{{ collo.category }} · {{ collo.quantity }} colli da {{ getFromSiteIdName(collo.fromSiteId) }}</p>
-        </div>
+    <section class="description">
+        <p>
+            Colli dal magazzino centrale. Quelli <strong class="text-green">arrivati</strong> si possono
+            confermare in ricezione; gli altri sono ancora in transito.
+        </p>
+    </section>
 
-      </article>
-    }
-  </div>
+    <div class="list-container">
+        @for (collo of trackingNumberList(); track collo.id; let isLast = $last) {
+        <article class="list-item" [class.border-bottom]="!isLast" (click)="navigateToDetail(collo.id)" role="button"
+            tabindex="0">
+            <div class="icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+            </div>
+
+            <div class="item-details">
+                <h2 class="item-title">{{ collo.code }}</h2>
+                <p class="item-subtitle">{{ collo.category }} · {{ collo.quantity }} colli da {{
+                    getFromSiteIdName(collo.fromSiteId) }}</p>
+            </div>
+
+        </article>
+        }
+    </div>
 
 </main>

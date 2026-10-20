@@ -12,19 +12,22 @@ import { SEED_SITES, SEED_TRACKING_NUMBER, Site, TrackingNumber } from '../../..
 })
 export class AdminTrackingNumberComponent {
     private readonly router = inject(Router);
-    // Mock dei dati per replicare fedelmente l'immagine
+
     private readonly trackingNumberList = signal<TrackingNumber[]>(SEED_TRACKING_NUMBER);
     private readonly siteList = signal<Site[]>(SEED_SITES);
 
     getFromSiteIdName(siteId: string): string {
-        const site = this.siteList().find(s => s.id === siteId );
+        const site = this.siteList().find(s => s.id === siteId);
         return site ? site.name : "Ente sconosciuto";
     }
 
-    // Badge count hardcoded per corrispondere alla grafica esatta
     readonly totalColli = signal<number>(5);
 
     goBack(): void {
         this.router.navigate(['/admin-home']);
+    }
+
+    navigateToDetail(trackingId: string): void {
+        this.router.navigate(['/admin-tracking-number-detail', trackingId]);
     }
 }
