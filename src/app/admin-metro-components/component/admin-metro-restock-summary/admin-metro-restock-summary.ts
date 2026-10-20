@@ -53,7 +53,8 @@ export class AdminMetroRestockSummary {
     this.isSubmitting.set(true);
     try {
       const items = this.orderItems().map(i => ({ productId: i.productId, quantity: i.quantity }));
-      await this.backend.requestRestockApproval(this.cart.siteId(), items);
+      // Le richieste di riordino nel carrello passano a 'Inviata' e non compaiono più nella sede
+      await this.backend.requestRestockApproval(this.cart.siteId(), items, this.cart.requestIds());
 
       // Salva il riepilogo per la pagina di conferma, poi svuota il carrello
       this.cart.markSent({ siteName: this.locationLabel(), productCount: items.length });

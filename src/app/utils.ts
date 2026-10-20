@@ -1,5 +1,7 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 
+import { MOCK_RESTOCK_REQUESTS } from './mock-data/mock-restock-requests'; // DATI DI PROVA
+
 // ==========================================
 // 1. INTERFACCE E TIPI (Gli "stampi" dei dati)
 // ==========================================
@@ -11,7 +13,8 @@ export type BeneficiaryStatus = 'Attivo' | 'Sospeso' | 'Scaduto';
 export type DeliveryStatus = 'Completata' | 'Sospesa' | 'Annullata';
 export type AlertDecision = 'In attesa' | 'Sospesa' | 'Annullata' | 'Confermata';
 export type ApprovalType = 'Nuovo beneficiario' | 'Token extra' | 'Riordino' | 'Nuovo prodotto' | 'Rifornimento sede';
-export type ApprovalStatus = 'In attesa' | 'Approvata' | 'Rifiutata';
+// 'Nel carrello' = richiesta di riordino aggiunta al carrello di rifornitura; 'Inviata' = ordine inviato
+export type ApprovalStatus = 'In attesa' | 'Approvata' | 'Rifiutata' | 'Nel carrello' | 'Inviata';
 export type RequestStatus = 'In attesa' | 'Approvata' | 'Rifiutata';
 export type ShipmentStatus = 'Ordinato' | 'In transito' | 'Arrivato';
 
@@ -397,7 +400,7 @@ export class MockBackendService {
     private readonly _beneficiaries = signal<Beneficiary[]>(this.load('beneficiaries', SEED_BENEFICIARIES));
     private readonly _deliveries = signal<Delivery[]>(this.load('deliveries', SEED_DELIVERIES));
     private readonly _alerts = signal<DeliveryAlert[]>(this.load('alerts', SEED_ALERTS));
-    private readonly _approvals = signal<ApprovalRequest[]>(this.load('approvals', SEED_APPROVALS));
+    private readonly _approvals = signal<ApprovalRequest[]>(this.withMockRequests(this.load('approvals', SEED_APPROVALS))); // DATI DI PROVA: togliere withMockRequests
     private readonly _shipments = signal<Shipment[]>(this.load('shipments', SEED_SHIPMENTS));
     private readonly _duplicateWindowDays = signal<number>(this.load('duplicateWindow', DEFAULT_DUPLICATE_WINDOW_DAYS));
 
@@ -841,7 +844,7 @@ export class MockBackendService {
      * La richiesta resta "In attesa" e contiene prodotti e quantità del carrello.
      * Lancia un errore se la sede non esiste o il carrello è vuoto.
      */
-    async requestRestockApproval(toSiteId: string, items: CartItem[]): Promise<ApprovalRequest> {
+    async requestRestockApproval(toSiteId: string, items: CartItem[], sourceRequestIds: string[] = []): Promise<ApprovalRequest> {
         return this.fakeApi(() => {
             const op = this.requireLogin();
 
@@ -858,9 +861,32 @@ export class MockBackendService {
                 siteId: toSiteId,
                 items
             };
-            this._approvals.update(list => [newRequest, ...list]);
+            // Le richieste di riordino confluite in questo ordine passano a 'Inviata':
+            // non compaiono più nell'elenco delle richieste della sede
+            this._approvals.update(list => [
+                newRequest,
+                ...list.map(a => sourceRequestIds.includes(a.id) ? { ...a, status: 'Inviata' as const } : a)
+            ]);
             return newRequest;
         });
+    }
+
+    /**
+     * Cambia lo stato di alcune richieste di riordino.
+     * Usato dal carrello: 'Nel carrello' quando vengono aggiunte, 'In attesa' se tolte dal carrello.
+     * Lo stato è salvato nel localStorage, quindi resta anche cambiando pagina o ricaricando.
+     */
+    setRestockRequestsStatus(requestIds: string[], status: ApprovalStatus): void {
+        if (requestIds.length === 0) return;
+        this._approvals.update(list =>
+            list.map(a => requestIds.includes(a.id) ? { ...a, status } : a)
+        );
+    }
+
+    // DATI DI PROVA: aggiunge le richieste di prova non ancora presenti (anche se il localStorage è già pieno)
+    private withMockRequests(list: ApprovalRequest[]): ApprovalRequest[] {
+        const existingIds = new Set(list.map(a => a.id));
+        return [...list, ...MOCK_RESTOCK_REQUESTS.filter(m => !existingIds.has(m.id))];
     }
 
     // --- RICHIESTE DI RIFORNITURA DELLE SEDI ---
@@ -898,7 +924,7 @@ export class MockBackendService {
         this._beneficiaries.set(SEED_BENEFICIARIES);
         this._deliveries.set(SEED_DELIVERIES);
         this._alerts.set(SEED_ALERTS);
-        this._approvals.set(SEED_APPROVALS);
+        this._approvals.set(this.withMockRequests(SEED_APPROVALS)); // DATI DI PROVA: togliere withMockRequests
         this._shipments.set(SEED_SHIPMENTS);
         this._inventories.set(SEED_INVENTORIES);
         this._duplicateWindowDays.set(DEFAULT_DUPLICATE_WINDOW_DAYS);

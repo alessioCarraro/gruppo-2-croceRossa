@@ -52,8 +52,18 @@ export class AdminMetroRestockSingleStoreComponent {
   public activeCategory = signal<string>('Tutti');
   public categories = signal<string[]>(['Tutti', 'Pasta', 'Omogeneizzati', 'Carne', 'Bevande']);
 
-  // Richieste inviate dalla sede, lette dal servizio (stessa fonte del badge)
-  public storeRequests = signal<ProductRequest[]>(this.loadStoreRequests());
+  // Quantità scelte (per richiesta) nell'elenco delle richieste della sede
+  private readonly requestQuantities = signal<Record<string, number>>({});
+
+  /**
+   * Richieste della sede lette dal servizio (stessa fonte del badge).
+   * Sono "computed": quando una richiesta passa a 'Nel carrello' o 'Inviata' nel servizio
+   * sparisce da sola, anche se si esce e si rientra nella pagina.
+   */
+  public storeRequests = computed<ProductRequest[]>(() => {
+    const quantities = this.requestQuantities();
+    return this.loadStoreRequests().map(req => ({ ...req, requestedQty: quantities[req.id] ?? 0 }));
+  });
 
   // Testo della ricerca e quantità scelte (per prodotto) nel catalogo
   public searchQuery = signal<string>('');
@@ -136,23 +146,18 @@ export class AdminMetroRestockSingleStoreComponent {
 
   // --- Gestione Richieste Sede ---
   public updateRequestQuantity(itemId: string, delta: number): void {
-    this.storeRequests.update(reqs => 
-      reqs.map(req => {
-        if (req.id === itemId && req.isAvailable) {
-          return { ...req, requestedQty: Math.max(0, req.requestedQty + delta) };
-        }
-        return req;
-      })
-    );
+    const req = this.storeRequests().find(r => r.id === itemId);
+    if (!req || !req.isAvailable) return;
+
+    const next = Math.max(0, req.requestedQty + delta);
+    this.requestQuantities.update(q => ({ ...q, [itemId]: next }));
   }
 
   public addRequestToCart(item: ProductRequest): void {
     if (item.isAvailable && item.requestedQty > 0 && item.productId) {
-      // Aggiunge la quantità scelta al carrello condiviso
-      this.cart.addItem(this.siteId, item.productId, item.name, item.requestedQty);
-
-      // Rimuove l'elemento dalle richieste dopo l'aggiunta al carrello
-      this.storeRequests.update(reqs => reqs.filter(r => r.id !== item.id));
+      // Aggiunge al carrello condiviso: la richiesta passa a 'Nel carrello' nel servizio
+      // e sparisce da questo elenco (anche tornando indietro dal carrello)
+      this.cart.addItem(this.siteId, item.productId, item.name, item.requestedQty, item.id);
     }
   }
 
