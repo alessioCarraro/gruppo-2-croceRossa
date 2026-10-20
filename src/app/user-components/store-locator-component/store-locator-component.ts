@@ -60,7 +60,7 @@ export class StoreLocatorComponent {
   });
 
   public goBack(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/user-home']);
   }
 
   public getAvailabilityColor(availability: number): string {
