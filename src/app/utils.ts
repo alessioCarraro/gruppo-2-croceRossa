@@ -342,21 +342,27 @@ export const SEED_DELIVERIES: Delivery[] = [
 export const SEED_ALERTS: DeliveryAlert[] = [];
 
 export const SEED_APPROVALS: ApprovalRequest[] = [
-    // {
-    //     id: '88ee93f5-68e8-41cb-8e3e-7ffcc08ee131', type: 'Nuovo beneficiario', description: 'Attivazione Alessandro Fina (nucleo 2+2)',
-    //     requestedBy: 'oedff434d-ceab-490a-9bba-b47366139ce2', date: '2026-10-14T15:00:00.000Z', status: 'In attesa', beneficiaryId: '912cd7e0-b935-42c0-a607-2b38c255656a'
-    // },
     {
-        id: '7fc5855a-0f28-460d-92df-9f19498bc74f', type: 'Token extra', description: '+50 token per Mario Rossi (spesa medica)',
-        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2', date: '2026-10-15T08:30:00.000Z', status: 'In attesa',
-        beneficiaryId: '4c3e3adf-b60e-4187-b1f5-4ad73b13dd06', extraTokens: 50
+        id: '7fc5855a-0f28-460d-92df-9f19498bc74f', 
+        type: 'Token extra', 
+        description: '+50% token extra per Mario Rossi',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2', 
+        date: '2026-10-15T08:30:00.000Z', 
+        status: 'In attesa',
+        beneficiaryId: '4c3e3adf-b60e-4187-b1f5-4ad73b13dd06', 
+        extraTokens: 225
     },
+    
     {
-        id: '50890db5-6695-4b49-800c-ca17486ca1c8', type: 'Riordino', description: 'Riordino 100 Omogeneizzato carne',
-        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2', date: '2026-10-15T09:00:00.000Z', status: 'In attesa',
-        siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44',
-        productId: '61321c12-9f01-4493-95f6-e7406296257b', quantity: 100
-    },
+        id: '50890db5-6695-4b49-800c-ca17486ca1c8', 
+        type: 'Riordino', 
+        description: 'Riordino 100 Omogeneizzato carne',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2', 
+        date: '2026-10-15T09:00:00.000Z', 
+        status: 'In attesa',
+        productId: '61321c12-9f01-4493-95f6-e7406296257b', 
+        quantity: 100
+    }
 ];
 
 export const SEED_SHIPMENTS: Shipment[] = [

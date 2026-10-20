@@ -277,3 +277,13 @@
   color: #1a1a1a;
   border: 1px solid #e0e0e0;
 }
+
+.btn-danger {
+  background-color: #fdf3f3;
+  color: #d32f2f;
+  border: 1px solid #f5c6c6;
+}
+
+.btn-danger:active {
+  background-color: #f8d7d7;
+}

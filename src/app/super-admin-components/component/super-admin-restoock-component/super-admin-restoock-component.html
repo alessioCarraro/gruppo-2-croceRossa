@@ -18,7 +18,8 @@
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input type="text" placeholder="Cerca una sede..." />
+        <!-- Aggiunto il binding per la ricerca in tempo reale -->
+        <input type="text" placeholder="Cerca una sede..." [value]="searchQuery()" (input)="updateSearchQuery($event)" />
       </div>
     </div>
 
@@ -47,6 +48,8 @@
             {{ loc.requests }}
           </div>
         </article>
+      } @empty {
+        <p style="text-align: center; color: #888; padding: 24px;">Nessuna sede trovata.</p>
       }
     </section>
   </main>

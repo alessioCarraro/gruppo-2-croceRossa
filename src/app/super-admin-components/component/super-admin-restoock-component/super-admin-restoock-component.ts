@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
 
 interface LocationRequest {
   id: string;
@@ -22,12 +24,42 @@ interface NavItem {
   styleUrls: ['./super-admin-restoock-component.css']
 })
 export class SuperAdminRestoockComponent {
-  readonly locations = signal<LocationRequest[]>([
-    { id: '1', name: 'Negozio Parabiago', requests: 4 },
-    { id: '2', name: 'S. Vittore Olona', requests: 3 },
-    { id: '3', name: 'Canegrate', requests: 2 },
-    { id: '4', name: 'Busto Garolfo', requests: 0 }
-  ]);
+  private readonly router = inject(Router);
+  private readonly backendService = inject(MockBackendService);
+
+  public searchQuery = signal<string>('');
+
+  // Carica le sedi dal MockBackendService calcolando le richieste di riordino associate
+  readonly locations = computed<LocationRequest[]>(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    
+    // Prendiamo solo le sedi periferiche (EnteDistributore), escludendo la sede centrale "Metro"
+    const sites = this.backendService.sites().filter(s => s.type !== 'Metro');
+    const approvals = this.backendService.approvals();
+    const operators = this.backendService.operators();
+
+    const mappedLocations = sites.map(site => {
+      // 1. Troviamo gli ID degli operatori che lavorano in questa specifica sede
+      const siteOperatorsIds = operators.filter(o => o.siteId === site.id).map(o => o.id);
+      
+      // 2. Contiamo le richieste di tipo "Riordino" associate a quegli operatori
+      // (Prendiamo quelle 'In attesa' o 'Approvata' da spedire)
+      const requestsCount = approvals.filter(a => 
+        a.type === 'Riordino' && 
+        (a.status === 'In attesa' || a.status === 'Approvata') && 
+        siteOperatorsIds.includes(a.requestedBy)
+      ).length;
+
+      return {
+        id: site.id,
+        name: site.name,
+        requests: requestsCount
+      };
+    });
+
+    if (!query) return mappedLocations;
+    return mappedLocations.filter(loc => loc.name.toLowerCase().includes(query));
+  });
 
   readonly navItems = signal<NavItem[]>([
     { id: 'home', label: 'Home', iconName: 'home', isActive: false },
@@ -37,17 +69,32 @@ export class SuperAdminRestoockComponent {
     { id: 'approve', label: 'Approva', iconName: 'approve', isActive: false }
   ]);
 
+  public updateSearchQuery(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchQuery.set(input.value);
+  }
+
   goBack(): void {
-    console.log('Azione: Torna indietro');
+    this.router.navigate(['/s-admin-home']);
   }
 
   selectLocation(loc: LocationRequest): void {
-    console.log('Sede selezionata:', loc.name);
+    // Naviga alla pagina di preparazione pacco passandogli l'id della sede
+    // (Se non hai ancora una rotta specifica per preparare la spedizione, puoi modificare questo percorso in seguito)
+    console.log(`Prepara spedizione per: ${loc.name}`);
+    this.router.navigate(['/s-admin-create-shipment'], { queryParams: { siteId: loc.id } });
   }
 
   onNavClick(navId: string): void {
     this.navItems.update(items =>
       items.map(item => ({ ...item, isActive: item.id === navId }))
     );
+    switch (navId) {
+      case 'home': this.router.navigate(['/s-admin-home']); break;
+      case 'inventory': this.router.navigate(['/s-admin-metro-stock']); break;
+      case 'upload': this.router.navigate(['/s-admin-load-item']); break;
+      case 'restock': this.router.navigate(['/s-admin-restock']); break;
+      case 'approve': this.router.navigate(['/s-admin-approval-requests']); break;
+    }
   }
 }

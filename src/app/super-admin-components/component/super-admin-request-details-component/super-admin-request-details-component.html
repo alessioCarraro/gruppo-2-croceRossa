@@ -30,7 +30,7 @@
     <!-- Section Title -->
     <div class="section-header">
       <span class="dash"></span>
-      <h2 class="section-title">PRODOTTI RICHIESTI</h2>
+      <h2 class="section-title">DETTAGLIO RICHIESTA</h2>
     </div>
 
     <!-- Products List Container -->
@@ -61,7 +61,7 @@
             </div>
 
             <!-- Pulsante Elimina -->
-            <button class="remove-btn" (click)="removeProduct(product.id)" aria-label="Rimuovi prodotto">
+            <button class="remove-btn" (click)="removeProduct(product.id)" aria-label="Rimuovi elemento">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -73,7 +73,7 @@
       
       @if (requestedProducts().length === 0) {
         <div class="empty-state">
-          Nessun prodotto richiesto presente.
+          Nessun elemento presente nella richiesta.
         </div>
       }
     </section>
@@ -87,8 +87,12 @@
       </svg>
       Conferma richiesta
     </button>
-    <button class="btn btn-secondary" (click)="returnToApprovals()">
-      Torna alle approvazioni
+    <button class="btn btn-danger" (click)="rejectRequest()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+      Rifiuta richiesta
     </button>
   </footer>
 
