@@ -13,8 +13,6 @@ interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 
   templateUrl: './profile-component.html',
 })
 export class ProfileComponent {
-  // Uso del servizio Location per gestire il pulsante "Indietro" nativo
-  private readonly location = inject(Location);
   // Sessione di login: contiene l'utente che ha effettuato l'accesso
   private readonly backend = inject(MockBackendService);
   private readonly router = inject(Router);

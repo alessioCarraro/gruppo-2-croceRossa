@@ -85,7 +85,7 @@ export const routes: Routes = [
     { path: 'admin-order', component: AdminOrderComponent },
     { path: 'admin-expiring-product', component: ExpiringProductsComponent },
     { path: 'admin-low-stock', component: LowStockComponent },
-    { path: 'admin-profile', component: ProfileComponent },
+    { path: 'admin-my-profile', component: ProfileComponent },
 
     // Rotte Super Admin
     { path: 's-admin-home', component: SuperAdminDashboardComponent },
