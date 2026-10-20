@@ -83,7 +83,7 @@ export class SuperAdminApprovalRequestsComponent {
     { id: 'home', label: 'Home', iconName: 'home', isActive: false },
     { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false },
     { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false },
-    { id: 'restock', label: 'Rifornit.', iconName: 'restock', isActive: false },
+    { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: false },
     { id: 'approve', label: 'Approva', iconName: 'approve', isActive: true }
   ]);
 

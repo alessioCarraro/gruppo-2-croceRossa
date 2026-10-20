@@ -31,14 +31,14 @@ interface CatalogItem extends BaseProduct {
   styleUrls: ['./admin-metro-restock-sigle-store-component.css']
 })
 export class AdminMetroRestockSingleStoreComponent {
-  private readonly route = inject(ActivatedRoute);
-  private readonly location = inject(Location);
-  private readonly backend = inject(MockBackendService);
-  private readonly router = inject(Router);
-  private readonly cart = inject(RestockCartService);
+  protected readonly route = inject(ActivatedRoute);
+  protected readonly location = inject(Location);
+  protected readonly backend = inject(MockBackendService);
+  protected readonly router = inject(Router);
+  protected readonly cart = inject(RestockCartService);
 
   // Sede scelta nella pagina "Rifornitura sedi" (?siteId=...)
-  private readonly siteId = this.route.snapshot.queryParamMap.get('siteId') ?? '';
+  protected readonly siteId = this.route.snapshot.queryParamMap.get('siteId') ?? '';
 
   // Nome della sede mostrato nel titolo
   public siteName = computed(() => this.backend.getSiteName(this.siteId));

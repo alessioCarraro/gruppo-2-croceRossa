@@ -47,6 +47,7 @@ import { ExpiringProductsComponent } from './admin-components/component/expiring
 import { LowStockComponent } from './admin-components/component/admin-low-stock-products-component/admin-low-stock-products-component';
 import { SuperAdminRequestDetailsComponent } from './super-admin-components/component/super-admin-request-details-component/super-admin-request-details-component';
 import { SuperAdminRestockSingleStoreComponent } from './super-admin-components/component/super-admin-restock-single-store-component/super-admin-restock-single-store-component';
+import { SuperAdminOrderSentConfirmationComponent } from './super-admin-components/component/super-admin-order-sent-confirmation-component/super-admin-order-sent-confirmation-component';
 import { SuperAdminRestockSummary } from './super-admin-components/component/super-admin-restock-summary-component/super-admin-restock-summary-component';
 
 export const routes: Routes = [
@@ -94,6 +95,7 @@ export const routes: Routes = [
     { path: 's-admin-add-new-item', component: SuperAdminAddNewItemComponent },
     { path: 's-admin-restock-single-store', component: SuperAdminRestockSingleStoreComponent },
     { path: 's-admin-restock-summary', component: SuperAdminRestockSummary },
+    { path: 's-admin-order-sent', component: SuperAdminOrderSentConfirmationComponent },
     { path: 's-admin-request-details', component: SuperAdminRequestDetailsComponent },
 
   // Rotte Operator

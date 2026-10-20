@@ -29,34 +29,16 @@ export class SuperAdminRestoockComponent {
 
   public searchQuery = signal<string>('');
 
-  // Carica le sedi dal MockBackendService calcolando le richieste di riordino associate
+  // Sedi con il numero di richieste: stessa fonte e stesso calcolo dell'Operator
+  // (restockRequestCount), quindi il numero scende quando una richiesta va nel carrello o viene inviata
   readonly locations = computed<LocationRequest[]>(() => {
     const query = this.searchQuery().toLowerCase().trim();
-    
-    const sites = this.backendService.sites().filter(s => s.type !== 'Metro');
-    const approvals = this.backendService.approvals();
-    const operators = this.backendService.operators();
 
-    // Leggiamo le richieste evase specificamente per singola sede (formato: "siteId_approvalId")
-    const completedRaw = localStorage.getItem('cri_completed_restocks');
-    const completedKeys: string[] = completedRaw ? JSON.parse(completedRaw) : [];
-
-    const mappedLocations = sites.map(site => {
-      const siteOperatorsIds = operators.filter(o => o.siteId === site.id).map(o => o.id);
-      
-      const requestsCount = approvals.filter(a => 
-        a.type === 'Riordino' && 
-        a.status !== 'Rifiutata' && 
-        siteOperatorsIds.includes(a.requestedBy) &&
-        !completedKeys.includes(`${site.id}_${a.id}`)
-      ).length;
-
-      return {
-        id: site.id,
-        name: site.name,
-        requests: requestsCount
-      };
-    });
+    const mappedLocations = this.backendService.distributionSites().map(site => ({
+      id: site.id,
+      name: site.name,
+      requests: this.backendService.restockRequestCount(site.id)
+    }));
 
     if (!query) return mappedLocations;
     return mappedLocations.filter(loc => loc.name.toLowerCase().includes(query));
@@ -66,7 +48,7 @@ export class SuperAdminRestoockComponent {
     { id: 'home', label: 'Home', iconName: 'home', isActive: false },
     { id: 'inventory', label: 'Inventario', iconName: 'inventory', isActive: false },
     { id: 'upload', label: 'Carico', iconName: 'upload', isActive: false },
-    { id: 'restock', label: 'Rifornit.', iconName: 'restock', isActive: true },
+    { id: 'restock', label: 'Rifornitura', iconName: 'restock', isActive: true },
     { id: 'approve', label: 'Approva', iconName: 'approve', isActive: false }
   ]);
 
@@ -80,9 +62,7 @@ export class SuperAdminRestoockComponent {
   }
 
   selectLocation(loc: LocationRequest): void {
-    // Naviga alla pagina di preparazione pacco passandogli l'id della sede
-    // (Se non hai ancora una rotta specifica per preparare la spedizione, puoi modificare questo percorso in seguito)
-    console.log(`Prepara spedizione per: ${loc.name}`);
+    // Apre la pagina della sede passando l'id
     this.router.navigate(['/s-admin-restock-single-store'], { queryParams: { siteId: loc.id } });
   }
 

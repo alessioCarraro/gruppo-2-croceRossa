@@ -14,11 +14,15 @@ import { NotificationCardComponent } from '../../../notification-card-component/
   styleUrls: ['./admin-metro-restock-summary.css']
 })
 export class AdminMetroRestockSummary {
-  private readonly location = inject(Location);
-  private readonly router = inject(Router);
-  private readonly backend = inject(MockBackendService);
-  private readonly cart = inject(RestockCartService);
-  private readonly notifications = inject(NotificationService);
+  protected readonly location = inject(Location);
+  protected readonly router = inject(Router);
+  protected readonly backend = inject(MockBackendService);
+  protected readonly cart = inject(RestockCartService);
+  protected readonly notifications = inject(NotificationService);
+
+  // Testo del pulsante e banner informativo: il Super Admin li cambia (invio diretto, senza conferma)
+  public submitLabel = 'Invia a richiesta di approvazione';
+  public requiresApproval = true;
 
   // Sede di destinazione dell'ordine
   public locationLabel = computed(() => this.backend.getSiteName(this.cart.siteId()));

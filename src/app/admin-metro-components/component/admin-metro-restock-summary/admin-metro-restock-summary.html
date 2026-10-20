@@ -48,6 +48,7 @@
       </div>
     </section>
 
+    @if (requiresApproval) {
     <!-- Info Banner -->
     <section class="content-section">
       <div class="info-banner">
@@ -61,13 +62,14 @@
         </p>
       </div>
     </section>
+    }
 
   </main>
 
   <!-- Sticky Footer -->
   <footer class="sticky-footer">
     <button class="primary-button" (click)="submitOrder()" [disabled]="orderItems().length === 0 || isSubmitting()">
-      Invia a richiesta di approvazione
+      {{ submitLabel }}
     </button>
   </footer>
 

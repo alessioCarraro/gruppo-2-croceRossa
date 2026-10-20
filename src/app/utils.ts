@@ -863,6 +863,62 @@ export class MockBackendService {
     }
 
     /**
+     * Invio DIRETTO di un ordine di rifornimento (solo S-Admin, senza richiesta di conferma).
+     * Crea la spedizione dalla metro verso la sede, scala la giacenza della metro e
+     * segna come 'Inviata' le richieste di riordino confluite nell'ordine.
+     * Lancia un errore se la sede non esiste, il carrello è vuoto o la giacenza non basta.
+     */
+    async sendRestockShipment(toSiteId: string, items: CartItem[], sourceRequestIds: string[] = []): Promise<Shipment> {
+        return this.fakeApi(() => {
+            this.requireRole(['S-Admin']);
+
+            if (!this._sites().some(s => s.id === toSiteId)) throw new Error('Sede non trovata');
+            if (items.length === 0) throw new Error('Il carrello è vuoto');
+
+            const metro = this._sites().find(s => s.type === 'Metro');
+            if (!metro) throw new Error('Metro non trovata');
+
+            // Controllo preventivo: la metro deve avere abbastanza giacenza per ogni prodotto
+            const invs = this._inventories();
+            for (const item of items) {
+                const inv = invs.find(i => i.siteId === metro.id && i.productId === item.productId);
+                if (!inv || inv.stock < item.quantity) {
+                    throw new Error('Giacenza insufficiente in metro');
+                }
+            }
+
+            // 1. Scala la giacenza della metro (inventario e catalogo)
+            this._inventories.update(list => list.map(inv => {
+                const item = items.find(i => inv.siteId === metro.id && i.productId === inv.productId);
+                return item ? { ...inv, stock: inv.stock - item.quantity } : inv;
+            }));
+            this._products.update(prods => prods.map(p => {
+                const item = items.find(i => i.productId === p.id);
+                return item ? { ...p, stock: Math.max(0, p.stock - item.quantity) } : p;
+            }));
+
+            // 2. Crea la spedizione
+            const shipment: Shipment = {
+                id: this.newId(),
+                trackingNumber: `TRK-${Math.floor(100000 + Math.random() * 900000)}`,
+                fromSiteId: metro.id,
+                toSiteId,
+                items,
+                status: 'Ordinato',
+                createdAt: this.nowIso()
+            };
+            this._shipments.update(list => [shipment, ...list]);
+
+            // 3. Le richieste di riordino spedite non compaiono più nell'elenco della sede
+            this._approvals.update(list =>
+                list.map(a => sourceRequestIds.includes(a.id) ? { ...a, status: 'Inviata' as const } : a)
+            );
+
+            return shipment;
+        });
+    }
+
+    /**
      * Invia a conferma del superadmin un ordine di rifornimento verso una sede.
      * La richiesta resta "In attesa" e contiene prodotti e quantità del carrello.
      * Lancia un errore se la sede non esiste o il carrello è vuoto.
