@@ -76,39 +76,19 @@ export class SuperAdminRestockSummary implements OnInit {
     const itemsToShip = this.orderItems();
     const serviceAny = this.backendService as any;
 
-    // 1. AZZERAMENTO RICHIESTE DELLA SEDE (Così il badge del negozio va a 0!)
-    const operators = this.backendService.operators();
-    const siteOperatorIds = operators
-      .filter(o => o.siteId === this.currentSiteId)
-      .map(o => o.id);
+    // 1. SEGNIAMO COME EVASE SOLO LE SPECIFICHE RICHIESTE PRESENTI NEL CARRELLO (tramite approvalId)
+    const completedRaw = localStorage.getItem('cri_completed_restocks');
+    const completedKeys: string[] = completedRaw ? JSON.parse(completedRaw) : [];
 
-    const currentApprovals = this.backendService.approvals();
-    const shippedApprovalIds = itemsToShip.map(i => i.approvalId).filter(Boolean);
-
-    // Rimuoviamo le richieste di Riordino di questa sede in quanto il rifornimento per il negozio è stato soddisfatto
-    const remainingApprovals = currentApprovals.filter(app => {
-      // Se l'ID è stato esplicitamente evaso nel carrello, lo rimuoviamo
-      if (shippedApprovalIds.includes(app.id)) return false;
-      // Inoltre, se è una richiesta di 'Riordino' di questo negozio, la consideriamo soddisfatta con questo ordine
-      if (app.type === 'Riordino' && siteOperatorIds.includes(app.requestedBy)) {
-        return false;
-      }
-      return true;
-    });
-
-    // Salviamo in localStorage e aggiorniamo qualunque signal (pubblico o privato) dentro MockBackendService
-    localStorage.setItem('cri_approvals', JSON.stringify(remainingApprovals));
-    for (const key of Object.keys(serviceAny)) {
-      const prop = serviceAny[key];
-      if (typeof prop === 'function' && typeof prop.set === 'function') {
-        try {
-          const val = prop();
-          if (Array.isArray(val) && val.some((x: any) => x && x.requestedBy !== undefined && x.type !== undefined)) {
-            prop.set(remainingApprovals);
-          }
-        } catch {}
+    for (const item of itemsToShip) {
+      if (item.approvalId) {
+        const key = `${this.currentSiteId}_${item.approvalId}`;
+        if (!completedKeys.includes(key)) {
+          completedKeys.push(key);
+        }
       }
     }
+    localStorage.setItem('cri_completed_restocks', JSON.stringify(completedKeys));
 
     // 2. SCALATURA REALE DELLE QUANTITÀ DA METRO
     const savedMetroStockRaw = localStorage.getItem('cri_metro_custom_stock');
@@ -120,7 +100,7 @@ export class SuperAdminRestockSummary implements OnInit {
     }
     localStorage.setItem('cri_metro_custom_stock', JSON.stringify(savedMetroStock));
 
-    // Aggiorniamo anche eventuali lotti nell'inventario di MockBackendService
+    // Scalatura per i lotti interni
     const metroSite = this.backendService.sites().find(s => s.type === 'Metro') || this.backendService.sites()[0];
     for (const key of Object.keys(serviceAny)) {
       const prop = serviceAny[key];
@@ -147,7 +127,7 @@ export class SuperAdminRestockSummary implements OnInit {
       }
     }
 
-    // 3. Puliamo il carrello della sede e torniamo alla lista sedi
+    // 3. Svuotamento carrello della sede e ritorno alla lista
     sessionStorage.removeItem(this.getCartStorageKey(this.currentSiteId));
     this.router.navigate(['/s-admin-restock']);
   }

@@ -32,22 +32,23 @@ export class SuperAdminRestoockComponent {
   // Carica le sedi dal MockBackendService calcolando le richieste di riordino associate
   readonly locations = computed<LocationRequest[]>(() => {
     const query = this.searchQuery().toLowerCase().trim();
-
-    // Prendiamo solo le sedi periferiche (EnteDistributore), escludendo la sede centrale "Metro"
+    
     const sites = this.backendService.sites().filter(s => s.type !== 'Metro');
     const approvals = this.backendService.approvals();
     const operators = this.backendService.operators();
 
-    const mappedLocations = sites.map(site => {
-      // 1. Troviamo gli ID degli operatori che lavorano in questa specifica sede
-      const siteOperatorsIds = operators.filter(o => o.siteId === site.id).map(o => o.id);
+    // Leggiamo le richieste evase specificamente per singola sede (formato: "siteId_approvalId")
+    const completedRaw = localStorage.getItem('cri_completed_restocks');
+    const completedKeys: string[] = completedRaw ? JSON.parse(completedRaw) : [];
 
-      // 2. Contiamo le richieste di tipo "Riordino" associate a quegli operatori
-      // (Prendiamo quelle 'In attesa' o 'Approvata' da spedire)
-      const requestsCount = approvals.filter(a =>
-        a.type === 'Riordino' &&
-        (a.status === 'In attesa' || a.status === 'Approvata') &&
-        siteOperatorsIds.includes(a.requestedBy)
+    const mappedLocations = sites.map(site => {
+      const siteOperatorsIds = operators.filter(o => o.siteId === site.id).map(o => o.id);
+      
+      const requestsCount = approvals.filter(a => 
+        a.type === 'Riordino' && 
+        a.status !== 'Rifiutata' && 
+        siteOperatorsIds.includes(a.requestedBy) &&
+        !completedKeys.includes(`${site.id}_${a.id}`)
       ).length;
 
       return {
