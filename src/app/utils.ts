@@ -241,7 +241,8 @@ export interface TrackingNumber {
     quantity: number;
     fromSiteId: string;
     toSiteId: string;
-    status: 'Arrivato' | 'In transito';
+    status: 'Arrivato' | 'In transito' | 'Ricevuto'; // 'Ricevuto' = ricezione confermata (storico)
+    receivedAt?: string;
     items: TrackingItem[]; // prodotti contenuti nel collo
 }
 
@@ -407,6 +408,17 @@ export const SEED_APPROVALS: ApprovalRequest[] = [
         beneficiaryId: '4c3e3adf-b60e-4187-b1f5-4ad73b13dd06',
         extraTokens: 225
     },
+    // 1b. Seconda richiesta di token (per provare sia "Accetta" sia "Rifiuta" nella pagina Richieste dell'Admin)
+    {
+        id: '9d2c1a64-3f0b-4b8e-a1c7-6e5d4f3b2a10',
+        type: 'Token extra',
+        description: '+50% token extra per Pietro Moretti',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-16T10:15:00.000Z',
+        status: 'In attesa',
+        beneficiaryId: '343f5707-a16f-4995-9e40-790e80226260',
+        extraTokens: 125
+    },
     // 2. Richiesta di prodotto singola (un solo prodotto)
     {
         id: '50890db5-6695-4b49-800c-ca17486ca1c8',
@@ -490,7 +502,7 @@ export class MockBackendService {
     private readonly _alerts = signal<DeliveryAlert[]>(this.load('alerts', SEED_ALERTS));
     private readonly _approvals = signal<ApprovalRequest[]>(this.load('approvals_v2', SEED_APPROVALS));
     private readonly _shipments = signal<Shipment[]>(this.load('shipments', SEED_SHIPMENTS));
-    private readonly _trackingNumber = signal<TrackingNumber[]>(this.load('trackingNumber', SEED_TRACKING_NUMBER));
+    private readonly _trackingNumber = signal<TrackingNumber[]>(this.load('trackingNumber_v2', SEED_TRACKING_NUMBER));
     private readonly _duplicateWindowDays = signal<number>(this.load('duplicateWindow', DEFAULT_DUPLICATE_WINDOW_DAYS));
 
     // Stato della sessione
@@ -512,6 +524,8 @@ export class MockBackendService {
     readonly pendingApprovalCount = computed(() => this._approvals().filter(a => a.status === 'In attesa').length);
     readonly shipments = this._shipments.asReadonly();
     readonly trackingNumber = this._trackingNumber.asReadonly();
+    // Colli ancora da ricevere (quelli con ricezione confermata restano nello storico)
+    readonly pendingTrackingNumbers = computed(() => this._trackingNumber().filter(t => t.status !== 'Ricevuto'));
     readonly duplicateWindowDays = this._duplicateWindowDays.asReadonly();
     readonly cart = this._cart.asReadonly();
     readonly lastDelivery = this._lastDelivery.asReadonly();
@@ -547,6 +561,8 @@ export class MockBackendService {
         effect(() => this.save('alerts', this._alerts()));
         effect(() => this.save('approvals_v2', this._approvals()));
         effect(() => this.save('shipments', this._shipments()));
+        // Salva i colli: la ricezione confermata resta anche ricaricando
+        effect(() => this.save('trackingNumber_v2', this._trackingNumber()));
         effect(() => this.save('duplicateWindow', this._duplicateWindowDays()));
         effect(() => this.save('operatorId', this._currentOperatorId()));
         // Salva anche l'inventario delle sedi, così i carichi non si perdono al ricaricamento
@@ -911,24 +927,35 @@ export class MockBackendService {
     /** 4. Metro - S-Admin: Approvazione richieste globali e configurazione di sistema */
     async decideApproval(approvalId: string, status: ApprovalStatus, items?: CartItem[]): Promise<ApprovalRequest> {
         return this.fakeApi(() => {
-            const op = this.requireRole(['S-Admin']);
-            let updatedReq: ApprovalRequest | null = null;
+            // Il Super Admin decide tutto; l'Admin di sede solo le richieste di token extra
+            const op = this.requireRole(['S-Admin', 'Admin']);
+            const target = this._approvals().find(a => a.id === approvalId);
 
-            this._approvals.update(list => list.map(req => {
-                if (req.id === approvalId) {
-                    updatedReq = {
-                        ...req,
-                        status,
-                        ...(items ? { items } : {}), // articoli rimasti dopo eventuali rimozioni
-                        decidedBy: op.id,
-                        decidedAt: this.nowIso()
-                    };
-                    return updatedReq;
-                }
-                return req;
-            }));
+            if (!target) throw new Error('Richiesta di approvazione non trovata');
+            if (op.role === 'Admin' && target.type !== 'Token extra') {
+                throw new Error('Autorizzazione insufficiente per questa operazione');
+            }
+            // Evita di applicare due volte la stessa decisione (es. doppio click)
+            if (target.status !== 'In attesa') throw new Error('Richiesta già gestita');
 
-            if (!updatedReq) throw new Error('Richiesta di approvazione non trovata');
+            const updatedReq: ApprovalRequest = {
+                ...target,
+                status,
+                ...(items ? { items } : {}), // articoli rimasti dopo eventuali rimozioni
+                decidedBy: op.id,
+                decidedAt: this.nowIso()
+            };
+            this._approvals.update(list => list.map(req => req.id === approvalId ? updatedReq : req));
+
+            // Token extra approvati: i token vengono accreditati al beneficiario
+            if (status === 'Approvata' && target.type === 'Token extra' && target.beneficiaryId) {
+                this._beneficiaries.update(list => list.map(b =>
+                    b.id === target.beneficiaryId
+                        ? { ...b, tokens: b.tokens + (target.extraTokens ?? 0), hasTokens: true }
+                        : b
+                ));
+            }
+
             return updatedReq;
         });
     }
@@ -1071,6 +1098,73 @@ export class MockBackendService {
         return { stockValue, expiredValue, totalItems, outgoingItems, expiringItems, requestCount };
     }
 
+    /**
+     * Registra la ricezione di un collo: passa a 'Ricevuto' e sparisce dall'elenco dei colli da ricevere.
+     * Il collo resta nei dati (storico). Lancia un errore se non esiste o è già stato ricevuto.
+     */
+    async confirmTrackingReceipt(trackingId: string): Promise<void> {
+        return this.fakeApi(() => {
+            this.requireLogin();
+            const target = this._trackingNumber().find(t => t.id === trackingId);
+
+            if (!target) throw new Error('Collo non trovato');
+            if (target.status === 'Ricevuto') throw new Error('Collo già ricevuto');
+
+            this._trackingNumber.update(list => list.map(t =>
+                t.id === trackingId ? { ...t, status: 'Ricevuto' as const, receivedAt: this.nowIso() } : t
+            ));
+        });
+    }
+
+    /**
+     * Invia l'ordine dell'Admin al magazzino centrale: crea una richiesta di riordino 'In attesa'
+     * per ogni prodotto (stessa logica delle richieste delle sedi, visibili a Operator e Super Admin).
+     * Tutto o niente: se un prodotto o una quantità non sono validi, non viene creata nessuna richiesta.
+     * NON cambia le giacenze: la merce arriva solo con la ricezione.
+     */
+    async requestReorder(items: { productId: string; quantity: number }[]): Promise<ApprovalRequest[]> {
+        return this.fakeApi(() => {
+            const op = this.requireRole(['User', 'Admin']);
+            if (items.length === 0) throw new Error('L\'ordine è vuoto');
+
+            // map lancia l'errore prima di modificare qualsiasi dato
+            const created: ApprovalRequest[] = items.map(item => {
+                const product = this.getProduct(item.productId);
+                if (!product) throw new Error('Prodotto non trovato');
+                if (!Number.isInteger(item.quantity) || item.quantity <= 0) throw new Error('Quantità non valida');
+
+                return {
+                    id: this.newId(),
+                    type: 'Riordino' as const,
+                    description: `Riordino ${item.quantity} ${product.name}`,
+                    requestedBy: op.id,
+                    date: this.nowIso(),
+                    status: 'In attesa' as const,
+                    siteId: op.siteId, // sede che invia la richiesta
+                    productId: item.productId,
+                    quantity: item.quantity
+                };
+            });
+
+            this._approvals.update(list => [...created, ...list]);
+            return created;
+        });
+    }
+
+    /** Richieste di token extra in attesa per una sede (stessa fonte per Admin, dashboard e Super Admin) */
+    pendingTokenRequestsForSite(siteId: string | undefined): ApprovalRequest[] {
+        if (!siteId) return [];
+        return this._approvals().filter(a => {
+            const requestSiteId = a.siteId ?? this._operators().find(o => o.id === a.requestedBy)?.siteId;
+            return a.type === 'Token extra' && a.status === 'In attesa' && requestSiteId === siteId;
+        });
+    }
+
+    /** Token massimi di un nucleo familiare (adulti e minori) */
+    getMaxTokens(beneficiary: Beneficiary): number {
+        return beneficiary.adults * TOKENS_PER_ADULTI + beneficiary.minors * TOKENS_PER_MINORI;
+    }
+
     // --- RICHIESTE DI RIFORNITURA DELLE SEDI ---
     // Sedi da rifornire (tutte tranne la Metro)
     readonly distributionSites = computed(() => this._sites().filter(s => s.type !== 'Metro'));
@@ -1107,7 +1201,7 @@ export class MockBackendService {
     }
 
     resetDemoData(): void {
-        const keys = ['products_v2', 'beneficiaries', 'deliveries', 'alerts', 'approvals_v2', 'shipments', 'duplicateWindow', 'operatorId', 'inventories_v2'];
+        const keys = ['products_v2', 'beneficiaries', 'deliveries', 'alerts', 'approvals_v2', 'shipments', 'duplicateWindow', 'operatorId', 'inventories_v2', 'trackingNumber_v2'];
         keys.forEach(key => {
             try { localStorage.removeItem(STORAGE_PREFIX + key); } catch { }
         });
@@ -1117,6 +1211,7 @@ export class MockBackendService {
         this._alerts.set(SEED_ALERTS);
         this._approvals.set(SEED_APPROVALS);
         this._shipments.set(SEED_SHIPMENTS);
+        this._trackingNumber.set(SEED_TRACKING_NUMBER);
         this._inventories.set(SEED_INVENTORIES);
         this._duplicateWindowDays.set(DEFAULT_DUPLICATE_WINDOW_DAYS);
         this._currentOperatorId.set(null);

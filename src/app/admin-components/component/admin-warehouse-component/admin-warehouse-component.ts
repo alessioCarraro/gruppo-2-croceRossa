@@ -1,12 +1,17 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
+import { AdminOrderService } from '../../../services/admin-order-service';
+import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
 interface Product {
   id: string;
+  productId: string;
   name: string;
   stock: number;
   expiryDate?: string;
+  expiringSoon: boolean;
   weightInfo: string;
   icon: string;
   addedToOrder: boolean;
@@ -16,58 +21,45 @@ interface Product {
 @Component({
   selector: 'app-admin-warehouse',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationCardComponent],
   templateUrl: './admin-warehouse-component.html',
   styleUrls: ['./admin-warehouse-component.css']
 })
 export class AdminWarehouseComponent {
   private readonly router = inject(Router);
+  private readonly backend = inject(MockBackendService);
+  private readonly order = inject(AdminOrderService);
 
   searchQuery = signal<string>('');
   activeCategory = signal<string>('Tutti');
   categories = ['Tutti', 'Pasta', 'Omogeneizzati', 'Carne'];
-  
-  products = signal<Product[]>([
-    {
-      id: '1',
-      name: 'Pasta di semola 500g',
-      stock: 1200,
-      expiryDate: '15/05/2026',
-      weightInfo: '20 T',
-      icon: 'bag',
-      addedToOrder: true,
-      category: 'Pasta'
-    },
-    {
-      id: '2',
-      name: 'Pasta integrale 500g',
-      stock: 58,
-      expiryDate: '02/11/2025',
-      weightInfo: '22 T',
-      icon: 'bag',
-      addedToOrder: true,
-      category: 'Pasta'
-    },
-    {
-      id: '3',
-      name: 'Petto di pollo 1kg',
-      stock: 26,
-      expiryDate: '30/10/2025',
-      weightInfo: '40 T',
-      icon: 'meat',
-      addedToOrder: false,
-      category: 'Carne'
-    },
-    {
-      id: '4',
-      name: 'Omogeneizzato carne',
-      stock: 0,
-      weightInfo: '30 T',
-      icon: 'jar',
-      addedToOrder: false,
-      category: 'Omogeneizzati'
-    }
-  ]);
+
+  /**
+   * Prodotti del magazzino dell'Admin: inventario della sua sede dal servizio condiviso
+   * (stessi dati di Operator e Super Admin). Si aggiorna da solo quando cambiano le giacenze.
+   */
+  products = computed<Product[]>(() => {
+    const siteId = this.backend.currentSite()?.id;
+
+    return this.backend.inventories()
+      .filter(inv => inv.siteId === siteId)
+      .map(inv => {
+        const product = this.backend.getProduct(inv.productId);
+        const [year, month, day] = inv.expiry.split('-');
+        return {
+          id: `${inv.productId}|${inv.expiry}`,
+          productId: inv.productId,
+          name: product?.name ?? inv.productName,
+          stock: inv.stock,
+          expiryDate: `${day}/${month}/${year}`,
+          expiringSoon: inv.isExpiringSoon,
+          weightInfo: `${product?.price ?? 0} T`,
+          icon: product?.iconType ?? 'bag',
+          addedToOrder: this.order.has(inv.productId),
+          category: product?.category ?? 'Altro'
+        };
+      });
+  });
 
   filteredProducts = computed(() => {
     const category = this.activeCategory();
@@ -80,7 +72,8 @@ export class AdminWarehouseComponent {
     });
   });
 
-  // Somma numerica dello stock totale
+  // Totale articoli: somma delle giacenze di TUTTI i prodotti del magazzino
+  // (non dipende da ricerca o filtri; 0 se il magazzino è vuoto)
   readonly totalArticles = computed(() => {
     return this.products().reduce((total, product) => total + product.stock, 0);
   });
@@ -90,19 +83,22 @@ export class AdminWarehouseComponent {
     return new Intl.NumberFormat('it-IT').format(this.totalArticles());
   });
 
-  // Calcolo dei prodotti aggiunti all'ordine (riflette il badge blu sullo scontrino)
-  readonly orderCount = computed(() => {
-    return this.products().filter(product => product.addedToOrder).length;
-  });
+  // Prodotti nell'ordine (badge blu sullo scontrino): bozza condivisa con la pagina Ordine
+  readonly orderCount = this.order.count;
 
   setCategory(category: string): void {
     this.activeCategory.set(category);
   }
 
-  addToOrder(productId: string): void {
-    this.products.update(products => 
-      products.map(product => product.id === productId ? { ...product, addedToOrder: true } : product)
-    );
+  // Aggiunge il prodotto alla bozza dell'ordine al magazzino centrale
+  addToOrder(product: Product): void {
+    this.order.add({
+      productId: product.productId,
+      name: product.name,
+      description: product.stock > 0 ? `Giacenza ${product.stock} · ${this.backend.currentSite()?.name ?? 'sede'}` : 'Esaurito',
+      // Quantità iniziale: la scorta minima del prodotto (modificabile nella pagina Ordine)
+      quantity: Math.max(1, this.backend.getProduct(product.productId)?.minStock ?? 10)
+    });
   }
 
   goBack(): void {

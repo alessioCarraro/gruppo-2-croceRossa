@@ -1,4 +1,7 @@
 <div class="app-container">
+
+  <!-- Banner di conferma / errore (sparisce da solo) -->
+  <app-notification-card />
   
   <!-- Header Fisso -->
   <header class="app-header">
@@ -68,15 +71,17 @@
 
             <!-- Card Actions -->
             <div class="action-buttons">
-              <button class="btn btn-primary" (click)="acceptRequest(req.id, req.tokensToGrant)">
+              <button class="btn btn-primary" [disabled]="isProcessing(req.id)" (click)="acceptRequest(req.id, req.tokensToGrant)">
                 Accetta (+{{ req.tokensToGrant }})
               </button>
-              <button class="btn btn-outline-danger" (click)="rejectRequest(req.id)">
+              <button class="btn btn-outline-danger" [disabled]="isProcessing(req.id)" (click)="rejectRequest(req.id)">
                 Rifiuta
               </button>
             </div>
 
           </article>
+        } @empty {
+          <p class="empty-text">Nessuna richiesta da gestire</p>
         }
       </div>
     </section>

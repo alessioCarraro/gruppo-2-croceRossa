@@ -1,4 +1,6 @@
 <main class="app-container">
+    <!-- Banner di conferma / errore (sparisce da solo) -->
+    <app-notification-card />
 
     <header class="header">
         <button class="icon-button back-btn" aria-label="Indietro" (click)="goBack()">
@@ -46,6 +48,8 @@
             </svg>
 
         </article>
+        } @empty {
+        <p class="empty-text">Nessun collo da ricevere</p>
         }
     </div>
 

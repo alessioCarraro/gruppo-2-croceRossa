@@ -1,4 +1,6 @@
 <main class="app-container">
+  <!-- Banner di errore (sparisce da solo) -->
+  <app-notification-card />
   
   <header class="header">
     <div class="header-left">
@@ -27,14 +29,20 @@
 
     @if (hasProducts()) {
       <section class="products-card">
-        @for (product of products(); track product.id; let isLast = $last) {
+        @for (product of products(); track product.productId; let isLast = $last) {
           <div class="product-item" [class.border-bottom]="!isLast">
             <div class="product-info">
               <h4 class="product-name">{{ product.name }}</h4>
               <p class="product-desc">{{ product.description }}</p>
             </div>
-            <!-- FIX 1: Pulsante X per rimuovere il prodotto -->
-            <button class="remove-btn" aria-label="Rimuovi prodotto" (click)="removeProduct(product.id)">
+            <!-- Quantità da ordinare -->
+            <div class="qty-selector">
+              <button type="button" class="qty-btn" aria-label="Riduci quantità" (click)="changeQuantity(product.productId, product.quantity - 1)">&minus;</button>
+              <span class="qty-value">{{ product.quantity }}</span>
+              <button type="button" class="qty-btn" aria-label="Aumenta quantità" (click)="changeQuantity(product.productId, product.quantity + 1)">+</button>
+            </div>
+            <!-- Pulsante X per rimuovere il prodotto -->
+            <button class="remove-btn" aria-label="Rimuovi prodotto" (click)="removeProduct(product.productId)">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -52,7 +60,7 @@
   </div>
 
   <footer class="footer">
-    <button class="primary-btn" (click)="submitOrder()" [disabled]="!hasProducts()">
+    <button class="primary-btn" (click)="submitOrder()" [disabled]="!hasProducts() || isSubmitting()">
       Invia ordine al magazzino centrale
     </button>
   </footer>

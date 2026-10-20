@@ -1,4 +1,7 @@
 <main class="magazzino-container">
+
+  <!-- Banner (es. "Ordine inviato"): sparisce da solo -->
+  <app-notification-card />
   
   <!-- Header con Back, Titolo, e Azioni a destra -->
   <header class="header">
@@ -83,7 +86,7 @@
             @if (product.stock > 0) {
               <span class="stock">Stock <strong>{{ product.stock }}</strong></span>
               <span class="separator">·</span>
-              <span class="expiry">scad <strong [class.warning]="product.expiryDate?.includes('2025')">{{ product.expiryDate }}</strong></span>
+              <span class="expiry">scad <strong [class.warning]="product.expiringSoon">{{ product.expiryDate }}</strong></span>
             } @else {
               <span class="out-of-stock">Esaurito</span>
             }
@@ -101,7 +104,7 @@
               In ordine
             </div>
           } @else {
-            <button class="restock-btn" (click)="addToOrder(product.id)">Ordina</button>
+            <button class="restock-btn" (click)="addToOrder(product)">Ordina</button>
           }
         </div>
       </div>

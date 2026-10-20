@@ -22,6 +22,16 @@ export class AdminHomeComponent {
 
     readonly userName = computed(() => this.currentUser()?.firstName ?? 'Ospite');
     readonly storeName = computed(() => this.currentSite()?.name ?? 'Sede non specificata');
+    // Richieste da gestire: stesso elenco della pagina Richieste (token extra in attesa nella sede)
+    readonly pendingRequests = computed(() =>
+        this.backend.pendingTokenRequestsForSite(this.currentSite()?.id).length
+    );
+    readonly pendingRequestsLabel = computed(() => {
+        const n = this.pendingRequests();
+        if (n === 0) return 'Nessuna richiesta da gestire';
+        return n === 1 ? '1 richiesta di token extra' : `${n} richieste di token extra`;
+    });
+
     // Gestione dello stato tramite Signals
     readonly searchQuery = signal(''); // Signal per la barra di ricerca
 

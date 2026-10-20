@@ -379,3 +379,14 @@
 .icon-check {
   color: #31708F;
 }
+.empty-text {
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -40,9 +40,11 @@
                 </div>
                 <div class="card-content">
                     <h3>Richieste da approvare</h3>
-                    <p>2 token extra · 1 prodotto esaurito</p>
+                    <p>{{ pendingRequestsLabel() }}</p>
                 </div>
-                <div class="badge-notification">3</div>
+                @if (pendingRequests() > 0) {
+                <div class="badge-notification">{{ pendingRequests() }}</div>
+                }
             </div>
         </section>
 

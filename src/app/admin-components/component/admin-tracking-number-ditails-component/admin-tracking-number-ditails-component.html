@@ -1,4 +1,6 @@
 <main class="app-container">
+    <!-- Banner di errore (sparisce da solo) -->
+    <app-notification-card />
 
     <!-- Header -->
     <header class="header">
@@ -59,12 +61,12 @@
 
     <!-- Sticky Footer Action -->
     <footer class="bottom-action-bar">
-        <button class="primary-btn" (click)="confirmReceipt()">
+        <button class="primary-btn" [disabled]="isSubmitting() || alreadyReceived()" (click)="confirmReceipt()">
             <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
-            Conferma avvenuta ricezione
+            {{ alreadyReceived() ? 'Ricezione già confermata' : 'Conferma avvenuta ricezione' }}
         </button>
     </footer>
 
