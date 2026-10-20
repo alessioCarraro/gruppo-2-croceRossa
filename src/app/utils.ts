@@ -91,6 +91,25 @@ export interface MetroStockItem {
     isExpiringSoon: boolean;
 }
 
+/** Statistiche di una sede (o di tutte le sedi): stessi criteri per Super Admin e Operator */
+export interface SiteStats {
+    stockValue: number;     // valore delle giacenze (quantità × prezzo in token)
+    expiredValue: number;   // valore dei prodotti scaduti
+    totalItems: number;     // somma delle quantità in magazzino
+    outgoingItems: number;  // pezzi in uscita (spedizioni non ancora arrivate)
+    expiringItems: number;  // quantità di articoli in scadenza (somma delle giacenze)
+    requestCount: number;   // richieste di riordino ancora da gestire
+}
+
+/** Articolo in scadenza di una sede (usato dalla pagina "Prossimi a scadenza") */
+export interface ExpiringStockItem {
+    productId: string;
+    name: string;
+    siteName: string;
+    stock: number;
+    expiry: string; // 'YYYY-MM-DD'
+}
+
 export interface StoreAvailabilityResult {
     siteId: string;
     siteName: string;
@@ -277,6 +296,25 @@ export const SEED_PRODUCTS: Product[] = [
     },
     {
         id: 'edff434d-ceab-490a-9bba-b47366139ce2', name: 'Pasta integrale 500g', category: 'Pasta', unit: 'Pacco', icon: 'bag', stock: 58,
+<<<<<<< HEAD
+        minStock: 60, isOutOfStock: false, price: 22, expiry: '2026-10-25', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 3,
+        iconType: 'bag'
+    },
+    {
+        id: '4396be27-f626-4032-8db2-18cbbb56d26a', name: 'Passata di pomodoro 700g', category: 'Verdura', unit: 'Scatola', icon: 'bottle', stock: 300,
+        minStock: 40, isOutOfStock: false, price: 15, expiry: '2026-10-28', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 4,
+        iconType: 'bag'
+    },
+    {
+        id: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', name: 'Petto di pollo 1kg', category: 'Carne', unit: 'Kg', icon: 'meat', stock: 25,
+        minStock: 30, isOutOfStock: false, price: 40, expiry: '2026-11-02', isExpiringSoon: true, isExpired: false, maxPerBeneficiary: 2,
+        iconType: 'meat'
+    },
+    {
+        id: '61321c12-9f01-4493-95f6-e7406296257b', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0,
+        minStock: 20, isOutOfStock: true, price: 12, expiry: '2026-10-12', isExpiringSoon: false, isExpired: true, maxPerBeneficiary: 6,
+        iconType: 'jar'
+=======
         minStock: 60, isOutOfStock: false, price: 22, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false, maxPerBeneficiary: 3,
         lot: 'C-9013', iconType: 'bag'
     },
@@ -294,30 +332,31 @@ export const SEED_PRODUCTS: Product[] = [
         id: '61321c12-9f01-4493-95f6-e7406296257b', name: 'Omogeneizzato carne', category: 'Omogeneizzati', unit: 'Scatola', icon: 'bottle', stock: 0,
         minStock: 20, isOutOfStock: true, price: 12, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true, maxPerBeneficiary: 6,
         lot: 'C-9014', iconType: 'jar'
+>>>>>>> 084ef8cb19854f3244d1658ba86675913c899a0a
     },
 ];
 
 export const SEED_INVENTORIES: SiteInventory[] = [
     // Sede Legnano
     { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: '4b45aa99-76d8-4eb9-acbc-87e300c197f0', productName: 'Pasta penne', weight: '500g', stock: 120, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false },
-    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: 'edff434d-ceab-490a-9bba-b47366139ce2', productName: 'Pasta spaghetti', weight: '500g', stock: 18, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false },
-    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: '4396be27-f626-4032-8db2-18cbbb56d26a', productName: 'Petto di pollo', weight: '450g', stock: 1, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false },
-    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 4, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false },
-    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: '61321c12-9f01-4493-95f6-e7406296257b', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true },
+    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: 'edff434d-ceab-490a-9bba-b47366139ce2', productName: 'Pasta spaghetti', weight: '500g', stock: 18, expiry: '2026-10-26', isExpiringSoon: true, isExpired: false },
+    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: '4396be27-f626-4032-8db2-18cbbb56d26a', productName: 'Petto di pollo', weight: '450g', stock: 1, expiry: '2026-10-30', isExpiringSoon: true, isExpired: false },
+    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 4, expiry: '2026-11-01', isExpiringSoon: true, isExpired: false },
+    { siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44', productId: '61321c12-9f01-4493-95f6-e7406296257b', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2026-10-14', isExpiringSoon: false, isExpired: true },
 
     // Sede Busto Arsizio
     { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: '4b45aa99-76d8-4eb9-acbc-87e300c197f0', productName: 'Pasta penne', weight: '500g', stock: 100, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false },
-    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: 'edff434d-ceab-490a-9bba-b47366139ce2', productName: 'Pasta spaghetti', weight: '500g', stock: 20, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false },
-    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: '4396be27-f626-4032-8db2-18cbbb56d26a', productName: 'Petto di pollo', weight: '450g', stock: 1, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false },
-    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 25, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false },
-    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: '61321c12-9f01-4493-95f6-e7406296257b', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true },
+    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: 'edff434d-ceab-490a-9bba-b47366139ce2', productName: 'Pasta spaghetti', weight: '500g', stock: 20, expiry: '2026-10-27', isExpiringSoon: true, isExpired: false },
+    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: '4396be27-f626-4032-8db2-18cbbb56d26a', productName: 'Petto di pollo', weight: '450g', stock: 1, expiry: '2026-10-29', isExpiringSoon: true, isExpired: false },
+    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 25, expiry: '2026-11-02', isExpiringSoon: true, isExpired: false },
+    { siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f', productId: '61321c12-9f01-4493-95f6-e7406296257b', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2026-10-15', isExpiringSoon: false, isExpired: true },
 
     // Metro
     { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: '4b45aa99-76d8-4eb9-acbc-87e300c197f0', productName: 'Pasta penne', weight: '500g', stock: 420, expiry: '2027-05-15', isExpiringSoon: false, isExpired: false },
-    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: 'edff434d-ceab-490a-9bba-b47366139ce2', productName: 'Pasta spaghetti', weight: '500g', stock: 58, expiry: '2026-10-25', isExpiringSoon: false, isExpired: false },
-    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: '4396be27-f626-4032-8db2-18cbbb56d26a', productName: 'Petto di pollo', weight: '450g', stock: 5, expiry: '2027-08-20', isExpiringSoon: true, isExpired: false },
-    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 25, expiry: '2026-10-20', isExpiringSoon: true, isExpired: false },
-    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: '61321c12-9f01-4493-95f6-e7406296257b', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2027-01-10', isExpiringSoon: false, isExpired: true },
+    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: 'edff434d-ceab-490a-9bba-b47366139ce2', productName: 'Pasta spaghetti', weight: '500g', stock: 58, expiry: '2026-10-25', isExpiringSoon: true, isExpired: false },
+    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: '4396be27-f626-4032-8db2-18cbbb56d26a', productName: 'Petto di pollo', weight: '450g', stock: 5, expiry: '2026-10-28', isExpiringSoon: true, isExpired: false },
+    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', productName: 'Biscotti Galleltti', weight: '1Kg', stock: 25, expiry: '2026-11-02', isExpiringSoon: true, isExpired: false },
+    { siteId: '96996a93-e59e-4fc6-91f3-99972fd6d977', productId: '61321c12-9f01-4493-95f6-e7406296257b', productName: 'Risco Basmati', weight: '500g', stock: 2, expiry: '2026-10-12', isExpiringSoon: false, isExpired: true },
 ];
 
 export const SEED_BENEFICIARIES: Beneficiary[] = [
@@ -447,7 +486,7 @@ export class MockBackendService {
     // Stato privato basato su Signals e localStorage
     private readonly _sites = signal<Site[]>(SEED_SITES);
     private readonly _operators = signal<Operator[]>(SEED_OPERATORS);
-    private readonly _products = signal<Product[]>(this.load('products', SEED_PRODUCTS));
+    private readonly _products = signal<Product[]>(this.load('products_v2', SEED_PRODUCTS));
     private readonly _beneficiaries = signal<Beneficiary[]>(this.load('beneficiaries', SEED_BENEFICIARIES));
     private readonly _deliveries = signal<Delivery[]>(this.load('deliveries', SEED_DELIVERIES));
     private readonly _alerts = signal<DeliveryAlert[]>(this.load('alerts', SEED_ALERTS));
@@ -504,7 +543,7 @@ export class MockBackendService {
 
     // Salvataggio automatico nel localStorage tramite effect
     constructor() {
-        effect(() => this.save('products', this._products()));
+        effect(() => this.save('products_v2', this._products()));
         effect(() => this.save('beneficiaries', this._beneficiaries()));
         effect(() => this.save('deliveries', this._deliveries()));
         effect(() => this.save('alerts', this._alerts()));
@@ -513,7 +552,7 @@ export class MockBackendService {
         effect(() => this.save('duplicateWindow', this._duplicateWindowDays()));
         effect(() => this.save('operatorId', this._currentOperatorId()));
         // Salva anche l'inventario delle sedi, così i carichi non si perdono al ricaricamento
-        effect(() => this.save('inventories', this._inventories()));
+        effect(() => this.save('inventories_v2', this._inventories()));
     }
 
     // --- HELPER DI UTILITÀ GENERALE ---
@@ -996,6 +1035,44 @@ export class MockBackendService {
         );
     }
 
+    /**
+     * Statistiche di una sede, oppure di tutte le sedi (siteId = null).
+     * È l'UNICA funzione usata dalle dashboard di Super Admin e Operator: stessi dati, stessi criteri.
+     * Legge solo i dati condivisi (non li modifica), quindi si aggiorna da sola in un computed.
+     *
+     * Criteri:
+     * - ogni record di inventario (sede + prodotto) è contato una sola volta;
+     * - valore = giacenza × prezzo del prodotto; "scaduto" e "in scadenza" seguono i flag dell'inventario;
+     * - "in scadenza" = somma delle quantità in scadenza (lo stesso totale della pagina Prossimi a scadenza);
+     * - in uscita = pezzi delle spedizioni partite dalla sede e non ancora 'Arrivato';
+     * - richieste = numero di richieste di riordino 'In attesa' (non il numero di articoli).
+     */
+    siteStats(siteId: string | null): SiteStats {
+        const products = this._products();
+        const inventories = this._inventories().filter(inv => !siteId || inv.siteId === siteId);
+
+        let stockValue = 0;
+        let expiredValue = 0;
+        let totalItems = 0;
+        let expiringItems = 0;
+
+        for (const inv of inventories) {
+            const price = products.find(p => p.id === inv.productId)?.price ?? 0;
+            stockValue += inv.stock * price;
+            totalItems += inv.stock;
+            if (inv.isExpiringSoon) expiringItems += inv.stock;
+            if (inv.isExpired) expiredValue += inv.stock * price;
+        }
+
+        const outgoingItems = this._shipments()
+            .filter(sh => sh.status !== 'Arrivato' && (!siteId || sh.fromSiteId === siteId))
+            .reduce((sum, sh) => sum + sh.items.reduce((q, i) => q + i.quantity, 0), 0);
+
+        const requestCount = siteId ? this.restockRequestCount(siteId) : this.totalRestockRequestCount();
+
+        return { stockValue, expiredValue, totalItems, outgoingItems, expiringItems, requestCount };
+    }
+
     // --- RICHIESTE DI RIFORNITURA DELLE SEDI ---
     // Sedi da rifornire (tutte tranne la Metro)
     readonly distributionSites = computed(() => this._sites().filter(s => s.type !== 'Metro'));
@@ -1032,7 +1109,7 @@ export class MockBackendService {
     }
 
     resetDemoData(): void {
-        const keys = ['products', 'beneficiaries', 'deliveries', 'alerts', 'approvals_v2', 'shipments', 'duplicateWindow', 'operatorId', 'inventories'];
+        const keys = ['products_v2', 'beneficiaries', 'deliveries', 'alerts', 'approvals_v2', 'shipments', 'duplicateWindow', 'operatorId', 'inventories_v2'];
         keys.forEach(key => {
             try { localStorage.removeItem(STORAGE_PREFIX + key); } catch { }
         });
@@ -1051,7 +1128,7 @@ export class MockBackendService {
     }
     //AVAILABILITY EACH STORE
 
-    private readonly _inventories = signal<SiteInventory[]>(this.load('inventories', SEED_INVENTORIES));
+    private readonly _inventories = signal<SiteInventory[]>(this.load('inventories_v2', SEED_INVENTORIES));
     readonly inventories = this._inventories.asReadonly();
 
     // --- GIACENZE DELLA METRO (fonte unica per Super Admin e Operator) ---
@@ -1079,15 +1156,22 @@ export class MockBackendService {
     // Somma delle giacenze di tutti i prodotti della metro (0 se vuota)
     readonly metroTotalStock = computed(() => this.metroStock().reduce((sum, i) => sum + i.stock, 0));
 
-    // Prodotti della metro in scadenza
-    readonly expiringMetroStock = computed(() => this.metroStock().filter(i => i.isExpiringSoon));
+    /**
+     * Articoli in scadenza di una sede, oppure di tutte le sedi (siteId = null).
+     * Stessi record e stesso criterio (flag isExpiringSoon) usati dal conteggio delle dashboard.
+     */
+    expiringStock(siteId: string | null): ExpiringStockItem[] {
+        return this._inventories()
+            .filter(inv => inv.isExpiringSoon && (!siteId || inv.siteId === siteId))
+            .map(inv => ({
+                productId: inv.productId,
+                name: this._products().find(p => p.id === inv.productId)?.name ?? inv.productName,
+                siteName: this.getSiteName(inv.siteId),
+                stock: inv.stock,
+                expiry: inv.expiry
+            }));
+    }
 
-    // Pezzi in uscita dalla metro: spedizioni non ancora arrivate
-    readonly outgoingShipmentQuantity = computed(() =>
-        this._shipments()
-            .filter(sh => sh.status !== 'Arrivato')
-            .reduce((sum, sh) => sum + sh.items.reduce((q, i) => q + i.quantity, 0), 0)
-    );
 
 
     searchInventoryProducts(query: string): { productId: string; productName: string }[] {

@@ -1,0 +1,5 @@
+/* Evita lo scorrimento orizzontale della pagina */
+html, body {
+  margin: 0;
+  overflow-x: hidden;
+}

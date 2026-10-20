@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MockBackendService } from '../../../utils';
 
 interface ScadenzaProdotto {
@@ -21,27 +21,41 @@ interface ScadenzaProdotto {
 })
 export class SuperAdminExpiringProductsComponent {
   private readonly router = inject(Router);
-  private readonly backendService: MockBackendService = inject(MockBackendService);
+  private readonly route = inject(ActivatedRoute);
+  protected readonly backendService: MockBackendService = inject(MockBackendService);
 
-  // Prodotti in scadenza dalle giacenze della metro (stessa fonte dell'Operator)
-  readonly prodotti = computed<ScadenzaProdotto[]>(() =>
-    this.backendService.expiringMetroStock().map(p => {
+  /**
+   * Sede di cui mostrare le scadenze: arriva dalla dashboard (?siteId=...).
+   * Senza sede mostra tutte le sedi. L'Operator la sostituisce con la metro.
+   */
+  protected getSiteId(): string | null {
+    return this.route.snapshot.queryParamMap.get('siteId');
+  }
+
+  // Articoli in scadenza: stessi dati e stesso criterio del conteggio nelle dashboard
+  readonly prodotti = computed<ScadenzaProdotto[]>(() => {
+    const siteId = this.getSiteId();
+
+    return this.backendService.expiringStock(siteId).map(p => {
       // Formatta la data da YYYY-MM-DD a DD/MM/YYYY
       const dateParts = p.expiry.split('-');
       const formattedDate = dateParts.length === 3
         ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
         : p.expiry;
 
+      // Codice lotto coerente con l'id; con tutte le sedi si indica anche la sede
+      const lotto = 'L-' + p.productId.slice(0, 4).toUpperCase();
+
       return {
-        id: p.productId,
+        id: p.productId + p.siteName,
         nome: p.name,
-        lotto: 'L-' + p.productId.slice(0, 4).toUpperCase(), // codice lotto coerente con l'id
+        lotto: siteId ? lotto : `${p.siteName} · ${lotto}`,
         quantita: p.stock,
         dataScadenza: formattedDate,
         urgente: true // Tutti quelli che arrivano qui sono in scadenza
       };
-    })
-  );
+    });
+  });
 
   // Somma totale delle quantità degli articoli in scadenza
   readonly totalItems = computed(() => 

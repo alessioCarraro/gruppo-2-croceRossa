@@ -22,6 +22,8 @@ interface MetricCard {
   label: string;
   colorClass: 'blue' | 'green' | 'black' | 'red' | 'orange';
   actionLabel?: string;
+  route?: string; // pagina aperta dal link della card
+  queryParams?: Record<string, string>; // parametri passati alla pagina (es. la sede selezionata)
 }
 
 interface ControlItem {
@@ -72,53 +74,36 @@ export class SuperAdminDashboardComponent {
   readonly selectedLocation = signal<string>('Tutte le sedi');
   readonly isDropdownOpen = signal<boolean>(false);
 
+  // Sede selezionata (null = "Tutte le sedi")
+  private readonly selectedSiteId = computed<string | null>(() => {
+    const name = this.selectedLocation();
+    if (name === 'Tutte le sedi') return null;
+    return this.backendService.sites().find(s => s.name === name)?.id ?? null;
+  });
+
   // 2. METRICHE FILTRATE PER SEDE
+  // Tutti i valori arrivano da MockBackendService.siteStats(): la stessa funzione usata dall'Operator.
+  // Con "Tutte le sedi" sono i totali; con una sede sono solo i valori di quella sede (0 se non ha dati).
+  // Il computed si ricalcola da solo quando cambia la sede o cambiano i dati condivisi.
   readonly metrics = computed<MetricCard[]>(() => {
-    const products = this.backendService.products();
-    let inventories = this.backendService.inventories();
+    const stats = this.backendService.siteStats(this.selectedSiteId());
+    const euro = (value: number) => `€${value.toLocaleString('it-IT')}`;
 
-    const currentLocationName = this.selectedLocation();
-    const sites = this.backendService.sites();
+    // La pagina delle scadenze mostra la stessa sede selezionata qui
+    const siteId = this.selectedSiteId();
+    const siteParams = siteId ? { siteId } : undefined;
 
-    if (currentLocationName !== 'Tutte le sedi') {
-      const selectedSite = sites.find(s => s.name === currentLocationName);
-      if (selectedSite) {
-        inventories = inventories.filter(inv => inv.siteId === selectedSite.id);
-      }
-    }
-
-    let totalValue = 0;
-    inventories.forEach(inv => {
-      const prod = products.find(p => p.id === inv.productId);
-      if (prod) totalValue += inv.stock * prod.price;
-    });
-
-    // Conteggio dei prodotti unici presenti
-    const catalogCount = products.length;
-
-    // Set di prodotti unici in scadenza (per evitare di contare più volte lo stesso prodotto se ha più lotti)
-    const expiringProductIds = new Set<string>();
-    let expiredValue = 0;
-
-    inventories.forEach(inv => {
-      const prod = products.find(p => p.id === inv.productId);
-      if (prod) {
-        if (inv.isExpiringSoon) {
-          expiringProductIds.add(inv.productId);
-        }
-        if (inv.isExpired) {
-          expiredValue += inv.stock * prod.price;
-        }
-      }
-    });
-
-    const expiringCount = expiringProductIds.size;
-
+    // Ordine: 3 righe da 2 card
     return [
-      { id: '1', value: `€${totalValue.toLocaleString('it-IT')}`, label: 'Valore giacenze', colorClass: 'black' },
-      { id: '2', value: catalogCount.toString(), label: 'Articoli presenti', colorClass: 'black' },
-      { id: '3', value: expiringCount.toString(), label: 'Articoli in scadenza', colorClass: 'orange', actionLabel: 'visualizza articoli' },
-      { id: '4', value: `€${expiredValue.toLocaleString('it-IT')}`, label: 'Valore prodotti scaduti', colorClass: 'red' }
+      // Riga 1
+      { id: 'stock-value', value: euro(stats.stockValue), label: 'Valore giacenze', colorClass: 'black' },
+      { id: 'expired-value', value: euro(stats.expiredValue), label: 'Valore prodotti scaduti', colorClass: 'red' },
+      // Riga 2
+      { id: 'total-items', value: stats.totalItems.toLocaleString('it-IT'), label: 'Articoli in magazzino', colorClass: 'black' },
+      { id: 'outgoing-items', value: stats.outgoingItems.toLocaleString('it-IT'), label: 'Articoli in uscita', colorClass: 'black' },
+      // Riga 3
+      { id: 'expiring-items', value: stats.expiringItems.toString(), label: 'Articoli in scadenza', colorClass: 'orange', actionLabel: 'visualizza articoli', route: '/s-admin-expiring-products', queryParams: siteParams },
+      { id: 'requests', value: stats.requestCount.toString(), label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'gestisci', route: '/s-admin-restock' }
     ];
   });
 
@@ -175,9 +160,10 @@ export class SuperAdminDashboardComponent {
     }
   }
 
-  onMetricAction(metricId: string): void {
-    if (metricId === '3') {
-      this.router.navigate(['/s-admin-expiring-products']);
+  // Apre la pagina collegata alla card (se c'è)
+  onMetricAction(route?: string, queryParams?: Record<string, string>): void {
+    if (route) {
+      this.router.navigate([route], { queryParams });
     }
   }
 
@@ -185,14 +171,13 @@ export class SuperAdminDashboardComponent {
   readonly searchQuery = signal<string>('');
 
   /**
-   * Risultati della ricerca: prodotti del catalogo/magazzino il cui nome contiene il testo scritto.
-   * Si aggiornano mentre si scrive; senza testo la lista è vuota.
+   * Risultati della ricerca: prodotti della metro il cui nome contiene il testo scritto
+   * (stessa fonte dell'Operator). Si aggiornano mentre si scrive; senza testo la lista è vuota.
    */
   readonly searchResults = computed<ProductSearchResult[]>(() => {
     const query = this.searchQuery().toLowerCase().trim();
     if (!query) return [];
 
-    // Stessa fonte dell'Operator: giacenze della metro
     return this.backendService.metroStock()
       .filter(p => p.name.toLowerCase().includes(query))
       .map(p => ({ id: p.productId, name: p.name, category: p.category, stock: p.stock }));

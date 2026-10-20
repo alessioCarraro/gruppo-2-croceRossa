@@ -8,14 +8,14 @@
 
 :host {
   display: block;
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   height: 100dvh;
   background-color: #fcf9f2;

@@ -1,6 +1,6 @@
 :host {
   display: block;
-  width: 100vw;
+  width: 100%;
   height: 100dvh;
   background-color: #fbfaf8; /* Sfondo generale più caldo come da mockup */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
