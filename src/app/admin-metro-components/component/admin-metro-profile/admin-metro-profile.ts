@@ -1,5 +1,6 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { MockBackendService } from '../../../utils';
 
 // ... (Interfacce invariate)
 interface UserData { initials: string; name: string; }
@@ -16,18 +17,28 @@ interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 
 export class AdminMetroProfileComponent {
   // Uso del servizio Location per gestire il pulsante "Indietro" nativo
   private readonly location = inject(Location);
+  // Sessione di login: contiene l'utente che ha effettuato l'accesso
+  private readonly backend = inject(MockBackendService);
 
-  readonly user = signal<UserData>({
-    initials: 'GF',
-    name: 'Giulia Ferri',
+  // Dati dell'utente realmente loggato (nessun dato di esempio)
+  readonly user = computed<UserData>(() => {
+    const operator = this.backend.currentOperator();
+    if (!operator) return { initials: '?', name: '' };
+
+    return {
+      initials: `${operator.firstName.charAt(0)}${operator.lastName.charAt(0)}`.toUpperCase(),
+      name: `${operator.firstName} ${operator.lastName}`
+    };
   });
 
-  readonly infoItems = signal<InfoItem[]>([
-    { id: 'role', label: 'Ruolo', value: 'Admin' },
-    { id: 'location', label: 'Sede', value: 'Magazzino Centrale' },
-    { id: 'email', label: 'Email', value: 'g.ferri@foodnetwork.it', isMonospace: true },
-    { id: 'phone', label: 'Telefono', value: '+39 340 9988776', isMonospace: true }
-  ]);
+  readonly infoItems = computed<InfoItem[]>(() => {
+    const operator = this.backend.currentOperator();
+    return [
+      { id: 'role', label: 'Ruolo', value: operator?.role ?? '-' },
+      { id: 'location', label: 'Sede', value: this.backend.currentSite()?.name ?? '-' },
+      { id: 'email', label: 'Email', value: operator?.email ?? '-', isMonospace: true }
+    ];
+  });
 
   readonly navItems = signal<NavItem[]>([
     { id: 'home', label: 'Home', iconName: 'home', isActive: false },

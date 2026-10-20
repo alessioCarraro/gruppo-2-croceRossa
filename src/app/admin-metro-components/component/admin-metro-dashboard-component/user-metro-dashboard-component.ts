@@ -1,6 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MockBackendService } from '../../../utils';
+
+interface ProductSearchResult { id: string; name: string; stock: number; }
 
 interface UserProfile { name: string; role: string; }
 interface MetricCard { id: string; value: string; label: string; colorClass: 'blue' | 'green' | 'black' | 'red'; actionLabel?: string; route?: string; }
@@ -16,20 +19,54 @@ interface NavItem { id: string; label: string; iconName: 'home' | 'inventory' | 
 })
 export class UserMetroDashboardComponent {
   private readonly router = inject(Router);
+  private readonly backend = inject(MockBackendService);
 
   private readonly activeTab = signal<string>('home');
   
-  readonly user = signal<UserProfile>({
-    name: 'Giulia Russo',
-    role: 'Magazzino'
+  // Nome dell'utente realmente loggato (dalla sessione del MockBackendService)
+  readonly user = computed<UserProfile>(() => {
+    const operator = this.backend.currentOperator();
+    return {
+      name: operator ? `${operator.firstName} ${operator.lastName}` : '',
+      role: operator?.role ?? ''
+    };
   });
 
-  readonly metrics = signal<MetricCard[]>([
+  // "computed": la card delle richieste si aggiorna da sola quando cambiano le richieste
+  readonly metrics = computed<MetricCard[]>(() => [
     { id: '1', value: '38.4k', label: 'Articoli in magazzino', colorClass: 'black' },
     { id: '2', value: '15', label: 'Articoli in uscita', colorClass: 'black' },
     { id: '3', value: '8', label: 'Articoli in scadenza', colorClass: 'red', actionLabel: 'Visualizza', route: '/user-metro-expiring-products' },
-    { id: '4', value: '6', label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'Gestisci' }
+    // Totale reale delle richieste di tutte le sedi (stessa fonte della pagina "Rifornitura sedi")
+    { id: '4', value: String(this.backend.totalRestockRequestCount()), label: 'Richieste dalle sedi', colorClass: 'blue', actionLabel: 'Gestisci', route: '/user-metro-restock' }
   ]);
+
+  // Testo scritto nella barra di ricerca
+  readonly searchQuery = signal<string>('');
+
+  /**
+   * Risultati della ricerca: prodotti presenti nel magazzino della metro il cui nome
+   * contiene il testo scritto. Si aggiornano mentre si scrive; senza testo la lista è vuota.
+   */
+  readonly searchResults = computed<ProductSearchResult[]>(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    if (!query) return [];
+
+    const metro = this.backend.sites().find(s => s.type === 'Metro');
+    return this.backend.inventories()
+      .filter(inv => inv.siteId === metro?.id)
+      .map(inv => ({
+        id: inv.productId,
+        // Stesso nome usato nelle pagine Inventario e Carico (catalogo)
+        name: this.backend.getProduct(inv.productId)?.name ?? inv.productName,
+        stock: inv.stock
+      }))
+      .filter(product => product.name.toLowerCase().includes(query));
+  });
+
+  public updateSearch(event: Event): void {
+    this.searchQuery.set((event.target as HTMLInputElement).value);
+  }
 
   readonly controls = signal<ControlItem[]>([
     { id: 'admins', iconName: 'users', title: 'Admin delle sedi', subtitle: 'referenti per sede', badgeValue: 6, badgeClass: 'gray', route: '/user-metro-admin-location' },

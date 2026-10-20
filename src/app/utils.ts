@@ -910,6 +910,15 @@ export class MockBackendService {
         return this.restockRequestsForSite(siteId).length;
     }
 
+    /**
+     * Totale delle richieste di riordino di tutte le sedi.
+     * Somma gli stessi conteggi dei badge della lista "Rifornitura sedi",
+     * quindi i due numeri non possono andare fuori sincronia.
+     */
+    totalRestockRequestCount(): number {
+        return this.distributionSites().reduce((sum, site) => sum + this.restockRequestCount(site.id), 0);
+    }
+
     // --- STRUMENTI DI RESET E CONTROLLO DEMO ---
     setServiceDown(down: boolean): void {
         this._serviceDown.set(down);
