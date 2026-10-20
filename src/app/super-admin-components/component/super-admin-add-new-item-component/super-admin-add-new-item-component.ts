@@ -2,6 +2,7 @@ import { Component, signal, computed, WritableSignal, HostListener, ElementRef, 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MockBackendService } from '../../../utils';
+import { NotificationService } from '../../../services/notification-service';
 import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
 type DropdownType = 'macro' | 'category' | null;
@@ -17,6 +18,8 @@ export class SuperAdminAddNewItemComponent implements OnInit {
   protected readonly router = inject(Router);
   protected readonly backendService = inject(MockBackendService);
   protected readonly elementRef = inject(ElementRef);
+  // Servizio delle card di notifica (errori in rosso, conferme)
+  protected readonly notifications = inject(NotificationService);
   
   public macroCategory = signal<string>('Alimentari');
   public category = signal<string>('');
@@ -204,7 +207,8 @@ export class SuperAdminAddNewItemComponent implements OnInit {
 
     const missingFields = this.getMissingFields();
     if (missingFields.length > 0) {
-      alert('ATTENZIONE! Compila o correggi i seguenti campi per procedere:\n\n- ' + missingFields.join('\n- '));
+      // Card rossa invece dell'alert del browser
+      this.notifications.error('Compila o correggi i campi: ' + missingFields.join(', '));
       return;
     }
 

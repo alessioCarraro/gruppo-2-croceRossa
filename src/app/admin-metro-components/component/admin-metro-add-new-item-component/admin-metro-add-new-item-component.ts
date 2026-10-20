@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SuperAdminAddNewItemComponent } from '../../../super-admin-components/component/super-admin-add-new-item-component/super-admin-add-new-item-component';
-import { NotificationService } from '../../../services/notification-service';
 import { NotificationCardComponent } from '../../../notification-card-component/notification-card-component';
 
 /**
@@ -19,7 +18,6 @@ import { NotificationCardComponent } from '../../../notification-card-component/
 })
 export class AdminMetroAddNewItemComponent extends SuperAdminAddNewItemComponent {
   private readonly location = inject(Location);
-  private readonly notifications = inject(NotificationService);
 
   // Testo del pulsante in basso
   public override submitLabel = 'Invia a conferma del superadmin';
