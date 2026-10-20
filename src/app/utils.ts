@@ -395,7 +395,10 @@ export const SEED_DELIVERIES: Delivery[] = [
 
 export const SEED_ALERTS: DeliveryAlert[] = [];
 
-// Esempi di approvazioni (solo 3): 1 richiesta di token + 2 richieste di prodotto
+// Esempi di approvazioni:
+// - 2 richieste di token extra (le gestisce l'Admin di sede, non il Super Admin);
+// - 2 ordini di rifornimento da approvare per il Super Admin: 1 con un solo prodotto, 1 con 3 articoli;
+// - richieste di riordino delle sedi (Legnano, Parabiago, Busto Arsizio): compaiono nella Rifornitura
 export const SEED_APPROVALS: ApprovalRequest[] = [
     // 1. Richiesta di token extra
     {
@@ -445,6 +448,107 @@ export const SEED_APPROVALS: ApprovalRequest[] = [
             { productId: 'edff434d-ceab-490a-9bba-b47366139ce2', quantity: 30 },
             { productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', quantity: 10 }
         ]
+    },
+    // Ordine di rifornimento con un solo prodotto (richiesta singola per il Super Admin)
+    {
+        id: '5e8a0c3d-2b1f-4d6a-9c47-1f3e5a7b9d20',
+        type: 'Rifornimento sede',
+        description: 'Rifornimento a Busto Arsizio: 1 prodotto',
+        requestedBy: 'd34dfbfe-45a9-4b67-8d03-c99d7fa4a4b5',
+        date: '2026-10-16T08:30:00.000Z',
+        status: 'In attesa',
+        siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f',
+        items: [
+            { productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229', quantity: 10 }
+        ]
+    },
+    {
+        id: 'seed-riordino-legnano-1',
+        type: 'Riordino',
+        description: 'Riordino 80 Pasta di semola 500g',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-16T08:00:00.000Z',
+        status: 'In attesa',
+        siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44',
+        productId: '4b45aa99-76d8-4eb9-acbc-87e300c197f0',
+        quantity: 80
+    },
+    {
+        id: 'seed-riordino-legnano-2',
+        type: 'Riordino',
+        description: 'Riordino 10 Petto di pollo 1kg',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-16T09:00:00.000Z',
+        status: 'In attesa',
+        siteId: '4e81f18f-a6af-45a9-adbe-d82dd95d6b44',
+        productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229',
+        quantity: 10
+    },
+    {
+        id: 'seed-riordino-parabiago-1',
+        type: 'Riordino',
+        description: 'Riordino 40 Pasta integrale 500g',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-17T08:00:00.000Z',
+        status: 'In attesa',
+        siteId: 'c9ea7b0d-2a83-47a7-bc69-f2f024392a7f',
+        productId: 'edff434d-ceab-490a-9bba-b47366139ce2',
+        quantity: 40
+    },
+    {
+        id: 'seed-riordino-parabiago-2',
+        type: 'Riordino',
+        description: 'Riordino 50 Passata di pomodoro 700g',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-17T09:00:00.000Z',
+        status: 'In attesa',
+        siteId: 'c9ea7b0d-2a83-47a7-bc69-f2f024392a7f',
+        productId: '4396be27-f626-4032-8db2-18cbbb56d26a',
+        quantity: 50
+    },
+    {
+        id: 'seed-riordino-parabiago-3',
+        type: 'Riordino',
+        description: 'Riordino 30 Omogeneizzato carne',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-17T10:00:00.000Z',
+        status: 'In attesa',
+        siteId: 'c9ea7b0d-2a83-47a7-bc69-f2f024392a7f',
+        productId: '61321c12-9f01-4493-95f6-e7406296257b',
+        quantity: 30
+    },
+    {
+        id: 'seed-riordino-busto-1',
+        type: 'Riordino',
+        description: 'Riordino 70 Pasta di semola 500g',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-18T08:00:00.000Z',
+        status: 'In attesa',
+        siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f',
+        productId: '4b45aa99-76d8-4eb9-acbc-87e300c197f0',
+        quantity: 70
+    },
+    {
+        id: 'seed-riordino-busto-2',
+        type: 'Riordino',
+        description: 'Riordino 45 Passata di pomodoro 700g',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-18T09:00:00.000Z',
+        status: 'In attesa',
+        siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f',
+        productId: '4396be27-f626-4032-8db2-18cbbb56d26a',
+        quantity: 45
+    },
+    {
+        id: 'seed-riordino-busto-3',
+        type: 'Riordino',
+        description: 'Riordino 15 Petto di pollo 1kg',
+        requestedBy: 'fd73fe4a-d415-4b92-8ca6-ed4d4b2792f2',
+        date: '2026-10-18T10:00:00.000Z',
+        status: 'In attesa',
+        siteId: '502231c0-021d-42c1-9f3c-0ab1f15fca8f',
+        productId: 'e8f3375e-63d7-4171-8c1b-d92af7cd5229',
+        quantity: 15
     }
 ];
 
@@ -500,7 +604,7 @@ export class MockBackendService {
     private readonly _beneficiaries = signal<Beneficiary[]>(this.load('beneficiaries', SEED_BENEFICIARIES));
     private readonly _deliveries = signal<Delivery[]>(this.load('deliveries', SEED_DELIVERIES));
     private readonly _alerts = signal<DeliveryAlert[]>(this.load('alerts', SEED_ALERTS));
-    private readonly _approvals = signal<ApprovalRequest[]>(this.load('approvals_v2', SEED_APPROVALS));
+    private readonly _approvals = signal<ApprovalRequest[]>(this.load('approvals_v3', SEED_APPROVALS));
     private readonly _shipments = signal<Shipment[]>(this.load('shipments', SEED_SHIPMENTS));
     private readonly _trackingNumber = signal<TrackingNumber[]>(this.load('trackingNumber_v2', SEED_TRACKING_NUMBER));
     private readonly _duplicateWindowDays = signal<number>(this.load('duplicateWindow', DEFAULT_DUPLICATE_WINDOW_DAYS));
@@ -520,8 +624,15 @@ export class MockBackendService {
     readonly deliveries = this._deliveries.asReadonly();
     readonly alerts = this._alerts.asReadonly();
     readonly approvals = this._approvals.asReadonly();
+    /**
+     * Approvazioni in attesa che spettano al Super Admin: ordini di rifornimento e nuovi prodotti.
+     * Le richieste di token extra le gestisce l'Admin di sede; i riordini delle sedi passano dalla Rifornitura.
+     */
+    readonly superAdminApprovals = computed(() =>
+        this._approvals().filter(a => a.status === 'In attesa' && (a.type === 'Rifornimento sede' || a.type === 'Nuovo prodotto'))
+    );
     // Numero di approvazioni in attesa: stessa regola della lista "Approvazioni" (badge della barra in basso)
-    readonly pendingApprovalCount = computed(() => this._approvals().filter(a => a.status === 'In attesa').length);
+    readonly pendingApprovalCount = computed(() => this.superAdminApprovals().length);
     readonly shipments = this._shipments.asReadonly();
     readonly trackingNumber = this._trackingNumber.asReadonly();
     // Colli ancora da ricevere (quelli con ricezione confermata restano nello storico)
@@ -559,7 +670,7 @@ export class MockBackendService {
         effect(() => this.save('beneficiaries', this._beneficiaries()));
         effect(() => this.save('deliveries', this._deliveries()));
         effect(() => this.save('alerts', this._alerts()));
-        effect(() => this.save('approvals_v2', this._approvals()));
+        effect(() => this.save('approvals_v3', this._approvals()));
         effect(() => this.save('shipments', this._shipments()));
         // Salva i colli: la ricezione confermata resta anche ricaricando
         effect(() => this.save('trackingNumber_v2', this._trackingNumber()));
@@ -965,12 +1076,13 @@ export class MockBackendService {
     /** 4. Metro - S-Admin: Approvazione richieste globali e configurazione di sistema */
     async decideApproval(approvalId: string, status: ApprovalStatus, items?: CartItem[]): Promise<ApprovalRequest> {
         return this.fakeApi(() => {
-            // Il Super Admin decide tutto; l'Admin di sede solo le richieste di token extra
             const op = this.requireRole(['S-Admin', 'Admin']);
             const target = this._approvals().find(a => a.id === approvalId);
 
             if (!target) throw new Error('Richiesta di approvazione non trovata');
-            if (op.role === 'Admin' && target.type !== 'Token extra') {
+            // I token extra li decide solo l'Admin di sede; le altre richieste solo il Super Admin
+            const isTokenRequest = target.type === 'Token extra';
+            if ((op.role === 'Admin') !== isTokenRequest) {
                 throw new Error('Autorizzazione insufficiente per questa operazione');
             }
             // Evita di applicare due volte la stessa decisione (es. doppio click)
@@ -1239,7 +1351,7 @@ export class MockBackendService {
     }
 
     resetDemoData(): void {
-        const keys = ['products_v2', 'beneficiaries', 'deliveries', 'alerts', 'approvals_v2', 'shipments', 'duplicateWindow', 'operatorId', 'inventories_v2', 'trackingNumber_v2'];
+        const keys = ['products_v2', 'beneficiaries', 'deliveries', 'alerts', 'approvals_v3', 'shipments', 'duplicateWindow', 'operatorId', 'inventories_v2', 'trackingNumber_v2'];
         keys.forEach(key => {
             try { localStorage.removeItem(STORAGE_PREFIX + key); } catch { }
         });

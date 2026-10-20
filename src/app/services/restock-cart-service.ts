@@ -15,7 +15,7 @@ export interface SentRestockSummary {
   productCount: number;
 }
 
-const CART_STORAGE_KEY = 'cri_restock_cart';
+const CART_STORAGE_KEY = 'cri_restock_cart_v2';
 
 /**
  * Carrello della rifornitura sedi, condiviso tra le pagine

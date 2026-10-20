@@ -47,7 +47,8 @@ export class SuperAdminApprovalRequestsComponent {
     const sites = this.backendService.sites();
     const operators = this.backendService.operators();
 
-    const pendingApprovals = allApprovals.filter(a => a.status === 'In attesa');
+    // Solo le richieste che spettano al Super Admin (stessa fonte del badge)
+    const pendingApprovals = this.backendService.superAdminApprovals();
 
     const mappedRequests: ApprovalRequestUI[] = pendingApprovals.map((req, index) => {
       const op = operators.find(o => o.id === req.requestedBy);
